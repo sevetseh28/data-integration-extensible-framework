@@ -14,7 +14,10 @@ def load_module(step_name, module_directory, **kwargs):
     module_name = "engine.modules.{}.{}.module".format(step_name, module_directory)
     gen_module = class_from_string(module_name, generic_module_class_name)
 
-    module = gen_module.__subclasses__()[0]
+    # Obtiene el modulo fijandose cual de las subclases de Module es la buscada
+    module = [m for m in gen_module.__subclasses__()
+              if m.__module__.startswith("engine.modules.{}.{}".format(step_name, module_directory))][0]
+
 
     # Se retorna el modulo creado con los atrs que reciba el constructor
     return module(**kwargs)

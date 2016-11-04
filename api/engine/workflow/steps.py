@@ -3,7 +3,7 @@ from __future__ import print_function
 import logging
 from abc import abstractmethod
 
-from engine.dal_mongo import store_step_results
+from engine.dal_mongo import DALMongo
 from engine.utils import dynamic_loading
 
 """
@@ -28,6 +28,7 @@ class Step(object):
         self.config = config
         self.class_name = type(self).__name__
         self.project_id = project_id
+        self.modules_directory = None
 
     """
     run generico. ejecuta cosas previas, ejecuta el step, y ejecuta cosas posteriores
@@ -39,7 +40,8 @@ class Step(object):
         self.run_implementation()
 
         # se guardan los resultados
-        store_step_results(self.project_id, step=self.class_name, results=self.results)
+        dal = DALMongo(self.project_id)
+        dal.store_step_results(step=self.class_name, results=self.results)
 
         logging.info("Finished step " + self.class_name)
 
@@ -50,6 +52,28 @@ class Step(object):
     @abstractmethod
     def run_implementation(self):
         pass
+
+    @staticmethod
+    @abstractmethod
+    def pretty_name():
+        pass
+
+    """
+        Carga el modulo dinamicamente.
+        Implementación por defecto
+    """
+
+    def _load_module(self, **kwargs):
+        step = self.modules_directory
+        module = self.config['selected_module']['name']
+        config = self.config['selected_module']['config']
+        return dynamic_loading.load_module(step, module, config=config, **kwargs)
+
+    def _append_result_collection(self, values, collection_suffix=''):
+        self.results['collections'].append({
+            'name_suffix': collection_suffix,
+            'values': values
+        })
 
 
 """
@@ -76,21 +100,8 @@ class ExtractionStep(Step):
         return "Extracción"
 
     def run_implementation(self):
-        module_source_1 = self._load_module(1)
-        module_source_2 = self._load_module(2)
-
-        self.results['collections'].append({
-            'name': 'source1',
-            'values': module_source_1.run()
-        })
-        self.results['collections'].append({
-            'name': 'source2',
-            'values': module_source_2.run()
-        })
-
-    """
-    Carga el modulo dinamicamente
-    """
+        self._load_module_results(1)
+        self._load_module_results(2)
 
     def _load_module(self, source):
         step = self.modules_directory
@@ -98,9 +109,19 @@ class ExtractionStep(Step):
         config = self.config['source{}'.format(source)]['selected_module']['config']
         return dynamic_loading.load_module(step, module, config=config)
 
+    def _load_module_results(self, source_number):
+        module = self._load_module(source_number)
+        (schema, records) = module.run()
+
+        self._append_result_collection(records, 'source{}_records'.format(source_number))
+        self._append_result_collection(schema, 'source{}_schema'.format(source_number))
+
+
 class StandarizationStep(Step):
-     pass
-#     def __init__(self):
+    pass
+
+
+# def __init__(self):
 #         super(StandarizationStep, self).__init__()
 #
 #     @staticmethod
@@ -109,3 +130,28 @@ class StandarizationStep(Step):
 #
 #     def run_implementation(self, config=None):
 #         print("Estandarización")
+
+"""
+Formato del config de SchemaMatching:
+{
+    "selected_module": {
+        "name": "[nombre_modulo]",
+        "config": {}
+    }
+}
+"""
+
+
+class SchemaMatchingStep(Step):
+    def __init__(self, **kwargs):
+        super(SchemaMatchingStep, self).__init__(**kwargs)
+        self.modules_directory = "schema-matching"
+
+    @staticmethod
+    def pretty_name():
+        return "Schema matching"
+
+    def run_implementation(self):
+        module = self._load_module(project_id=self.project_id)
+
+        self._append_result_collection(module.run())
