@@ -1,8 +1,8 @@
 from engine.models.record import FieldType, Record, Field, Column
-from engine.modules.module import GenericModule
+from engine.modules.module import Module
 
 
-class Module(GenericModule):
+class DummyExtractor(Module):
 
     def __init__(self, **kwargs):
         super(Module, self).__init__(**kwargs)
