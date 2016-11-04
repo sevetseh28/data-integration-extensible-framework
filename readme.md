@@ -7,6 +7,6 @@ Para correr migrations:
     - python api/manage.py migrate
 
 Para correr el servidor:
-    - crearr connfig de run server en pycharm
+    - crear config de run server en pycharm
     - o
     - python api/manage.py runserver

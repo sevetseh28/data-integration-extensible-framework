@@ -1,20 +1,29 @@
+from engine.utils import dynamic_loading
 from steps import *
 
-first_step = ExtractionStep
+FIRST_STEP = ExtractionStep
 
-step_table = {
+STEP_TABLE = {
     ExtractionStep: StandarizationStep
 }
 
 
-
 class Workflow:
-    def __init__(self):
-        self.step = first_step()
+    def __init__(self, project_id):
+        self.step = None
+        self.project_id = project_id
 
-    def execute_step(self, config = None):
-        self.step.run(config)
-        if type(self.step) in step_table:
-            self.step = step_table[type(self.step)]()
+    def set_current_step(self, current_step, config):
+        self.step = dynamic_loading.load_step(current_step, project_id=self.project_id, config=config)
+
+    def execute_step(self):
+        # se ejecuta el step
+        self.step.run()
+
+        # se avanza al siguiente step
+        if type(self.step) in STEP_TABLE:
+            result = STEP_TABLE[type(self.step)](None, None).class_name
         else:
-            print("no hay mas estados")
+            result = "no hay mas estados"
+
+        return result
