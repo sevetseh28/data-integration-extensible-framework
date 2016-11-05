@@ -1,10 +1,14 @@
+# coding=utf-8
 from engine.models.record import *
+from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
 
-"""
-    Genera n records con m columnas y un field por columna
-"""
-class DummyExtractor(Module):
+
+class DummyExtractor(ExtractionModule):
+    """
+        Genera n records con m columnas y un field por columna
+    """
+
     def __init__(self, **kwargs):
         super(DummyExtractor, self).__init__(**kwargs)
 
@@ -12,18 +16,20 @@ class DummyExtractor(Module):
         cant_cols = 10
         cant_records = 100
 
-        columns = [Column("Column" + str(i)) for i in range(cant_cols)]
-
-        schema = columns
-        records = []
-
         # se generan los records dummy
         for i in range(cant_records):
-            records.append(Record())
+            self.records.append(Record())
             for j in range(cant_cols):
-                records[i].columns[columns[j]] = [Field(
-                    value="val_rec{0}_col{1}".format(i, j),
-                    tipe=FieldType.string,
-                    column=columns[j]
-                )]
-        return schema, records
+                column = Column("Column" + str(j))
+
+                # se añade la columna al esquema de la fuente
+                self.add_to_schema(column)
+
+                column.fields.append(Field(
+                    value="Val_Rec{0}_col{1}".format(i, j),
+                    tipe=FieldType.string
+                ))
+
+                self.records[i].columns[column.name] = column
+
+        return self.schema, self.records

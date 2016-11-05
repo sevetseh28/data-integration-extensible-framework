@@ -50,22 +50,50 @@ class DALMongo:
         GETS
     """""""""""""""""""""""""""""""""""""""""""""""""""
 
-    # Retorna el esquema original de una fuente
+    def get_records(self, step, source_number):
+        """
+        Retorna los records de una fuente para un step
+
+        :param step: nombre de la clase del step
+        :param source_number: numero de fuente (1 o 2)
+        :return: registros de la fuente resultado de ejecutar el step
+        """
+        records = self.get_all(step, "source{}_records".format(source_number))
+
+        return [Record.from_json(r) for r in records]
+
     def get_schema(self, source_number):
+        """
+        Retorna el esquema original de una fuente
+
+        :param source_number: numero de fuente (1 o 2)
+        :return: columnas del esquema de la fuente
+        """
         schema = self.get_all("ExtractionStep", "source{}_schema".format(source_number))
 
         return [Column.from_json(c) for c in schema]
 
-    # Retorna una coleccion dado el step y suffix
     def get_all(self, step, suffix):
+        """
+        Retorna una coleccion dado el step y suffix
+
+        :param step: nombre de la clase del step
+        :param suffix: sufijo de la coleccion
+        :return: documentos de la coleccion de ese step con ese sufijo
+        """
         return self._get_all(self._col_from_step_and_suffix(step, suffix))
 
-    # Retorna toda la coleccion
     def _get_all(self, collection_name):
+        """
+        Retorna toda una coleccion
+
+        :param collection_name: nombre de coleccion
+        :return: documentos de la coleccion
+        """
         c = self.get_connection()
 
         col = c[self.db_name][collection_name]
-        result = col.find({})
+        result = col.find({}, {'_id': False})
 
         c.close()
         return result
@@ -74,11 +102,11 @@ class DALMongo:
         UTILS
     """""""""""""""""""""""""""""""""""""""""""""""""""
 
-    # def _db_from_project(self):
-    #     return 'project' + self.project_id
-
-
     def _col_from_step_and_suffix(self, step, suffix):
         if suffix:
             return "{}_{}".format(step, suffix)
         return step
+
+    def drop_database(self):
+        c = self.get_connection()
+        c.drop_database(self.db_name)

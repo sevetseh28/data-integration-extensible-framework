@@ -4,7 +4,7 @@ from steps import *
 FIRST_STEP = ExtractionStep
 
 STEP_TABLE = {
-    ExtractionStep: StandarizationStep
+    ExtractionStep: StandardizationStep
 }
 
 
@@ -22,7 +22,7 @@ class Workflow:
 
         # se avanza al siguiente step
         if type(self.step) in STEP_TABLE:
-            result = STEP_TABLE[type(self.step)](None, None).class_name
+            result = STEP_TABLE[type(self.step)]().class_name
         else:
             result = "no hay mas estados"
 

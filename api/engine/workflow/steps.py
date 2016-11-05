@@ -6,22 +6,22 @@ from abc import abstractmethod
 from engine.dal_mongo import DALMongo
 from engine.utils import dynamic_loading
 
-"""
-Formato de results:
-{
-    "collections": [
-        {
-            "name":"[nombre_col]",
-            "values":[array_values]
-        },
-        ...
-    ]
-}
-"""
-
 
 class Step(object):
-    def __init__(self, project_id, config=None):
+    """
+    Formato de results:
+    {
+        "collections": [
+            {
+                "name":"[nombre_col]",
+                "values":[array_values]
+            },
+            ...
+        ]
+    }
+    """
+
+    def __init__(self, project_id=None, config=None):
         self.results = {
             "collections": []
         }
@@ -30,11 +30,10 @@ class Step(object):
         self.project_id = project_id
         self.modules_directory = None
 
-    """
-    run generico. ejecuta cosas previas, ejecuta el step, y ejecuta cosas posteriores
-    """
-
     def run(self):
+        """
+        Run generico. ejecuta cosas previas, ejecuta el step, y ejecuta cosas posteriores
+        """
         logging.info("Starting step " + self.class_name)
 
         self.run_implementation()
@@ -45,12 +44,11 @@ class Step(object):
 
         logging.info("Finished step " + self.class_name)
 
-    """
-    firma de el run particular de cada step
-    """
-
     @abstractmethod
     def run_implementation(self):
+        """
+        Firma de el run particular de cada step
+        """
         pass
 
     @staticmethod
@@ -58,46 +56,47 @@ class Step(object):
     def pretty_name():
         pass
 
-    """
+    def _load_module(self, **kwargs):
+        """
         Carga el modulo dinamicamente.
         Implementación por defecto
-    """
-
-    def _load_module(self, **kwargs):
+        """
         step = self.modules_directory
         module = self.config['selected_module']['name']
         config = self.config['selected_module']['config']
         return dynamic_loading.load_module(step, module, config=config, **kwargs)
 
     def _append_result_collection(self, values, collection_suffix=''):
+        """
+        Appendea una coleccion a los resultados
+        """
         self.results['collections'].append({
             'name_suffix': collection_suffix,
             'values': values
         })
 
 
-"""
-Formato del config de extracción:
-{
-    "source1": {
-        "selected_module": {
-            "name":"[un_nombre]",
-            "config":{[config]}
-        }
-    },
-    "source2": {[idem source1]}
-}
-"""
-
-
 class ExtractionStep(Step):
+    """
+    Formato del config de extracción:
+    {
+        "source1": {
+            "selected_module": {
+                "name":"[un_nombre]",
+                "config":{[config]}
+            }
+        },
+        "source2": {[idem source1]}
+    }
+    """
+
     def __init__(self, **kwargs):
         super(ExtractionStep, self).__init__(**kwargs)
         self.modules_directory = "extraction"
 
     @staticmethod
     def pretty_name():
-        return "Extracción"
+        return "Extraction"
 
     def run_implementation(self):
         self._load_module_results(1)
@@ -117,32 +116,65 @@ class ExtractionStep(Step):
         self._append_result_collection(schema, 'source{}_schema'.format(source_number))
 
 
-class StandarizationStep(Step):
-    pass
-
-
-# def __init__(self):
-#         super(StandarizationStep, self).__init__()
-#
-#     @staticmethod
-#     def pretty_name():
-#         return "Estandarización"
-#
-#     def run_implementation(self, config=None):
-#         print("Estandarización")
-
-"""
-Formato del config de SchemaMatching:
-{
-    "selected_module": {
-        "name": "[nombre_modulo]",
-        "config": {}
+class StandardizationStep(Step):
+    """
+    Formato del config de estandarizacion:
+    {
+        "source1":{
+            "[nombre_columna1]": [
+                {
+                    "name":"[nombre_modulo]",
+                    "config":{[config]}
+                },
+                ...
+            }
+        },
+        "source2": idem
     }
-}
-"""
+    """
+
+    def __init__(self, **kwargs):
+        super(StandardizationStep, self).__init__(**kwargs)
+        self.modules_directory = "standardization"
+
+    @staticmethod
+    def pretty_name():
+        return "Standardization"
+
+    def run_implementation(self):
+        self._standardize_source(1)
+        self._standardize_source(2)
+
+    def _standardize_source(self, source_number):
+        dal = DALMongo(self.project_id)
+        records = dal.get_records(ExtractionStep().class_name, source_number)
+
+        for record in records:
+            for col, standardizations in self.config["source{}".format(source_number)].items():
+                for standardization in standardizations:
+                    module = self._load_module(standardization)
+                    record.columns[col] = module.run(record.columns[col])
+
+        self._append_result_collection(records, "source{}".format(source_number))
+
+    def _load_module(self, standardization):
+        step = self.modules_directory
+        module = standardization['name']
+        config = standardization['config']
+        return dynamic_loading.load_module(step, module, config=config)
 
 
 class SchemaMatchingStep(Step):
+    """
+    Formato del config de SchemaMatching:
+    {
+        "selected_module": {
+            "name": "[nombre_modulo]",
+            "config": {}
+        }
+    }
+    """
+
     def __init__(self, **kwargs):
         super(SchemaMatchingStep, self).__init__(**kwargs)
         self.modules_directory = "schema-matching"

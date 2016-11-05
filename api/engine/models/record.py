@@ -5,34 +5,52 @@ from enum import Enum
 
 
 class Record:
-    def __init__(self):
-        # columns es un diccionario con columnas como claves y listas de fields como valores
-        self.columns = {}
+    def __init__(self, columns=None):
+        # columns es un diccionario <string, column> donde el string es el nombre de la columna
+        if columns is None:
+            columns = {}
+
+        self.columns = columns
 
     def to_json(self):
         return {
-            c.to_string(): [f.to_json() for f in self.columns[c]]
-            for c in self.columns
+            n: c.to_json()
+            for n, c in self.columns.items()
             }
-
-
-class Column:
-    def __init__(self, name):
-        self.name = name
 
     @staticmethod
     def from_json(json):
-        return Column(json["name"])
+        return Record({n: Column.from_json(c) for n, c in json.items()})
 
-    def to_json(self):
-        return self.__dict__
+
+class Column:
+    def __init__(self, name, fields=None):
+        if fields is None:
+            fields = []
+
+        self.name = name
+        self.fields = fields
+
+    @staticmethod
+    def from_json(json):
+        return Column(json["name"], [Field.from_json(f) for f in json["fields"]])
+
+    def to_json(self, with_fields=True):
+        json = {
+            "name": self.name,
+        }
+
+        if with_fields:
+            json["fields"] = [f.to_json() for f in self.fields]
+
+        return json
 
     def to_string(self):
         return self.name
 
 
 class Field:
-    def __init__(self, value, tipe, tags=None, output_field=None, column=None):
+    def __init__(self, value, tipe, tags=None, output_field=None):
         if tags is None:
             tags = []
 
@@ -40,34 +58,35 @@ class Field:
         self.tipe = tipe
         self.tags = tags
         self.output_field = output_field
-        self.column = column
 
     def to_json(self):
         json = self.__dict__
-        json["column"] = self.column.to_json()
         json["tipe"] = self.tipe.to_json()
 
         return json
 
-
-"""
-Representa la coleccion de columnas matcheadas.
-Es una lista de pares de conjuntos de columnas donde los elementos del par son las columnas que matchean con las otras.
-[
-    {
-        "source1": [col11, col12, ..],
-        "source2": [col21, col22, ..]
-    },
-    {
-        "source1": [col14, col15, ..],
-        "source2": [col24, col25, ..]
-    },
-    ...
-]
-"""
+    @staticmethod
+    def from_json(json):
+        return Field(json["value"], FieldType.from_json(json["tipe"]), json["tags"], json["output_field"])
 
 
 class SchemaMatch:
+    """
+    Representa la coleccion de columnas matcheadas.
+    Es una lista de pares de conjuntos de columnas donde los elementos del par son las columnas que matchean con las otras.
+    [
+        {
+            "source1": [col11, col12, ..],
+            "source2": [col21, col22, ..]
+        },
+        {
+            "source1": [col14, col15, ..],
+            "source2": [col24, col25, ..]
+        },
+        ...
+    ]
+    """
+
     def __init__(self):
         self.schema_matches = []
 
@@ -79,8 +98,8 @@ class SchemaMatch:
 
     def to_json(self):
         return [{
-                    "source1": [c.to_json() for c in match['source1']],
-                    "source2": [c.to_json() for c in match['source2']]
+                    "source1": [c.to_json(with_fields=False) for c in match['source1']],
+                    "source2": [c.to_json(with_fields=False) for c in match['source2']]
                 } for match in self.schema_matches]
 
 
@@ -92,3 +111,7 @@ class FieldType(Enum):
 
     def to_json(self):
         return self.value
+
+    @staticmethod
+    def from_json(json):
+        return FieldType(json)
