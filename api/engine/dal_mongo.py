@@ -31,6 +31,10 @@ class DALMongo:
         db = c[self.db_name]
 
         for collection in results['collections']:
+            # Si la coleccion es vacia, pasa a la siguiente
+            if not collection['values']:
+                continue
+
             # Se obtiene la coleccion (si no existe se crea)
             collection_name = self._col_from_step_and_suffix(step, collection['name_suffix'])
             real_collection = db[collection_name]
@@ -38,7 +42,10 @@ class DALMongo:
             # Se pasan a Json los valores
             # Si es iterable se convierte cada elemento
             if hasattr(collection['values'], '__iter__'):
-                json_values = [v.to_json() for v in collection['values']]
+                if step == "IndexingStep":
+                    json_values = [v for v in collection['values'] for v in v.to_json()]
+                else:
+                    json_values = [v.to_json() for v in collection['values']]
             else:
                 json_values = collection['values'].to_json()
 

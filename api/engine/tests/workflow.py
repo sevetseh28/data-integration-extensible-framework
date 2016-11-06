@@ -35,6 +35,10 @@ config = {
                     "name": "lowercase",
                     "config": {}
                 },
+                {
+                    "name": "delete-chars",
+                    "config": {"chars": "_"}
+                }
             ],
         },
         "source2": {
@@ -43,13 +47,25 @@ config = {
                     "name": "delete-chars",
                     "config": {"chars": "_"}
                 },
+                {
+                    "name": "lowercase",
+                    "config": {}
+                }
+
             ],
+        }
+    },
+    "indexing": {
+        "selected_module": {
+            "name": "blocking-standard",
+            "config": {"keys": ["Column1", "Column2"]}
         }
     }
 }
 
 dal = DALMongo(project_id)
 dal.drop_database()
+
 w.set_current_step("ExtractionStep", config["extraction"])
 w.execute_step()
 
@@ -57,4 +73,7 @@ w.set_current_step("StandardizationStep", config["standardization"])
 w.execute_step()
 
 w.set_current_step("SchemaMatchingStep", config["schema-matching"])
+w.execute_step()
+
+w.set_current_step("IndexingStep", config["indexing"])
 w.execute_step()

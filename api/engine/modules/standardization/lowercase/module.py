@@ -14,7 +14,7 @@ class LowerCase(Module):
 
     def run(self, column):
         for field in column.fields:
-            if field.tipe == FieldType.string:
+            if field.tipe.value == FieldType.string.value:
                 field.value = field.value.lower()
 
         return column

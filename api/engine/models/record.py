@@ -45,8 +45,12 @@ class Column:
 
         return json
 
-    def to_string(self):
-        return self.name
+    def concat_fields(self):
+        result = ""
+        for field in self.fields:
+            result += str(field.value)
+
+        return result
 
 
 class Field:
@@ -60,7 +64,7 @@ class Field:
         self.output_field = output_field
 
     def to_json(self):
-        json = self.__dict__
+        json = dict(self.__dict__)
         json["tipe"] = self.tipe.to_json()
 
         return json
@@ -101,6 +105,17 @@ class SchemaMatch:
                     "source1": [c.to_json(with_fields=False) for c in match['source1']],
                     "source2": [c.to_json(with_fields=False) for c in match['source2']]
                 } for match in self.schema_matches]
+
+
+class IndexingGroup:
+    def __init__(self, key, record_list1, record_list2):
+        self.key = key
+        self.records1 = record_list1
+        self.records2 = record_list2
+
+    def to_json(self):
+        return [dict(r.to_json(), source=1, key=self.key) for r in self.records1] + \
+               [dict(r.to_json(), source=2, key=self.key) for r in self.records2]
 
 
 class FieldType(Enum):
