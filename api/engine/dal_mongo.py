@@ -3,8 +3,8 @@ from json import dumps
 from pymongo import MongoClient
 from django.conf import settings
 
-from api.api.settings import DATABASES
-from api.engine.models.record import *
+from api.settings import DATABASES
+from engine.models.record import *
 
 COL_STEP_PREFIXES = {
     "extraction": "ExtractionStep",

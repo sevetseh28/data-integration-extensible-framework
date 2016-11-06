@@ -1,3 +1,6 @@
+from django.http import JsonResponse
+
+from engine.utils.dynamic_loading import load_module, list_modules
 from models import *
 from rest_framework import viewsets
 from serializers import *
@@ -14,3 +17,7 @@ class StepConfigViewSet(viewsets.ModelViewSet):
     """
     queryset = StepConfig.objects.all()
     serializer_class = StepConfigSerializer
+
+
+def available_modules(request, step=''):
+    return JsonResponse(list_modules(step), safe=False)

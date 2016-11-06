@@ -1,7 +1,8 @@
 from models import Project, StepConfig
 from rest_framework import serializers
 
-#ver http://www.django-rest-framework.org/tutorial/quickstart/#serializers
+
+# ver http://www.django-rest-framework.org/tutorial/quickstart/#serializers
 
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
