@@ -12,5 +12,9 @@ class FullIndexing(Module):
         super(FullIndexing, self).__init__(**kwargs)
         self.records = records
 
+    @staticmethod
+    def pretty_name():
+        return "Full index"
+
     def run(self):
         return {'all': self.records}

@@ -2,6 +2,7 @@ from engine.dal_mongo import DALMongo
 from engine.models.record import *
 from engine.modules.indexing.indexing_module import IndexingModule
 from engine.modules.module import Module
+from engine.utils import dynamic_loading
 
 
 class BlockingStandard(IndexingModule):
@@ -9,6 +10,10 @@ class BlockingStandard(IndexingModule):
         super(BlockingStandard, self).__init__(**kwargs)
         self.records = records
         self.keys = self.config["keys"]
+
+    @staticmethod
+    def pretty_name():
+        return "Blocking Standard"
 
     def run(self):
         groups = {}
@@ -25,9 +30,24 @@ class BlockingStandard(IndexingModule):
 
         return groups
 
-    def _concat_cols(self, record, cols):
+    @staticmethod
+    def _concat_cols(record, cols):
         concat = ""
         for col in cols:
             concat += record.columns[col].concat_fields()
 
         return concat
+
+    @staticmethod
+    def required_config():
+        return {
+            'keys': {
+                'label': 'Keys',
+                'type': 'list'
+            },
+            'encoding': {
+                'label': 'Encoding',
+                'type': 'select',
+                'options': dynamic_loading.list_modules('encoding')
+            }
+        }

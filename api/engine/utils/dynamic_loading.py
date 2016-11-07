@@ -14,7 +14,7 @@ def class_from_string(module_name, class_name):
     return class_
 
 
-def load_module(step_name, module_directory, **kwargs):
+def _load_module(step_name, module_directory):
     generic_module_class_name = "Module"
 
     module_name = MODULE_PREFIX + "{}.{}.module".format(step_name, module_directory)
@@ -25,7 +25,11 @@ def load_module(step_name, module_directory, **kwargs):
               if m.__module__.startswith(MODULE_PREFIX + "{}.{}".format(step_name, module_directory))][0]
 
     # Se retorna el modulo creado con los atrs que reciba el constructor
-    return module(**kwargs)
+    return module
+
+
+def load_module(step_name, module_directory, **kwargs):
+    return _load_module(step_name, module_directory)(**kwargs)
 
 
 def load_step(step_name, **kwargs):
@@ -46,10 +50,21 @@ def list_modules(step_name):
 
     modules = pkgutil.iter_modules(module.__path__)
 
-    # m[2] indica si es una carpeta, m[1] es el nombre del modulo
-    modules = [m[1] for m in modules if m[2]]
+    modules_data = []
 
-    return modules
+    for m in modules:
+        if not m[2]:
+            continue
+        # m[2] indica si es una carpeta, m[1] es el nombre del modulo
+        mod_instance = _load_module(step_name, m[1])
+
+        modules_data.append({
+            'id': m[1],
+            'name': mod_instance.pretty_name(),
+            'config': mod_instance.required_config()
+        })
+
+    return modules_data
 
 
 def _get_all_subclasses(cls):

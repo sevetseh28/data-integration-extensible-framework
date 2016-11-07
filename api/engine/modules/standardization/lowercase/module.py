@@ -12,6 +12,10 @@ class LowerCase(Module):
     def __init__(self, **kwargs):
         super(LowerCase, self).__init__(**kwargs)
 
+    @staticmethod
+    def pretty_name():
+        return "To lowercase"
+
     def run(self, column):
         for field in column.fields:
             if field.tipe.value == FieldType.string.value:

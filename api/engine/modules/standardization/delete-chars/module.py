@@ -17,9 +17,22 @@ class DeleteChars(Module):
     def __init__(self, **kwargs):
         super(DeleteChars, self).__init__(**kwargs)
 
+    @staticmethod
+    def pretty_name():
+        return "Delete chars"
+
     def run(self, column):
         for field in column.fields:
             if field.tipe.value == FieldType.string.value:
                 field.value = field.value.__str__().translate(None, self.config["chars"])
 
         return column
+
+    @staticmethod
+    def required_config():
+        return {
+            'chars': {
+                'label': 'Characters',
+                'type': 'text'
+            }
+        }

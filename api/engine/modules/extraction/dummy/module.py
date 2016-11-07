@@ -11,6 +11,7 @@ class DummyExtractor(ExtractionModule):
 
     def __init__(self, **kwargs):
         super(DummyExtractor, self).__init__(**kwargs)
+        self.pretty_name = 'DummyExtractor'
 
     def run(self):
         cant_cols = 10
@@ -33,3 +34,12 @@ class DummyExtractor(ExtractionModule):
                 self.records[i].columns[column.name] = column
 
         return self.schema, self.records
+
+    @staticmethod
+    def required_config():
+        return {
+            'config1': {
+                'label': 'coso',
+                'type': 'text'
+            }
+        }
