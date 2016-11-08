@@ -31,13 +31,16 @@ class DALMongo:
         db = c[self.db_name]
 
         for collection in results['collections']:
-            # Si la coleccion es vacia, pasa a la siguiente
-            if not collection['values']:
-                continue
-
             # Se obtiene la coleccion (si no existe se crea)
             collection_name = self._col_from_step_and_suffix(step, collection['name_suffix'])
             real_collection = db[collection_name]
+
+            # Se vacia la coleccion (por si se esta re-ejecutando el step)
+            db[collection_name].drop()
+
+            # Si la coleccion es vacia, pasa a la siguiente
+            if not collection['values']:
+                continue
 
             # Se pasan a Json los valores
             # Si es iterable se convierte cada elemento

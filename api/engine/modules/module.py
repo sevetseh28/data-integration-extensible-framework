@@ -1,5 +1,5 @@
 class Module(object):
-    required_config = {}
+    config_json = {}
 
     def __init__(self, config=None):
         if config is None:
@@ -11,5 +11,5 @@ class Module(object):
         return "Generic Module"
 
     @staticmethod
-    def required_config():
+    def config_json(**kwargs):
         return {}

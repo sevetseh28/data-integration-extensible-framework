@@ -45,7 +45,7 @@ LIST
 """""""""""""""""""""""""""""""""""""""
 
 
-def list_modules(step_name):
+def list_modules(step_name, project_id=None):
     module = __import__(MODULE_PREFIX + step_name, fromlist=[str(step_name)])
 
     modules = pkgutil.iter_modules(module.__path__)
@@ -61,7 +61,7 @@ def list_modules(step_name):
         modules_data.append({
             'id': m[1],
             'name': mod_instance.pretty_name(),
-            'config': mod_instance.required_config()
+            'config': mod_instance.config_json(project_id=project_id)
         })
 
     return modules_data

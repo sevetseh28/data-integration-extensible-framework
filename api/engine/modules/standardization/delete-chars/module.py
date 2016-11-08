@@ -29,7 +29,7 @@ class DeleteChars(Module):
         return column
 
     @staticmethod
-    def required_config():
+    def config_json(**kwargs):
         return {
             'chars': {
                 'label': 'Characters',

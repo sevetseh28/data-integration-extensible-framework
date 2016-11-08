@@ -36,7 +36,7 @@ class DummyExtractor(ExtractionModule):
         return self.schema, self.records
 
     @staticmethod
-    def required_config():
+    def config_json(**kwargs):
         return {
             'config1': {
                 'label': 'coso',

@@ -22,10 +22,29 @@ config = {
             }
         }
     },
-    "schema-matching": {
+    "schema-matching1": {
         "selected_module": {
             "name": "dummy",
             "config": {}
+        }
+    },
+    "schema-matching2": {
+        "selected_module": {
+            "name": "manual",
+            "config": {
+                'matches': [
+                    {
+                        'source1': [
+                            'Column1',
+                            'Column2'
+                        ],
+                        'source2': [
+                            'Column2',
+                            'Column4'
+                        ]
+                    }
+                ]
+            }
         }
     },
     "standardization": {
@@ -55,10 +74,16 @@ config = {
             ],
         }
     },
-    "indexing": {
+    "indexing1": {
         "selected_module": {
             "name": "blocking-standard",
             "config": {"keys": ["Column1", "Column2"]}
+        }
+    },
+    "indexing2": {
+        "selected_module": {
+            "name": "full",
+            "config": {}
         }
     }
 }
@@ -72,8 +97,14 @@ w.execute_step()
 w.set_current_step("StandardizationStep", config["standardization"])
 w.execute_step()
 
-w.set_current_step("SchemaMatchingStep", config["schema-matching"])
+w.set_current_step("SchemaMatchingStep", config["schema-matching1"])
 w.execute_step()
 
-w.set_current_step("IndexingStep", config["indexing"])
+w.set_current_step("SchemaMatchingStep", config["schema-matching2"])
+w.execute_step()
+
+w.set_current_step("IndexingStep", config["indexing1"])
+w.execute_step()
+
+w.set_current_step("IndexingStep", config["indexing2"])
 w.execute_step()

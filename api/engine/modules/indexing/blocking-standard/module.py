@@ -6,6 +6,16 @@ from engine.utils import dynamic_loading
 
 
 class BlockingStandard(IndexingModule):
+    """
+    Formato config:
+    {
+        'keys': [
+            'key1',
+            'key2',
+            ...
+        ]
+    }
+    """
     def __init__(self, records, **kwargs):
         super(BlockingStandard, self).__init__(**kwargs)
         self.records = records
@@ -39,7 +49,7 @@ class BlockingStandard(IndexingModule):
         return concat
 
     @staticmethod
-    def required_config():
+    def config_json(**kwargs):
         return {
             'keys': {
                 'label': 'Keys',

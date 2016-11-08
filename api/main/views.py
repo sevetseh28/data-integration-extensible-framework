@@ -18,6 +18,6 @@ class StepConfigViewSet(viewsets.ModelViewSet):
     serializer_class = StepConfigSerializer
 
 
-def available_modules(request, step=''):
-    return JsonResponse(list_modules(step), safe=False)
+def available_modules(request, step='', project_id=None):
+    return JsonResponse(list_modules(step, project_id), safe=False)
 
