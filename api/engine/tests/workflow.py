@@ -22,31 +22,6 @@ config = {
             }
         }
     },
-    "schema-matching1": {
-        "selected_module": {
-            "name": "dummy",
-            "config": {}
-        }
-    },
-    "schema-matching2": {
-        "selected_module": {
-            "name": "manual",
-            "config": {
-                'matches': [
-                    {
-                        'source1': [
-                            'Column1',
-                            'Column2'
-                        ],
-                        'source2': [
-                            'Column2',
-                            'Column4'
-                        ]
-                    }
-                ]
-            }
-        }
-    },
     "standardization": {
         "source1": {
             "Column1": [
@@ -74,6 +49,37 @@ config = {
             ],
         }
     },
+    "segmentation": {
+        "selected_module": {
+            "name": "nop",
+            "config": {}
+        }
+    },
+    "schema-matching1": {
+        "selected_module": {
+            "name": "dummy",
+            "config": {}
+        }
+    },
+    "schema-matching2": {
+        "selected_module": {
+            "name": "manual",
+            "config": {
+                'matches': [
+                    {
+                        'source1': [
+                            'Column1',
+                            'Column2'
+                        ],
+                        'source2': [
+                            'Column2',
+                            'Column4'
+                        ]
+                    }
+                ]
+            }
+        }
+    },
     "indexing1": {
         "selected_module": {
             "name": "blocking-standard",
@@ -95,6 +101,9 @@ w.set_current_step("ExtractionStep", config["extraction"])
 w.execute_step()
 
 w.set_current_step("StandardizationStep", config["standardization"])
+w.execute_step()
+
+w.set_current_step("SegmentationStep", config["segmentation"])
 w.execute_step()
 
 w.set_current_step("SchemaMatchingStep", config["schema-matching1"])

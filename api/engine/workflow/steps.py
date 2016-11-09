@@ -169,6 +169,38 @@ class StandardizationStep(Step):
         return dynamic_loading.load_module(step, module, config=config)
 
 
+class SegmentationStep(Step):
+    """
+    Formato del config de Segmentation:
+    {
+        "selected_module": {
+            "name": "[nombre_modulo]",
+            "config": {}
+        }
+    }
+    """
+
+    def __init__(self, **kwargs):
+        super(SegmentationStep, self).__init__(**kwargs)
+        self.modules_directory = "segmentation"
+
+    @staticmethod
+    def pretty_name():
+        return "Segmentation"
+
+    def run_implementation(self):
+        self._segment_source(1)
+        self._segment_source(2)
+
+    def _segment_source(self, source_number):
+        dal = DALMongo(self.project_id)
+
+        records = dal.get_records(StandardizationStep().class_name, source_number)
+        module = self._load_module(records=records)
+
+        self._append_result_collection(module.run(), 'source{}'.format(source_number))
+
+
 class SchemaMatchingStep(Step):
     """
     Formato del config de SchemaMatching:
@@ -187,23 +219,6 @@ class SchemaMatchingStep(Step):
     @staticmethod
     def pretty_name():
         return "Schema matching"
-
-
-# class SegmentationStep(Step):
-#     """
-#     nop
-#     """
-#
-#     def __init__(self, **kwargs):
-#         super(SegmentationStep, self).__init__(**kwargs)
-#         self.modules_directory = "segmentation"
-#
-#     @staticmethod
-#     def pretty_name():
-#         return "Segmentation"
-#
-#     def run_implementation(self):
-#         pass
 
 
 class IndexingStep(Step):
@@ -244,6 +259,55 @@ class IndexingStep(Step):
     def _get_groups(self, source_number):
         dal = DALMongo(self.project_id)
 
-        records = dal.get_records(StandardizationStep().class_name, source_number)
+        records = dal.get_records(SegmentationStep().class_name, source_number)
         module = self._load_module(records=records)
         return module.run()
+
+# class ComparisonStep(Step):
+#     """
+#     Formato del config de comparacion:
+#     {
+#         "source1":{
+#             "[nombre_columna1]": [
+#                 {
+#                     "name":"[nombre_modulo]",
+#                     "config":{[config]}
+#                 },
+#                 ...
+#             }
+#         },
+#         "source2": idem
+#     }
+#     """
+#
+#     def __init__(self, **kwargs):
+#         super(ComparisonStep, self).__init__(**kwargs)
+#         self.modules_directory = "comparison"
+#
+#     @staticmethod
+#     def pretty_name():
+#         return "Comparison"
+#
+#     def run_implementation(self):
+#         self._standardize_source(1)
+#         self._standardize_source(2)
+#
+#     def _standardize_source(self, source_number):
+#         # Se obtienen los registros
+#         dal = DALMongo(self.project_id)
+#         records = dal.get_records(ExtractionStep().class_name, source_number)
+#
+#         # Se aplican las estandarizaciones para cada columna de cada registro
+#         for record in records:
+#             for col, standardizations in self.config["source{}".format(source_number)].items():
+#                 for standardization in standardizations:
+#                     module = self._load_module(standardization)
+#                     record.columns[col] = module.run(record.columns[col])
+#
+#         self._append_result_collection(records, "source{}_records".format(source_number))
+#
+#     def _load_module(self, standardization):
+#         step = self.modules_directory
+#         module = standardization['name']
+#         config = standardization['config']
+#         return dynamic_loading.load_module(step, module, config=config)
