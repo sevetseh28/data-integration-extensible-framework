@@ -326,3 +326,39 @@ class ComparisonStep(Step):
         module = comparison['name']
         config = comparison['config']
         return dynamic_loading.load_module(step, module, config=config)
+
+
+class ClassificationStep(Step):
+    """
+        Define cuales de los pares dados por el paso de comparacion corresponden a matches
+
+        Formato del config de clasificación:
+        {
+            "selected_module":{
+                "name":"[nombre_modulo]",
+                "config":{[config]}
+            }
+        }
+    """
+
+    def __init__(self, **kwargs):
+        super(ClassificationStep, self).__init__(**kwargs)
+        self.modules_directory = "classification"
+
+    @staticmethod
+    def pretty_name():
+        return "Classification"
+
+    def run_implementation(self):
+        # Se obtienen los vectores de similitud
+        dal = DALMongo(self.project_id)
+
+        simils = dal.get_similarity_vectors()
+
+        match_results = []
+        module = self._load_module()
+
+        for simil in simils:
+            match_results.append(module.run(simil))
+
+        self._append_result_collection(match_results)

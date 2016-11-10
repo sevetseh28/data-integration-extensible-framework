@@ -16,7 +16,7 @@ class Record:
     def to_json(self):
         json = {
             'columns': [c.to_json() for n, c in self.columns.items()]
-            }
+        }
 
         if self._id:
             json['_id'] = self._id
@@ -169,6 +169,43 @@ class SimilarityVector:
 
     def to_json(self):
         return self.__dict__
+
+    @staticmethod
+    def from_json(json):
+        return SimilarityVector(json['record1'], json['record2'], json['vector'])
+
+
+class MatchResultType(Enum):
+    no_match = 0
+    match = 1
+    undetermined = 2
+
+    def to_json(self):
+        return self.value
+
+    @staticmethod
+    def from_json(json):
+        return FieldType(json)
+
+
+class MatchResult:
+    def __init__(self, r1_id, r2_id, likelihood=None, match_type=MatchResultType.no_match):
+        self.record1 = r1_id
+        self.record2 = r2_id
+
+        self.match_type = match_type
+
+        self.likelihood = likelihood
+
+    def to_json(self):
+        json = self.__dict__
+        json['match_type'] = self.match_type.to_json()
+        return json
+
+    @staticmethod
+    def from_json(json):
+        return MatchResult(json['record1'], json['record2'], json["likelihood"],
+                           MatchResultType.from_json(json['match_type']))
 
 
 class FieldType(Enum):

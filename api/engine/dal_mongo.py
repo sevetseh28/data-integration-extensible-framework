@@ -72,7 +72,19 @@ class DALMongo:
 
         return [Record.from_json(r) for r in records]
 
+    def get_similarity_vectors(self):
+        """
+        Retorna los vectores de similaridad dados por el paso de comparacion
+        """
+        svs = self.get_all("ComparisonStep")
+
+        return [SimilarityVector.from_json(sv) for sv in svs]
+
     def get_indexing_groups(self):
+        """
+        Retorna los grupos dados por el paso de indexacion
+        :return: Lista de IndexingGroup
+        """
         c = self.get_connection()
         col = c[self.db_name]["IndexingStep"]
 
@@ -110,7 +122,7 @@ class DALMongo:
 
         return SchemaMatch.from_json(json)
 
-    def get_all(self, step, suffix, with_id = False):
+    def get_all(self, step, suffix="", with_id = False):
         """
         Retorna una coleccion dado el step y suffix
 

@@ -105,6 +105,16 @@ config = {
             "name": "equals",
             "config": {}
         }
+    },
+    "classification": {
+        "selected_module": {
+            "name": "fellegi-sunter",
+            "config": {
+                "lower_bound": 0.3,
+                "upper_bound": 0.5,
+                "vector_reducer": 'average'
+            }
+        }
     }
 }
 
@@ -133,4 +143,7 @@ w.set_current_step("IndexingStep", config["indexing2"])
 w.execute_step()
 
 w.set_current_step("ComparisonStep", config["comparison"])
+w.execute_step()
+
+w.set_current_step("ClassificationStep", config["classification"])
 w.execute_step()
