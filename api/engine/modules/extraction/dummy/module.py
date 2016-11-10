@@ -15,7 +15,7 @@ class DummyExtractor(ExtractionModule):
 
     def run(self):
         cant_cols = 10
-        cant_records = 100
+        cant_records = 20
 
         # se generan los records dummy
         for i in range(cant_records):

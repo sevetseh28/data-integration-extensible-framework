@@ -68,9 +68,27 @@ class DALMongo:
         :param source_number: numero de fuente (1 o 2)
         :return: registros de la fuente resultado de ejecutar el step
         """
-        records = self.get_all(step, "source{}_records".format(source_number))
+        records = self.get_all(step, "source{}_records".format(source_number), with_id=True)
 
         return [Record.from_json(r) for r in records]
+
+    def get_indexing_groups(self):
+        c = self.get_connection()
+        col = c[self.db_name]["IndexingStep"]
+
+        # Se obtienen las keys de los grupos
+        keys = [k["_id"] for k in col.aggregate([{"$group": {"_id": "$key"}}])]
+
+        groups = []
+        for key in keys:
+            group_source1 = [Record.from_json(r) for r in col.find({"key": key, "source": 1})]
+            group_source2 = [Record.from_json(r) for r in col.find({"key": key, "source": 2})]
+
+            group = IndexingGroup(key, group_source1, group_source2)
+
+            groups.append(group)
+
+        return groups
 
     def get_schema(self, source_number):
         """
@@ -83,7 +101,16 @@ class DALMongo:
 
         return [Column.from_json(c) for c in schema]
 
-    def get_all(self, step, suffix):
+    def get_schema_matching(self):
+        """
+        Retorna el esquema matching
+        """
+        schema = self.get_all("SchemaMatchingStep", "")
+        json = [match for match in schema]
+
+        return SchemaMatch.from_json(json)
+
+    def get_all(self, step, suffix, with_id = False):
         """
         Retorna una coleccion dado el step y suffix
 
@@ -91,9 +118,9 @@ class DALMongo:
         :param suffix: sufijo de la coleccion
         :return: documentos de la coleccion de ese step con ese sufijo
         """
-        return self._get_all(self._col_from_step_and_suffix(step, suffix))
+        return self._get_all(self._col_from_step_and_suffix(step, suffix), with_id)
 
-    def _get_all(self, collection_name):
+    def _get_all(self, collection_name, with_id=False):
         """
         Retorna toda una coleccion
 
@@ -102,8 +129,12 @@ class DALMongo:
         """
         c = self.get_connection()
 
+        extra = {'_id': False}
+        if with_id:
+            extra = None
+
         col = c[self.db_name][collection_name]
-        result = col.find({}, {'_id': False})
+        result = col.find({}, extra)
 
         c.close()
         return result

@@ -75,6 +75,14 @@ config = {
                             'Column2',
                             'Column4'
                         ]
+                    },
+{
+                        'source1': [
+                            'Column4'
+                        ],
+                        'source2': [
+                            'Column4'
+                        ]
                     }
                 ]
             }
@@ -89,6 +97,12 @@ config = {
     "indexing2": {
         "selected_module": {
             "name": "full",
+            "config": {}
+        }
+    },
+    "comparison": {
+        "": {
+            "name": "equals",
             "config": {}
         }
     }
@@ -116,4 +130,7 @@ w.set_current_step("IndexingStep", config["indexing1"])
 w.execute_step()
 
 w.set_current_step("IndexingStep", config["indexing2"])
+w.execute_step()
+
+w.set_current_step("ComparisonStep", config["comparison"])
 w.execute_step()

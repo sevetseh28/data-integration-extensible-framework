@@ -5,22 +5,45 @@ from enum import Enum
 
 
 class Record:
-    def __init__(self, columns=None):
+    def __init__(self, columns=None, id=None):
         # columns es un diccionario <string, column> donde el string es el nombre de la columna
         if columns is None:
             columns = {}
 
         self.columns = columns
+        self._id = id
 
     def to_json(self):
-        return {
-            n: c.to_json()
-            for n, c in self.columns.items()
+        json = {
+            'columns': [c.to_json() for n, c in self.columns.items()]
             }
+
+        if self._id:
+            json['_id'] = self._id
+
+        return json
+
+    def get_output_field_cols(self, out_field, cols):
+        result = ""
+        col_names = [c.name for c in cols]
+
+        for colname, col in self.columns.items():
+            if colname in col_names:
+                for f in col.fields:
+                    if f.output_field == out_field:
+                        result += str(f.value)
+
+        return result
 
     @staticmethod
     def from_json(json):
-        return Record({n: Column.from_json(c) for n, c in json.items()})
+        id = json.pop("_id") if "_id" in json else None
+        if 'key' in json: json.pop('key')
+        if 'source' in json: json.pop('source')
+
+        columns = {c["name"]: Column.from_json(c) for c in json['columns']}
+
+        return Record(columns, id)
 
 
 class Column:
@@ -33,7 +56,11 @@ class Column:
 
     @staticmethod
     def from_json(json):
-        return Column(json["name"], [Field.from_json(f) for f in json["fields"]])
+        fields = []
+        if "fields" in json:
+            fields = [Field.from_json(f) for f in json["fields"]]
+
+        return Column(json["name"], fields)
 
     def to_json(self, with_fields=True):
         json = {
@@ -106,6 +133,18 @@ class SchemaMatch:
                     "source2": [c.to_json(with_fields=False) for c in match['source2']]
                 } for match in self.schema_matches]
 
+    @staticmethod
+    def from_json(json):
+        matches = SchemaMatch()
+
+        for match in json:
+            cols1 = [Column.from_json(c) for c in match['source1']]
+            cols2 = [Column.from_json(c) for c in match['source2']]
+
+            matches.add_match(cols1, cols2)
+
+        return matches
+
 
 class IndexingGroup:
     def __init__(self, key, record_list1, record_list2):
@@ -116,6 +155,20 @@ class IndexingGroup:
     def to_json(self):
         return [dict(r.to_json(), source=1, key=self.key) for r in self.records1] + \
                [dict(r.to_json(), source=2, key=self.key) for r in self.records2]
+
+
+class SimilarityVector:
+    def __init__(self, r1_id, r2_id, vector=None):
+        if vector is None:
+            vector = []
+
+        self.record1 = r1_id
+        self.record2 = r2_id
+
+        self.vector = vector
+
+    def to_json(self):
+        return self.__dict__
 
 
 class FieldType(Enum):
