@@ -55,24 +55,50 @@ class ManualSchemaMatching(Module):
         cols1 = [c.name for c in dal.get_schema(1)]
         cols2 = [c.name for c in dal.get_schema(2)]
 
-        rows = [{
-                    'type': 'row',
-                    'cols': [
-                        {
-                            'type': 'select',
-                            'options': cols1
-                        },
-                        {
-                            'type': 'select',
-                            'options': cols2
-                        }
-                    ]
-                } for _ in range(max(len(cols1), len(cols2)))]
+        if len(cols1) > len(cols2):
+            options = cols2
+            labels = cols1
+        else:
+            options = cols1
+            labels = cols2
 
-        return {
-            'matches': {
-                'type': 'rows',
-                'rows': rows,
-                'label': 'Matches'
-            }
-        }
+        rows = [{
+                    'type': 'select',
+                    'options': options,
+                    'label': c
+                } for c in labels]
+
+        return [{
+                    'type': 'select',
+                    'options': options,
+                    'label': c
+                } for c in labels]
+
+        # @staticmethod
+        # def config_json(project_id):
+        #     dal = DALMongo(project_id)
+        #
+        #     cols1 = [c.name for c in dal.get_schema(1)]
+        #     cols2 = [c.name for c in dal.get_schema(2)]
+        #
+        #     rows = [{
+        #                 'type': 'row',
+        #                 'cols': [
+        #                     {
+        #                         'type': 'select',
+        #                         'options': cols1
+        #                     },
+        #                     {
+        #                         'type': 'select',
+        #                         'options': cols2
+        #                     }
+        #                 ]
+        #             } for _ in range(max(len(cols1), len(cols2)))]
+        #
+        #     return {
+        #         'matches': {
+        #             'type': 'rows',
+        #             'rows': rows,
+        #             'label': 'Matches'
+        #         }
+        #     }
