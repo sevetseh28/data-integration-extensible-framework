@@ -1,5 +1,3 @@
-from engine.dal_mongo import DALMongo
-from engine.models.record import *
 from engine.modules.indexing.indexing_module import IndexingModule
 from engine.modules.module import Module
 from engine.utils import dynamic_loading

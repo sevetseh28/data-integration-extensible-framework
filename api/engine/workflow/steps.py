@@ -362,3 +362,36 @@ class ClassificationStep(Step):
             match_results.append(module.run(simil))
 
         self._append_result_collection(match_results)
+
+
+class DataFusionStep(Step):
+    """
+        Fusiona los matches
+
+        Formato del config de clasificación:
+        {
+            "selected_module":{
+                "name":"[nombre_modulo]",
+                "config":{[config]}
+            }
+        }
+    """
+
+    def __init__(self, **kwargs):
+        super(DataFusionStep, self).__init__(**kwargs)
+        self.modules_directory = "data-fusion"
+
+    @staticmethod
+    def pretty_name():
+        return "Data fusion"
+
+    def run_implementation(self):
+        # Se obtienen los resultados de la comparación
+        dal = DALMongo(self.project_id)
+
+        matches = dal.get_matches()
+
+        module = self._load_module(project_id=self.project_id, matches=matches)
+        fused_records = module.run()
+
+        self._append_result_collection(fused_records)

@@ -115,6 +115,14 @@ config = {
                 "vector_reducer": 'average'
             }
         }
+    },
+    "data-fusion": {
+        "selected_module": {
+            "name": "preferred-source",
+            "config": {
+                "preferred-source": 2
+            }
+        }
     }
 }
 
@@ -146,4 +154,7 @@ w.set_current_step("ComparisonStep", config["comparison"])
 w.execute_step()
 
 w.set_current_step("ClassificationStep", config["classification"])
+w.execute_step()
+
+w.set_current_step("DataFusionStep", config["data-fusion"])
 w.execute_step()

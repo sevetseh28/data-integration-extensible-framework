@@ -23,6 +23,19 @@ class Record:
 
         return json
 
+    def add_columns(self, cols, prefix=''):
+        for col in cols:
+            self.add_column(col, prefix)
+
+    def add_column(self, col, prefix=''):
+        if prefix:
+            key = "{}-{}".format(prefix, col.name)
+            col.name = key
+        else:
+            key = col.name
+
+        self.columns[key] = col
+
     def get_output_field_cols(self, out_field, cols):
         result = ""
         col_names = [c.name for c in cols]
@@ -34,6 +47,12 @@ class Record:
                         result += str(f.value)
 
         return result
+
+    def get_col_names(self):
+        return [self.columns.keys()]
+
+    def get_cols(self, cols):
+        return [col for col in self.columns.values() if col.name in cols]
 
     @staticmethod
     def from_json(json):
@@ -189,23 +208,28 @@ class MatchResultType(Enum):
 
 
 class MatchResult:
-    def __init__(self, r1_id, r2_id, likelihood=None, match_type=MatchResultType.no_match):
+    def __init__(self, r1_id, r2_id, likelihood=None, match_type=MatchResultType.no_match, id=None):
         self.record1 = r1_id
         self.record2 = r2_id
 
         self.match_type = match_type
 
         self.likelihood = likelihood
+        self._id = id
 
     def to_json(self):
         json = self.__dict__
+
+        if not self._id:
+            json.pop('_id')
+
         json['match_type'] = self.match_type.to_json()
         return json
 
     @staticmethod
     def from_json(json):
         return MatchResult(json['record1'], json['record2'], json["likelihood"],
-                           MatchResultType.from_json(json['match_type']))
+                           MatchResultType.from_json(json['match_type']), id=json['_id'])
 
 
 class FieldType(Enum):

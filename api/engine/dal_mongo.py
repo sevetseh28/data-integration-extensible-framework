@@ -1,3 +1,4 @@
+# coding=utf-8
 from json import dumps
 
 from pymongo import MongoClient
@@ -72,6 +73,32 @@ class DALMongo:
 
         return [Record.from_json(r) for r in records]
 
+    def get_match_pair(self, match):
+        """
+        Retorna el par de registros de un match
+        """
+
+        r1 = self.get_all("SegmentationStep", "source1_records",  filters={"_id": match.record1}).next()
+        r2 = self.get_all("SegmentationStep", "source2_records",  filters={"_id": match.record2}).next()
+
+        return Record.from_json(r1), Record.from_json(r2)
+
+    def get_matches(self):
+        """
+        Retorna los matches de la clasificacion
+        """
+        results = self.get_all("ClassificationStep", filters={"match_type":1}, with_id=True)
+
+        return [MatchResult.from_json(r) for r in results]
+
+    # def get_classification_results(self):
+    #     """
+    #     Retorna los resultados de la clasificación
+    #     """
+    #     results = self.get_all("ClassificationStep")
+    #
+    #     return [MatchResult.from_json(r) for r in results]
+
     def get_similarity_vectors(self):
         """
         Retorna los vectores de similaridad dados por el paso de comparacion
@@ -100,6 +127,8 @@ class DALMongo:
 
             groups.append(group)
 
+        c.close()
+
         return groups
 
     def get_schema(self, source_number):
@@ -122,7 +151,7 @@ class DALMongo:
 
         return SchemaMatch.from_json(json)
 
-    def get_all(self, step, suffix="", with_id = False):
+    def get_all(self, step, suffix="", with_id=False, filters=None):
         """
         Retorna una coleccion dado el step y suffix
 
@@ -130,15 +159,17 @@ class DALMongo:
         :param suffix: sufijo de la coleccion
         :return: documentos de la coleccion de ese step con ese sufijo
         """
-        return self._get_all(self._col_from_step_and_suffix(step, suffix), with_id)
+        return self._get_all(self._col_from_step_and_suffix(step, suffix), with_id, filters)
 
-    def _get_all(self, collection_name, with_id=False):
+    def _get_all(self, collection_name, with_id=False, filters=None):
         """
         Retorna toda una coleccion
 
         :param collection_name: nombre de coleccion
         :return: documentos de la coleccion
         """
+        if filters is None:
+            filters = {}
         c = self.get_connection()
 
         extra = {'_id': False}
@@ -146,7 +177,7 @@ class DALMongo:
             extra = None
 
         col = c[self.db_name][collection_name]
-        result = col.find({}, extra)
+        result = col.find(filters, extra)
 
         c.close()
         return result
@@ -163,3 +194,4 @@ class DALMongo:
     def drop_database(self):
         c = self.get_connection()
         c.drop_database(self.db_name)
+        c.close()
