@@ -395,3 +395,32 @@ class DataFusionStep(Step):
         fused_records = module.run()
 
         self._append_result_collection(fused_records)
+
+
+class ExportStep(Step):
+    """
+    Formato del config de exportacion:
+    {
+        "selected_module": {
+            "name":"[un_nombre]",
+            "config":{[config]}
+        }
+    }
+    """
+
+    def __init__(self, **kwargs):
+        super(ExportStep, self).__init__(**kwargs)
+        self.modules_directory = "export"
+
+    @staticmethod
+    def pretty_name():
+        return "Export"
+
+    def run_implementation(self):
+        # Se obtienen los resultados del data fusion
+        dal = DALMongo(self.project_id)
+
+        records = dal.get_fused_records()
+
+        self._load_module(records=records).run()
+

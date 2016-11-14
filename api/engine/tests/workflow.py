@@ -123,6 +123,17 @@ config = {
                 "preferred-source": 2
             }
         }
+    },
+    "export": {
+        "selected_module": {
+            "name": "mongodb",
+            "config": {
+                'host': "localhost",
+                'port': 27017,
+                'db': "base",
+                'collection': "coso"
+            }
+        }
     }
 }
 
@@ -157,4 +168,7 @@ w.set_current_step("ClassificationStep", config["classification"])
 w.execute_step()
 
 w.set_current_step("DataFusionStep", config["data-fusion"])
+w.execute_step()
+
+w.set_current_step("ExportStep", config["export"])
 w.execute_step()

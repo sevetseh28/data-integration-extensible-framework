@@ -73,6 +73,14 @@ class DALMongo:
 
         return [Record.from_json(r) for r in records]
 
+    def get_fused_records(self):
+        """
+        Retorna los records finales
+        """
+        records = self.get_all("DataFusionStep")
+
+        return [Record.from_json(r) for r in records]
+
     def get_match_pair(self, match):
         """
         Retorna el par de registros de un match
