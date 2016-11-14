@@ -86,8 +86,8 @@ class DALMongo:
         Retorna el par de registros de un match
         """
 
-        r1 = self.get_all("SegmentationStep", "source1_records",  filters={"_id": match.record1}).next()
-        r2 = self.get_all("SegmentationStep", "source2_records",  filters={"_id": match.record2}).next()
+        r1 = self.get_all("SchemaMatchingStep", "source1_records", filters={"_id": match.record1}).next()
+        r2 = self.get_all("SchemaMatchingStep", "source2_records", filters={"_id": match.record2}).next()
 
         return Record.from_json(r1), Record.from_json(r2)
 
@@ -95,9 +95,26 @@ class DALMongo:
         """
         Retorna los matches de la clasificacion
         """
-        results = self.get_all("ClassificationStep", filters={"match_type":1}, with_id=True)
+        results = self.get_all("ClassificationStep", filters={"match_type": 1}, with_id=True)
 
         return [MatchResult.from_json(r) for r in results]
+
+    def get_non_matches(self):
+        """
+        Retorna los matches de la clasificacion
+        """
+        results = self.get_all("ClassificationStep", filters={"match_type": 1}, with_id=True)
+        results = [r for r in results]
+
+        s1_ids = [r["record1"] for r in results]
+        s2_ids = [r["record2"] for r in results]
+
+        nonmatches1 = self.get_all("SchemaMatchingStep", "source1_records", filters={"_id": {"$nin": s1_ids}},
+                                   with_id=True)
+        nonmatches2 = self.get_all("SchemaMatchingStep", "source2_records", filters={"_id": {"$nin": s2_ids}},
+                                   with_id=True)
+
+        return [Record.from_json(r) for r in nonmatches1] + [Record.from_json(r) for r in nonmatches2]
 
     # def get_classification_results(self):
     #     """

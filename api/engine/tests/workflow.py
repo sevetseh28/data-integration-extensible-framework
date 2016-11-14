@@ -55,13 +55,7 @@ config = {
             "config": {}
         }
     },
-    "schema-matching1": {
-        "selected_module": {
-            "name": "dummy",
-            "config": {}
-        }
-    },
-    "schema-matching2": {
+    "schema-matching": {
         "selected_module": {
             "name": "manual",
             "config": {
@@ -76,7 +70,7 @@ config = {
                             'Column4'
                         ]
                     },
-{
+                    {
                         'source1': [
                             'Column4'
                         ],
@@ -91,7 +85,7 @@ config = {
     "indexing1": {
         "selected_module": {
             "name": "blocking-standard",
-            "config": {"keys": ["Column1", "Column2"]}
+            "config": {"keys": ["s1_Column8", "s1_Column9"]}
         }
     },
     "indexing2": {
@@ -120,7 +114,7 @@ config = {
         "selected_module": {
             "name": "preferred-source",
             "config": {
-                "preferred-source": 2
+                "preferred-source": 1
             }
         }
     },
@@ -149,10 +143,7 @@ w.execute_step()
 w.set_current_step("SegmentationStep", config["segmentation"])
 w.execute_step()
 
-w.set_current_step("SchemaMatchingStep", config["schema-matching1"])
-w.execute_step()
-
-w.set_current_step("SchemaMatchingStep", config["schema-matching2"])
+w.set_current_step("SchemaMatchingStep", config["schema-matching"])
 w.execute_step()
 
 w.set_current_step("IndexingStep", config["indexing1"])

@@ -45,14 +45,12 @@ class Step(object):
 
         logging.info("Finished step " + self.class_name)
 
+    @abstractmethod
     def run_implementation(self):
         """
         Firma del run particular de cada step
-        Implementación por defecto
         """
-        module = self._load_module(project_id=self.project_id)
-
-        self._append_result_collection(module.run())
+        pass
 
     @staticmethod
     @abstractmethod
@@ -220,6 +218,22 @@ class SchemaMatchingStep(Step):
     def pretty_name():
         return "Schema matching"
 
+    def run_implementation(self):
+        """
+        Firma del run particular de cada step
+        Implementación por defecto
+        """
+        dal = DALMongo(self.project_id)
+        records1 = dal.get_records("SegmentationStep", 1)
+        records2 = dal.get_records("SegmentationStep", 2)
+
+        module = self._load_module(project_id=self.project_id, records1=records1, records2=records2)
+
+        records1, records2 = module.run()
+
+        self._append_result_collection(records1, 'source1_records')
+        self._append_result_collection(records2, 'source2_records')
+
 
 class IndexingStep(Step):
     """
@@ -259,7 +273,7 @@ class IndexingStep(Step):
     def _get_groups(self, source_number):
         dal = DALMongo(self.project_id)
 
-        records = dal.get_records(SegmentationStep().class_name, source_number)
+        records = dal.get_records(SchemaMatchingStep().class_name, source_number)
         module = self._load_module(records=records)
         return module.run()
 
@@ -293,7 +307,6 @@ class ComparisonStep(Step):
         dal = DALMongo(self.project_id)
 
         groups = dal.get_indexing_groups()
-        schmatches = dal.get_schema_matching()
 
         simils = []
 
@@ -303,14 +316,14 @@ class ComparisonStep(Step):
                     # Inicializa el vector de comparacion vacio
                     sv = SimilarityVector(r1._id, r2._id)
 
-                    for schmatch in schmatches.schema_matches:
+                    for col in r1.matched_cols():
                         # Inicializa la comparacion con 0
                         sv.vector.append(0)
 
                         for out_field, comparison in self.config.items():
                             # Se obienen los valores a comparar y se comparan
-                            out_field_value1 = r1.get_output_field_cols(out_field, schmatch['source1'])
-                            out_field_value2 = r2.get_output_field_cols(out_field, schmatch['source2'])
+                            out_field_value1 = r1.get_output_field_col(out_field, col)
+                            out_field_value2 = r2.get_output_field_col(out_field, col)
 
                             module = self._load_module(comparison)
 
@@ -421,6 +434,7 @@ class ExportStep(Step):
         dal = DALMongo(self.project_id)
 
         records = dal.get_fused_records()
+        records += dal.get_non_matches()
 
         self._load_module(records=records).run()
 

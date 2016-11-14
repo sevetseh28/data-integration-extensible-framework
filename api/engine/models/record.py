@@ -23,9 +23,23 @@ class Record:
 
         return json
 
+    def prefix_cols(self, prefix):
+        for col in self.columns.values():
+            if not col.name.startswith("__new__"):
+                self.columns.pop(col.name)
+                new_name = prefix + "_" + col.name
+                col.name = new_name
+                self.columns[new_name] = col
+
     def add_columns(self, cols, prefix=''):
         for col in cols:
             self.add_column(col, prefix)
+
+    def remove_cols(self, cols):
+        remove_cols = [c.name for c in cols]
+        for col in self.columns.keys():
+            if col in remove_cols:
+                self.columns.pop(col)
 
     def add_column(self, col, prefix=''):
         if prefix:
@@ -36,17 +50,34 @@ class Record:
 
         self.columns[key] = col
 
-    def get_output_field_cols(self, out_field, cols):
+    def get_output_field_col(self, out_field, col):
         result = ""
-        col_names = [c.name for c in cols]
 
-        for colname, col in self.columns.items():
-            if colname in col_names:
-                for f in col.fields:
-                    if f.output_field == out_field:
-                        result += str(f.value)
+        col = self.columns[col]
+        for f in col.fields:
+            if f.output_field == out_field:
+                result += str(f.value)
 
         return result
+
+    def get_sourcex_cols(self, source_number):
+        return [c for c in self.columns.values() if c.name.startswith("s{}".format(source_number))]
+
+    def get_new_cols(self):
+            return [c for c in self.columns.values() if c.name.startswith("__new__")]
+
+    def matched_cols(self):
+        return [c for c in self.columns.keys() if c.startswith("__new__")]
+
+    def join_cols(self, cols, new_name):
+        col_names = [c.name for c in cols]
+
+        new_column = Column(new_name)
+        for colname, col in self.columns.items():
+            if colname in col_names:
+                new_column.fields += col.fields
+
+        self.columns[new_name] = new_column
 
     def get_col_names(self):
         return [self.columns.keys()]
@@ -142,12 +173,14 @@ class SchemaMatch:
 
     def add_match(self, columns_source1, columns_source2):
         self.schema_matches.append({
+            "col_name": "__new__" + "-".join([c.name for c in columns_source1]),
             "source1": columns_source1,
             "source2": columns_source2,
         })
 
     def to_json(self):
         return [{
+                    "col_name": match["col_name"],
                     "source1": [c.to_json(with_fields=False) for c in match['source1']],
                     "source2": [c.to_json(with_fields=False) for c in match['source2']]
                 } for match in self.schema_matches]

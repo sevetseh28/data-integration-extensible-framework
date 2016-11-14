@@ -24,9 +24,6 @@ class PreferredSource(Module):
 
     def run(self):
         dal = DALMongo(self.project_id)
-        schematches = dal.get_schema_matching()
-        s1_unmatched_cols, s2_unmatched_cols = self._get_unmatched_cols(schematches, dal.get_schema(1),
-                                                                        dal.get_schema(2))
 
         fused_records = []
         for match in self.matches:
@@ -34,19 +31,18 @@ class PreferredSource(Module):
             [r1, r2] = dal.get_match_pair(match)
 
             # se extraen las columnas que no estan matcheadas
-            r1_remaining_cols = r1.get_cols(s1_unmatched_cols)
-            r2_remaining_cols = r2.get_cols(s2_unmatched_cols)
+            r1_remaining_cols = r1.get_sourcex_cols(1)
+            r2_remaining_cols = r2.get_sourcex_cols(2)
 
             # se crea un record con las columnas no matcheadas
             r3 = Record(id=match._id)
-            r3.add_columns(r1_remaining_cols, prefix="s1")
-            r3.add_columns(r2_remaining_cols, prefix="s2")
+            r3.add_columns(r1_remaining_cols)
+            r3.add_columns(r2_remaining_cols)
 
             # se agregan las columnas matcheadas de acuerdo al criterio
-            for schmatch in schematches.schema_matches:
-                preferred_record = r1 if self.preferred_source == 1 else r2
-                c = self.column_from_schmatch(preferred_record, schmatch)
-                r3.add_column(c)
+            preferred_record = r1 if self.preferred_source == 1 else r2
+            for col in preferred_record.get_new_cols():
+                r3.add_column(col)
 
             fused_records.append(r3)
 
