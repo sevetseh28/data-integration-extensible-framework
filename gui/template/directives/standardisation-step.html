@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-sm-6" ng-repeat="source in sources">
+        <div ng-repeat="o in standardisation.moduleSelections[source] track by $index">
+            <div class="row">
+                <div class="col-sm-4">
+                    <p class="c-black f-500 m-b-20">Column</p>
+                    <div class="select">
+                        <select class="form-control" ng-model="o.columnSelected" ng-options="c.name for c in standardisation.columns[source]">
+                    </select>
+                    </div>
+
+                </div>
+                <div class="col-sm-7">
+                    <p class="c-black f-500 m-b-20">Module</p>
+                    <div class="select">
+                        <select class="form-control" ng-model="o.moduleSelected" ng-options="m as m.name for m in o">
+                    </select>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button class="btn btn-danger waves-effect" ng-click="standardisation.removeOption($index, source)"><i class="zmdi zmdi-close"></i></button>
+                </div>
+            </div>
+
+            <div class="row" ng-repeat="(k, c) in o.moduleSelected.config">
+                <div class="col-sm-12">
+                    <dynamic-input config='c'></dynamic-input>
+                </div>
+            </div>
+
+            <hr>
+        </div>
+        <button ng-click='standardisation.addOption(source)' class="btn btn-primary btn-icon waves-effect waves-circle" style="float: right"><i class="zmdi zmdi-plus"></i></button>
+
+    </div>
+</div>

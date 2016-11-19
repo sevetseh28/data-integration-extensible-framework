@@ -1,0 +1,80 @@
+<header id="header" data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl">
+</header>
+
+<section id="main">
+
+    <section id="content">
+        <div class="container">
+
+            <div class="block-header">
+                <h2>Data Integration</h2>
+
+                
+            </div>
+
+            <!-- TABS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Main Workflow</h2>
+
+
+                    <ul class="actions">
+                        <li dropdown class="dropdown action-show">
+                            <a href="" dropdown-toggle>
+                                <i class="zmdi zmdi-more-vert"></i>
+                            </a>
+
+                            <div class="dropdown-menu pull-right">
+                                <p class="p-20">
+                                    You can put anything here
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body card-padding" data-ng-controller="StepsCtrl">
+
+                    <p>Go through the following 9 steps in order to integrate your data.
+                        <a target="_blank" href="http://angular-ui.github.io/bootstrap/#/tabs">Read more...</a></p>
+
+                    <tabset >
+                        
+                        <tab heading="{{tabs[0]['title']}}" ng-attr-active='tabs[0]["active"]' disable='tabs[0]["disabled"]'>
+                            <extraction-step></extraction-step>
+                        </tab>
+
+                        <tab heading="{{tabs[1]['title']}}" ng-attr-active='tabs[1]["active"]' disable='tabs[1]["disabled"]'>
+                            <standardisation-step></standardisation-step>
+                        </tab>
+
+                        <tab heading="{{tabs[2]['title']}}" ng-attr-active='tabs[2]["active"]' disable='tabs[2]["disabled"]'>
+                            <segmentation-step></segmentation-step>
+                        </tab>
+
+                        <tab heading="{{tabs[3]['title']}}" ng-attr-active='tabs[3]["active"]' disable='tabs[3]["disabled"]'>
+                            <schemamatching-step></schemamatching-step>
+                        </tab>
+
+                        <tab heading="{{tabs[4]['title']}}" ng-attr-active='tabs[4]["active"]' disable='tabs[4]["disabled"]'>
+                            
+                        </tab>
+
+                        <tab heading="{{tabs[5]['title']}}" ng-attr-active='tabs[5]["active"]' disable='tabs[5]["disabled"]'>
+                            
+                        </tab>
+
+                    </tabset>
+                    
+                    <button ng-click='runCurrentStep()' class="btn btn-lg bgm-lightgreen btn-icon waves-effect waves-circle" style="float: right"><i class="zmdi zmdi-arrow-forward"></i></button>
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+</section>
+
+<footer id="footer" data-ng-include="'template/footer.html'"></footer>

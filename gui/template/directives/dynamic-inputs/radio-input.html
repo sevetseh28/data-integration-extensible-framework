@@ -1,0 +1,10 @@
+<p class="c-black f-500 m-b-20">{{config.label}}</p>
+<form>
+    <div class="radio m-b-15" ng-repeat="o in config.options">
+        <label>
+            <input type="radio" value="{{o.value}}" ng-model="config.selected">
+            <i class="input-helper"></i>
+            {{o.label}}
+        </label>
+    </div>
+</form>

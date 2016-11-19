@@ -1,0 +1,34 @@
+<div ng-repeat="r in config.rows track by $index">
+    <div class="card-header">
+
+        <ul class="actions">
+            <li dropdown="" class="dropdown action-show">
+                <a href="" ng-click="removeRow($index)" aria-haspopup="true" aria-expanded="false">
+                    <i class="zmdi zmdi-close"></i>
+                </a>
+
+            </li>
+        </ul>
+        <!--<button class="btn btn-danger waves-effect" style="float: right"  ><i class="zmdi zmdi-close"></i></button>-->
+
+    </div>
+
+
+    <!--<row-input></row-input>-->
+    <dynamic-input config='r'></dynamic-input>
+
+
+
+
+
+
+    <!--<hr style="height:1px;border:none;color:#333;background-color:#333;" />-->
+
+
+    <hr/>
+
+</div>
+
+
+<button ng-click='addRow()' class="btn btn-primary btn-icon waves-effect waves-circle" style="float: right"><i class="zmdi zmdi-plus"></i></button>
+

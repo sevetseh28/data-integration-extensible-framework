@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-sm-12">
+        <p class="c-black f-500 m-b-20">Select schema matching module</p>
+
+        <div class="form-group">
+            <div class="fg-line">
+                <div class="select">
+                    <select class="form-control" ng-model="schemamatching.selectedModule" 
+                     
+                    ng-options="m as m.name for m in schemamatching.modules">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div> 
+            <dynamic-input ng-repeat="(k, c) in schemamatching.selectedModule['config']" config='c'></dynamic-input>
+        </div>
+
+    </div>
+
+</div>
