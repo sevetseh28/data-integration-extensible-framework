@@ -7,14 +7,16 @@ materialAdmin
     .controller('StepsCtrl', function ($scope, $window) {
         $scope.currentStep = 0;
 
-        $scope.sources = ['source1', 'source2']
+        $scope.sources = ['source1', 'source2'];
 
         $scope.steps = [
             'extraction',
             'standardisation',
             'segmentation',
-            'schemamatching'
-        ]
+            'schemamatching',
+            'indexing',
+            'comparison'
+        ];
 
         // Esta funcion es global y es llamada por cada directiva de step para cargar los modulos disponibles
         $scope.loadModules = function (step) {
@@ -53,9 +55,42 @@ materialAdmin
                         'name': 'CSV Extractor',
                         'config': {
                             'path': {
-                                'type': 'file',
-                                'name': 'Select CSV file',
-                                'value': ''
+                                'type': 'dropdown',
+                                'label': 'Select one option',
+                                'selectedoption': {  },
+                                'options': [
+                                    {
+                                        'label': 'esto es un slider',
+                                        'config': {
+                                            'input1': {
+                                                "type": "slider",
+                                                "label": "Chus a namber",
+                                                "value": 0.5,
+                                                "start": 0,
+                                                "end": 1,
+                                                "step": 0.1,
+                                                "color": "amber"
+                                            },
+                                            'path': {
+                                                'type': 'text',
+                                                'name': 'Ponga el path'
+                                            }
+                                        }
+                                    },
+                                    {
+                                        'label': 'esto es un checkbox',
+                                        'config': {
+                                            'input2': {
+                                                "type": "checkbox",
+                                                "label": "Check some boxes",
+                                                "options": [
+                                                    {"label": "Opcion 1", "value": false},
+                                                    {"label": "Opcion 2", "value": false}
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
                             }
                         }
                     },
@@ -77,8 +112,9 @@ materialAdmin
                             }
                         }
                     }]
-                }
+                };
                 $scope[step]['modules']['source2'] = angular.copy($scope[step]['modules']['source1'])
+
             } else if (step == 'segmentation') {
 
                 $scope[step]['modules'] = [
@@ -128,7 +164,6 @@ materialAdmin
                                             {
                                                 "type": "slider",
                                                 "label": "Chus a namber",
-                                                "inline": false,
                                                 "value": 0.5,
                                                 "start": 0,
                                                 "end": 1,
@@ -147,12 +182,88 @@ materialAdmin
             } else if (step == 'comparison') {
                 $scope[step]['modules'] = [
                     {
-                        "name": "Q-grams"
+                        "name": "Q-grams",
+                        "config": {
+                            "q": {
+                                "type": "slider",
+                                "label": "Size of Q-grams",
+                                "value": 2,
+                                "start": 1,
+                                "end": 10,
+                                "step": 1,
+                                "color": "green"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Levenshtein edit distance",
+                        "config": {}
+                    }
+                ]
+            }  else if (step == 'indexing') {
+                $scope[step]['modules'] = [
+                    {
+                        "name": "Full index",
+                        "config": {}
+                    },
+                    {
+                        "name": "Blocking standard",
+                        "config": {
+                            "blocking-key": {
+                                "type": "rows",
+                                "rows": [],
+                                "rowmodel": {
+                                    "type": "row",
+                                    "cols": [
+                                        {
+                                            "type": "dropdown",
+                                            'label': 'Select a column',
+                                            'selectedoption': {},
+                                            'options': [
+                                                {
+                                                    'label': 'Fullname <---> Nombre y apellido',
+                                                    'config': {}
+                                                },
+                                                {
+                                                    'label': 'Address <---> Address',
+                                                    'config': {}
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "dropdown",
+                                            'label': 'Select encoding',
+                                            'selectedoption': {},
+                                            'options': [
+                                                {
+                                                    'label': 'Soundex',
+                                                    'config': {}
+                                                },
+                                                {
+                                                    'label': 'Keep first N chars',
+                                                    'config': {
+                                                        "n": {
+                                                            "type": "slider",
+                                                            "label": "Value of N",
+                                                            "value": 2,
+                                                            "start": 1,
+                                                            "end": 10,
+                                                            "step": 1,
+                                                            "color": "red"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     }
                 ]
             }
 
-        }
+        };
 
         // INICIALIZACION DE OBJETOS DE steps
         $scope.extraction = {
@@ -161,7 +272,7 @@ materialAdmin
                 'source2': { 'config': {} }
             },
             modules: []
-        }
+        };
 
         $scope.standardisation = {
             selectedModules: {
@@ -170,17 +281,27 @@ materialAdmin
             },
             modules: [],
             columns: {}
-        }
+        };
 
         $scope.segmentation = {
             selectedModule: {},
             modules: []
-        }
+        };
 
         $scope.schemamatching = {
             selectedModule: {},
             modules: []
-        }
+        };
+
+        $scope.indexing = {
+            selectedModule: {},
+            modules: []
+        };
+
+        $scope.comparison = {
+            selectedModule: {},
+            modules: []
+        };
 
 
         $scope.runCurrentStep = function () {
@@ -193,20 +314,20 @@ materialAdmin
             $scope.tabs[$scope.currentStep]['active'] = true;
 
             //alert('Current step is now ' + $scope.tabs[$scope.currentStep]['title'] )
-        }
+        };
 
         $scope.tabs = [
             {
                 title: 'Extract',
                 directive: 'extraction-step',
                 active: true,
-                disabled: false,
+                disabled: false
             },
             {
                 title: 'Standardise',
                 directive: 'standardisation-step',
                 active: false,
-                disabled: true,
+                disabled: true
             },
             {
                 title: 'Segment',
@@ -254,4 +375,4 @@ materialAdmin
             }
         ];
 
-    })
+    });
