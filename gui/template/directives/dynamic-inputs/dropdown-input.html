@@ -1,0 +1,11 @@
+<select  chosen data-placeholder="{{config.label}}" class="w-100"
+         ng-model="config.selectedoption"
+         ng-options="o as o.label for o in config.options">
+    <option></option>
+</select>
+
+<br/>
+
+<div ng-repeat="input in config.selectedoption.config">
+    <dynamic-input config="input"></dynamic-input>
+</div>
