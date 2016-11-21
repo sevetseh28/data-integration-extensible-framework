@@ -235,6 +235,21 @@ angular.module('materialAdmin')
                             }
                         }
                     }]
+            } else if (step == 'classification') {
+                return [{
+                    "name": "Fellegi & Stunter",
+                    "config": {
+                        "potentialmatches": {
+                            "type": "rangeslider",
+                            "label": "Range for potential matches",
+                            "start": "0",
+                            "end": "1",
+                            "from": "0.5",
+                            "to": "0.7",
+                            "step": 0.01
+                        }
+                    }
+                }]
             }
         }
 

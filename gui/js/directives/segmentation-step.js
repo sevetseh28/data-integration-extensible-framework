@@ -6,10 +6,6 @@ angular.module("materialAdmin")
         controller: function ($scope) {
 
             $scope.extraction['title'] = 'Segmentation';
-            $scope.loadStep('segmentation');
-        },
-        link: function(scope) {
-            scope.loadStep('segmentation');
         }
     }
 });

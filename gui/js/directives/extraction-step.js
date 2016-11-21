@@ -6,7 +6,6 @@ angular.module("materialAdmin")
         controller: function ($scope) {
 
             $scope.extraction['title'] = 'Extraction';
-            $scope.loadStep('extraction');
 
             $scope.displayModuleGUISource1 = function (moduleName) {
                 $scope.extraction['isSelectedSource1'] = true;

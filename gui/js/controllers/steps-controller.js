@@ -15,7 +15,10 @@ materialAdmin
             'segmentation',
             'schemamatching',
             'indexing',
-            'comparison'
+            'comparison',
+            'classification',
+            'datafusion',
+            'export'
         ];
 
         // Esta funcion es global y es llamada por cada directiva de step para cargar los modulos disponibles
@@ -50,6 +53,8 @@ materialAdmin
                 }
 
             }  else if (step == 'indexing') {
+                $scope[step]['modules'] = APIService.getModules(step);
+            } else if (step == 'classification') {
                 $scope[step]['modules'] = APIService.getModules(step);
             }
         };
@@ -89,6 +94,11 @@ materialAdmin
 
         $scope.comparison = {
             outputFields: [],
+            modules: []
+        };
+
+        $scope.classification = {
+            selectedModule: {},
             modules: []
         };
 
