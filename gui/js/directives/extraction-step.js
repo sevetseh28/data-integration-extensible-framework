@@ -6,7 +6,7 @@ angular.module("materialAdmin")
         controller: function ($scope) {
 
             $scope.extraction['title'] = 'Extraction';
-            $scope.loadModules('extraction');
+            $scope.loadStep('extraction');
 
             $scope.displayModuleGUISource1 = function (moduleName) {
                 $scope.extraction['isSelectedSource1'] = true;
@@ -24,7 +24,7 @@ angular.module("materialAdmin")
             };
         },
         link: function(scope) {
-            scope.loadModules('extraction');
+            scope.loadStep('extraction');
         }
     }
 });
