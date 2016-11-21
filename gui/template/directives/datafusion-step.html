@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-sm-12">
+        <p class="c-black f-500 m-b-20">Select a data fusion module</p>
+
+        <div class="form-group">
+            <div class="fg-line">
+                <div class="select">
+                    <select class="form-control" ng-model="datafusion.selectedModule"
+
+                            ng-options="m as m.name for m in datafusion.modules">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <dynamic-input ng-repeat="(k, c) in datafusion.selectedModule['config']" config='c'></dynamic-input>
+        </div>
+
+    </div>
+
+</div>

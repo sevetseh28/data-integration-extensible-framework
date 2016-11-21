@@ -250,6 +250,20 @@ angular.module('materialAdmin')
                         }
                     }
                 }]
+            } else if (step == 'datafusion') {
+                return [{
+                    "name": "Source preference",
+                    "config": {
+                        "potentialmatches": {
+                            "type": "radio",
+                            "label": "Select the source to prefer",
+                            "options": [
+                                {"value": 1, "label": "Source 1"},
+                                {"value": 2, "label": "Source 2"}
+                            ]
+                        }
+                    }
+                }]
             }
         }
 

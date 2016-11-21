@@ -56,6 +56,8 @@ materialAdmin
                 $scope[step]['modules'] = APIService.getModules(step);
             } else if (step == 'classification') {
                 $scope[step]['modules'] = APIService.getModules(step);
+            } else if (step == 'datafusion') {
+                $scope[step]['modules'] = APIService.getModules(step);
             }
         };
 
@@ -98,6 +100,11 @@ materialAdmin
         };
 
         $scope.classification = {
+            selectedModule: {},
+            modules: []
+        };
+
+        $scope.datafusion = {
             selectedModule: {},
             modules: []
         };
