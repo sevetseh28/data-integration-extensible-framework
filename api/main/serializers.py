@@ -7,7 +7,7 @@ from rest_framework import serializers
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Project
-        fields = ('name', 'stepconfig_set')
+        fields = ('id', 'name', 'stepconfig_set')
 
 
 class StepConfigSerializer(serializers.HyperlinkedModelSerializer):

@@ -1,0 +1,44 @@
+<header id="header" data-ng-include="'template/header.html'" data-ng-controller="headerCtrl as hctrl">
+</header>
+
+<div class="container" ng-controller="ProjectsCtrl">
+
+    <div class="card card">
+        <div class="card-body card-padding">
+            <div ng-if="allProjects.length">
+                <div ng-repeat="project in allProjects" class="card project-card">
+                    <div class="card-header ch-alt">
+                        <a ng-click="go('/project/'+ project.id )" href="#"><h2 class="text-uppercase">{{ project.name }} <!--<span
+                                class="badge date-project-tag-next"> - </span>--></h2></a>
+                        <ul class="actions">
+                            <li tooltip-popup-delay="500" tooltip-append-to-body="true" tooltip="Remove project"
+                                tooltip-placement="top">
+                                <a data-ng-click="deleteProject(project.id)">
+                                    <i class="zmdi zmdi-delete"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="!allProjects.length">
+                <img style="margin: auto;display: block;" src="/img/no-projects.png">
+
+                <h2 style="color: rgb(102, 102, 102);margin:30px 0;">You don't have any projects :(</h2>
+            </div>
+
+                    <div class="form-group">
+
+                        <div class="fg-line">
+                            <input type="text" ng-model="newProject.name" class="form-control input-lg"
+                                   placeholder="New project name">
+                        </div>
+                    </div>
+
+                    <button ng-click='createProject()'
+                            class="btn btn-lg bgm-lightgreen btn-icon waves-effect waves-circle"
+                            style="float: right"><i class="zmdi zmdi-plus"></i></button>
+
+        </div>
+    </div>
+</div>
