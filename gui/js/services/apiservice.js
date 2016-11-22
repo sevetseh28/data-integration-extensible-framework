@@ -2,15 +2,73 @@
  * Created by Hernan on 20/11/2016.
  */
 angular.module('materialAdmin')
-    .factory('APIService', function ($http) {
+    .factory('APIService', function ($http, $q) {
 
-        function getData() {
-            $http.get(apiurl)
-                .success(function (data, status, config, headers) {
-                    myData = data;
-                })
-                .error(function () { //handler errors here
-                });
+        var baseUrl = 'http://localhost:8001/';
+
+        function get(path, ignoreloadingbar) {
+            var deferred = $q.defer();
+
+            return $http.get(baseUrl+path+"/", {
+                headers: {'Content-Type': 'application/json'}
+            }).success(function (data) {
+                deferred.resolve(data);
+            });
+        }
+
+        function post(path, params, ignoreloadingbar) {
+            var deferred = $q.defer();
+
+            return $http.post(baseUrl+path+"/", params, {
+                headers: {'Content-Type': 'application/json'}
+            }).success(function (data) {
+                deferred.resolve(data);
+            });
+        }
+
+
+        function put(path, params, ignoreloadingbar) {
+            var deferred = $q.defer();
+
+            return $http.put(baseUrl+path+"/", params, {
+                headers: {'Content-Type': 'application/json'}
+            }).success(function (data) {
+                deferred.resolve(data);
+            });
+        }
+
+        function del(path, ignoreloadingbar) {
+            var deferred = $q.defer();
+
+            return $http.delete(baseUrl+path+"/", {
+                headers: {'Content-Type': 'application/json'}
+            }).success(function (data) {
+                deferred.resolve(data);
+            });
+        }
+        //
+        // function getData() {
+        //     $http.get(apiurl)
+        //         .success(function (data, status, config, headers) {
+        //             myData = data;
+        //         })
+        //         .error(function () { //handler errors here
+        //         });
+        // }
+
+        function getProjects() {
+            var path = 'projects';
+            return get(path);
+        }
+
+        function createProject(project) {
+            var path = 'projects';
+            return post(path, project);
+        }
+
+        function deleteProject(idProject) {
+            var path = 'projects/'+idProject;
+            return del(path);
         }
 
         function getColumnsSource1() {
@@ -301,6 +359,10 @@ angular.module('materialAdmin')
             getColumnsSource1: getColumnsSource1,
             getColumnsSource2: getColumnsSource2,
             getOutputFields: getOutputFields,
-            getModules: getModules
+            getModules: getModules,
+            //Projects
+            getProjects:getProjects,
+            deleteProject:deleteProject,
+            createProject:createProject,
         }
     });

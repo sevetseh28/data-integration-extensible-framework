@@ -17,7 +17,7 @@ class NopSegmentation(Module):
         for r in self.records:
             for cname, c in r.columns.items():
                 for f in c.fields:
-                    f.output_field = ""
+                    f.output_field = cname
 
         return self.records
 
