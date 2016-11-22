@@ -43,11 +43,11 @@ angular.module('materialAdmin')
                         'config': {
                             'char': {
                                 'type': 'text',
-                                'name': 'nothing'
+                                'label': 'nothing'
                             },
                             'char2': {
                                 'type': 'text',
-                                'name': 'nothing 2'
+                                'label': 'nothing 2'
                             }
                         }
                     },
@@ -56,7 +56,7 @@ angular.module('materialAdmin')
                         'config': {
                             'char': {
                                 'type': 'text',
-                                'name': 'Input char to delete'
+                                'label': 'Input char to delete'
                             }
                         }
                     }
@@ -85,7 +85,7 @@ angular.module('materialAdmin')
                                         },
                                         'path': {
                                             'type': 'text',
-                                            'name': 'Ponga el path'
+                                            'label': 'Ponga el path'
                                         }
                                     }
                                 },
@@ -111,7 +111,7 @@ angular.module('materialAdmin')
                         'config': {
                             'path': {
                                 'type': 'text',
-                                'name': 'Ponga el path'
+                                'label': 'Ponga el path'
                             }
                         }
                     },
@@ -263,6 +263,36 @@ angular.module('materialAdmin')
                             ]
                         }
                     }
+                }]
+            } else if (step == 'export') {
+                return [{
+                    "name": "MongoDB",
+                    "config": {
+                        "ip": {
+                            "type": "text",
+                            "label": "Database IP address"
+                        },
+                        "user": {
+                            "type": "text",
+                            "label": "Username"
+                        },
+                        "pass": {
+                            "type": "text",
+                            "label": "Password"
+                        },
+                        "db": {
+                            "type": "text",
+                            "label": "Database name"
+                        },
+                        "collection": {
+                            "type": "text",
+                            "label": "Collection name"
+                        }
+                    }
+                },
+                {
+                    "name": "CSV",
+                    "config": {}
                 }]
             }
         }

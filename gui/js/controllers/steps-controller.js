@@ -58,6 +58,8 @@ materialAdmin
                 $scope[step]['modules'] = APIService.getModules(step);
             } else if (step == 'datafusion') {
                 $scope[step]['modules'] = APIService.getModules(step);
+            } else if (step == 'export') {
+                $scope[step]['modules'] = APIService.getModules(step);
             }
         };
 
@@ -105,6 +107,11 @@ materialAdmin
         };
 
         $scope.datafusion = {
+            selectedModule: {},
+            modules: []
+        };
+
+        $scope.export = {
             selectedModule: {},
             modules: []
         };
