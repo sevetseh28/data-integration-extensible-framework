@@ -270,6 +270,7 @@ class FieldType(Enum):
     number = 2
     date = 3
     boolean = 4
+    notexist = 5
 
     def to_json(self):
         return self.value
