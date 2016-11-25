@@ -2,6 +2,8 @@ from django.http import JsonResponse
 
 from engine.utils.dynamic_loading import list_modules
 from rest_framework import viewsets
+
+from engine.workflow.workflow import Workflow
 from serializers import *
 
 
@@ -19,5 +21,18 @@ class StepConfigViewSet(viewsets.ModelViewSet):
 
 
 def available_modules(request, step='', project_id=None):
+    return JsonResponse(list_modules(step, project_id), safe=False)
+
+def run(request):
+    # Se obtienen los parametros del request
+    project_id = request.POST['project_id']
+    step = request.POST['step']
+    config = request.POST['config']
+
+    # Llamado a workflow
+    w = Workflow(project_id)
+    w.set_current_step(step, config)
+    w.execute_step()
+
     return JsonResponse(list_modules(step, project_id), safe=False)
 

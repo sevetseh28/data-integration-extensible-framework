@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
     url(r'^available-modules/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.available_modules),
+    url(r'^run/', views.run),
 ]

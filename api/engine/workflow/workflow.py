@@ -18,12 +18,4 @@ class Workflow:
 
     def execute_step(self):
         # se ejecuta el step
-        self.step.run()
-
-        # se avanza al siguiente step
-        if type(self.step) in STEP_TABLE:
-            result = STEP_TABLE[type(self.step)]().class_name
-        else:
-            result = "no hay mas estados"
-
-        return result
+        return self.step.run()

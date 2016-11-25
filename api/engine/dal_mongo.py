@@ -12,7 +12,6 @@ COL_STEP_PREFIXES = {
 
 }
 
-
 class DALMongo:
     def __init__(self, project_id=None):
         self.db_name = 'project{}'.format(project_id)

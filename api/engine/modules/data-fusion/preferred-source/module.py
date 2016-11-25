@@ -1,3 +1,5 @@
+import time
+
 from engine.dal_mongo import DALMongo
 from engine.models.record import Record, Column
 from engine.modules.module import Module
@@ -73,8 +75,6 @@ class PreferredSource(Module):
     def _get_unmatched_cols(schematches, schema1, schema2):
         schema1 = [c.name for c in schema1]
         schema2 = [c.name for c in schema2]
-
-
 
         for schmatch in schematches.schema_matches:
             matched_cols1 = [c.name for c in schmatch["source1"]]
