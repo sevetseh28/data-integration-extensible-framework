@@ -33,13 +33,41 @@ class MongodbExtractor(ExtractionModule):
         documents = collection.find(filters,extra)
         columns = []
         for doc in documents:
-            record = Record()
-            for key, value in doc.items():
-                if type(value) is int or type(value) is float or type(value) is str:
-                    column = Column(key)
-                    self.add_to_schema(column)
-                    if not [c for c in columns if c.name == key ]:
-                        columns.append(column)
+            self.get_all_columns(doc,"")
+        for doc in documents:
+            self.records.append(Record())
+            for col in self.schema:
+                colkeys = col.name.split(".")
+                valuedoc = doc
+                for k in colkeys:
+                    if type(valuedoc) is dict:
+                        if valuedoc[k]:
+                            valuedoc = valuedoc[k]
+                        else:
+                            valuedoc = Enum.
+
+
+
+
+
+
+
+
+
+    def get_all_columns(self,document,concat):
+        for key,value in document.items():
+            if type(value) is int or type(value) is float or type(value) is str:
+                column = Column(concat+key)
+                self.add_to_schema(column)
+            elif type(value) is dict:
+                concat += key+"."
+                self.get_all_columns(value,concat)
+            else:
+                continue
+
+
+
+
 
 
 
