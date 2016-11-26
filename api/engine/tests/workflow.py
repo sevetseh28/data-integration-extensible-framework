@@ -11,8 +11,13 @@ config = {
     "extraction": {
         "source1": {
             "selected_module": {
-                "name": "dummy",
-                "config": {}
+                "name": "mongo-extractor",
+                "config": {
+            'host': "localhost",
+            'port': 27017,
+            'db': "tweetsdb",
+            'collection': "tweetslite",
+        }
             }
         },
         "source2": {
@@ -24,7 +29,7 @@ config = {
     },
     "standardization": {
         "source1": {
-            "Column1": [
+            "source": [
                 {
                     "name": "lowercase",
                     "config": {}
@@ -62,8 +67,8 @@ config = {
                 'matches': [
                     {
                         'source1': [
-                            'Column1',
-                            'Column2'
+                            'id',
+                            'retweeted'
                         ],
                         'source2': [
                             'Column2',
@@ -72,7 +77,7 @@ config = {
                     },
                     {
                         'source1': [
-                            'Column4'
+                            'id'
                         ],
                         'source2': [
                             'Column4'
@@ -85,7 +90,7 @@ config = {
     "indexing1": {
         "selected_module": {
             "name": "blocking-standard",
-            "config": {"keys": ["s1_Column8", "s1_Column9"]}
+            "config": {"keys": ["s1_id", "s1_retweeted"]}
         }
     },
     "indexing2": {
