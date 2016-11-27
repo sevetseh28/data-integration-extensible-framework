@@ -9,7 +9,7 @@ angular.module('materialAdmin')
         function get(path, ignoreloadingbar) {
             var deferred = $q.defer();
 
-            return $http.get(baseUrl+path+"/", {
+            return $http.get(baseUrl + path + "/", {
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 deferred.resolve(data);
@@ -19,7 +19,7 @@ angular.module('materialAdmin')
         function post(path, params, ignoreloadingbar) {
             var deferred = $q.defer();
 
-            return $http.post(baseUrl+path+"/", params, {
+            return $http.post(baseUrl + path + "/", params, {
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 deferred.resolve(data);
@@ -30,7 +30,7 @@ angular.module('materialAdmin')
         function put(path, params, ignoreloadingbar) {
             var deferred = $q.defer();
 
-            return $http.put(baseUrl+path+"/", params, {
+            return $http.put(baseUrl + path + "/", params, {
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 deferred.resolve(data);
@@ -40,12 +40,13 @@ angular.module('materialAdmin')
         function del(path, ignoreloadingbar) {
             var deferred = $q.defer();
 
-            return $http.delete(baseUrl+path+"/", {
+            return $http.delete(baseUrl + path + "/", {
                 headers: {'Content-Type': 'application/json'}
             }).success(function (data) {
                 deferred.resolve(data);
             });
         }
+
         //
         // function getData() {
         //     $http.get(apiurl)
@@ -67,7 +68,7 @@ angular.module('materialAdmin')
         }
 
         function deleteProject(idProject) {
-            var path = 'projects/'+idProject;
+            var path = 'projects/' + idProject;
             return del(path);
         }
 
@@ -121,50 +122,53 @@ angular.module('materialAdmin')
                 ]
 
             } else if (step == 'extraction') {
-                return [{
-                    'name': 'CSV Extractor',
-                    'config': {
-                        'path': {
-                            'type': 'dropdown',
-                            'label': 'Select one option',
-                            'selectedoption': {},
-                            'options': [
-                                {
-                                    'label': 'esto es un slider',
-                                    'config': {
-                                        'input1': {
-                                            "type": "slider",
-                                            "label": "Chus a namber",
-                                            "value": 0.5,
-                                            "start": 0,
-                                            "end": 1,
-                                            "step": 0.1,
-                                            "color": "amber"
-                                        },
-                                        'path': {
-                                            'type': 'text',
-                                            'label': 'Ponga el path'
-                                        }
-                                    }
-                                },
-                                {
-                                    'label': 'esto es un checkbox',
-                                    'config': {
-                                        'input2': {
-                                            "type": "checkbox",
-                                            "label": "Check some boxes",
-                                            "options": [
-                                                {"label": "Opcion 1", "value": false},
-                                                {"label": "Opcion 2", "value": false}
-                                            ]
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                },
+                return [
                     {
+                        'id': 'csv',
+                        'name': 'CSV Extractor',
+                        'config': {
+                            'path': {
+                                'type': 'dropdown',
+                                'label': 'Select one option',
+                                'selectedoption': {},
+                                'options': [
+                                    {
+                                        'label': 'esto es un slider',
+                                        'config': {
+                                            'input1': {
+                                                "type": "slider",
+                                                "label": "Chus a namber",
+                                                "value": 0.5,
+                                                "start": 0,
+                                                "end": 1,
+                                                "step": 0.1,
+                                                "color": "amber"
+                                            },
+                                            'path': {
+                                                'type': 'text',
+                                                'label': 'Ponga el path'
+                                            }
+                                        }
+                                    },
+                                    {
+                                        'label': 'esto es un checkbox',
+                                        'config': {
+                                            'input2': {
+                                                "type": "checkbox",
+                                                "label": "Check some boxes",
+                                                "options": [
+                                                    {"label": "Opcion 1", "value": false},
+                                                    {"label": "Opcion 2", "value": false}
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        'id': 'postgres',
                         'name': 'PostgreSQL Extractor',
                         'config': {
                             'path': {
@@ -174,6 +178,7 @@ angular.module('materialAdmin')
                         }
                     },
                     {
+                        'id': 'mongo',
                         'name': 'MongoDB Extractor',
                         'config': {
                             'path': {
@@ -348,11 +353,21 @@ angular.module('materialAdmin')
                         }
                     }
                 },
-                {
-                    "name": "CSV",
-                    "config": {}
-                }]
+                    {
+                        "name": "CSV",
+                        "config": {}
+                    }]
             }
+        }
+
+        function run(project_id, step, config){
+            var path = 'run';
+            var params = {
+                project_id:project_id,
+                step:step,
+                config: config
+            };
+            return post(path, params);
         }
 
         return {
@@ -360,9 +375,10 @@ angular.module('materialAdmin')
             getColumnsSource2: getColumnsSource2,
             getOutputFields: getOutputFields,
             getModules: getModules,
+            run:run,
             //Projects
-            getProjects:getProjects,
-            deleteProject:deleteProject,
-            createProject:createProject,
+            getProjects: getProjects,
+            deleteProject: deleteProject,
+            createProject: createProject,
         }
     });

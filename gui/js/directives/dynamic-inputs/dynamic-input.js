@@ -1,30 +1,39 @@
 angular.module("materialAdmin")
-.directive('dynamicInput', function($compile) {
-    return {
-        restrict: "E",
-        template: "",
-        scope: {
-            config: '='
-        },
-        link: function(scope, element, attrs) {
+    .directive('dynamicInput', function ($compile) {
+        return {
+            restrict: "E",
+            template: "",
+            scope: {
+                config: '=',
+                returnValue: '=',
+                configId: '@'
+            },
+            link: function (scope, element, attrs) {
 
-           function compile_directive() {
+                scope.returnValue = scope.returnValue || {};
 
-                var directive = '<'+scope.config.type+'-input></'+scope.config.type+'-input>';
-                /*
-                $compile(directive)(scope, function(cloned, scope){
-                    element.append(cloned);
-                });*/
-                element.html(directive);
-                $compile(element.contents())(scope);
-                //alert('Dynamic input compilado')
+                scope.debug = function(){
+                    scope.config.a=1;
+                    2+2
+                };
+
+                function compile_directive() {
+
+                    var directive = '<' + scope.config.type + '-input></' + scope.config.type + '-input><button ng-click="debug()">lala</button>';
+                    /*
+                     $compile(directive)(scope, function(cloned, scope){
+                     element.append(cloned);
+                     });*/
+                    element.html(directive);
+                    $compile(element.contents())(scope);
+                    //alert('Dynamic input compilado')
+                }
+
+                scope.$watch('config.type', compile_directive);
+
+
             }
 
-            scope.$watch('config.type', compile_directive);
 
-        },
-
-
-
-    }
-});
+        }
+    });

@@ -2,13 +2,39 @@
  * Created by Hernan on 20/11/2016.
  */
 angular.module("materialAdmin")
-    .directive('dropdownInput', function() {
+    .directive('dropdownInput', function () {
         return {
             restrict: "E",
             scope: true,
-            templateUrl: "template/directives/dynamic-inputs/dropdown-input.html"
+            templateUrl: "template/directives/dynamic-inputs/dropdown-input.html",
+            link: function (scope, element, attrs) {
+
+                scope.childReturnValues = [];
+                scope.loadChildControls = function () {
+                    for(var k in scope.config.selectedoption.config){
+                        scope.childReturnValues[k] = {};
+                    }
+                };
+                scope.loadChildControl = function (k) {
+                    scope.childReturnValues[k] = {};
+                };
+
+                function appendReturnValue() {
+                    var ret = {};
+
+                    for (var id in scope.childReturnValues) {
+                        ret[id] = scope.childReturnValues[id][id]
+                    }
+
+                    scope.returnValue[scope.configId] = ret
+                }
+
+                scope.$watch('config',appendReturnValue, true);
+
+            }
 
         }
+
     });
 
 // EXAMPLE OF A DROPDOWN

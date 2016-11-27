@@ -15,7 +15,7 @@
 
 
         <div> 
-            <dynamic-input ng-repeat="(k, c) in extraction.selectedModules[s]['config']" config='c'></dynamic-input>
+            <dynamic-input ng-repeat="(k, c) in extraction.selectedModules[s]['config']" return-value='extraction.returnValue[s].selected_module.config' config-id='{{ k }}' config='c'></dynamic-input>
         </div>
 
     </div>

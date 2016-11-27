@@ -1,3 +1,5 @@
+import json
+
 from django.http import JsonResponse
 
 from engine.utils.dynamic_loading import list_modules
@@ -25,9 +27,10 @@ def available_modules(request, step='', project_id=None):
 
 def run(request):
     # Se obtienen los parametros del request
-    project_id = request.POST['project_id']
-    step = request.POST['step']
-    config = request.POST['config']
+    params = json.loads(request.body)
+    project_id = params['project_id']
+    step = params['step']
+    config = params['config']
 
     # Llamado a workflow
     w = Workflow(project_id)

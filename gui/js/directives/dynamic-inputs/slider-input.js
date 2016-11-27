@@ -13,6 +13,15 @@ angular.module("materialAdmin")
             <small class="c-gray">Current value: {{config.value}}</small>\
                <br/>\
                 <br/>\
-            <div slider class="input-slider m-b-25" ng-model="config.value" start={{config.start}} end={{config.end}} step={{config.step}} data-is-color={{config.color}}></div>'
+            <div slider class="input-slider m-b-25" ng-model="config.value" start={{config.start}} end={{config.end}} step={{config.step}} data-is-color={{config.color}}></div>',
+            link: function (scope, element, attrs) {
+
+                function appendReturnValue() {
+                    scope.returnValue[scope.configId] = scope.config.value
+                }
+
+                scope.$watch('config', appendReturnValue, true);
+
+            }
         }
     });

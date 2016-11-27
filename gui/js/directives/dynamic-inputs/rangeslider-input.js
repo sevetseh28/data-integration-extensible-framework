@@ -11,7 +11,18 @@ angular.module("materialAdmin")
                <br/>\
                 <br/>\
                 <div slider class="input-slider-range" ng-from="config.from" ng-to="config.to" start={{config.start}} end={{config.end}} step={{config.step}}></div>',
-            controller: function ($scope) {
+            link: function (scope, element, attrs) {
+
+                function appendReturnValue() {
+                    scope.returnValue[scope.configId] = {
+                        from: scope.config.from,
+                        to: scope.config.to
+
+                    }
+                }
+
+                scope.$watch('config', appendReturnValue, true);
+
             }
         }
     });
