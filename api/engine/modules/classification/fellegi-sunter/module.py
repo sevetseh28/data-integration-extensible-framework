@@ -8,7 +8,7 @@ from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
 
 
-class FellegiSunterComparison(Module):
+class FellegiSunterClassification(Module):
     """
         Devuelve
             - match si la similitud esta por encima de upper bound
@@ -17,13 +17,14 @@ class FellegiSunterComparison(Module):
 
         Formato config:
         {
-            "lower_bound": [numero]
-            "upper_bound": [numero]
+            "lower_bound": [numero],
+            "upper_bound": [numero],
+            "vector_reducer": [funcion de reduccion]
         }
     """
 
     def __init__(self, **kwargs):
-        super(FellegiSunterComparison, self).__init__(**kwargs)
+        super(FellegiSunterClassification, self).__init__(**kwargs)
 
         # Si no hay una funcion de reducciond e vector definida, se asigna la de promedio
         if 'vector_reducer' not in self.config:
@@ -53,26 +54,26 @@ class FellegiSunterComparison(Module):
     def config_json(**kwargs):
         # Se cargan las funciones de reduccion del vector
         vector_reducers = []
-        for func in dir(FellegiSunterComparison):
+        for func in dir(FellegiSunterClassification):
             m = re.search('_vector_(.+)', func)
             if m:
                 vector_reducers.append(m.group(1))
 
-
         return {
-            'upper_bound': {
-                'type': 'number',
-                'label': 'Upper bound'
+            'thresholds': {
+                "type": "rangeslider",
+                "label": "Range for potential matches",
+                "start": "0",
+                "end": "1",
+                "from": "0.5",
+                "to": "0.7",
+                "step": 0.01
             },
-            'lower_bound': {
-                'type': 'number',
-                'label': 'Lower bound'
-            },
-            'vector_reducer': {
-                'type': 'select',
-                'label': 'Vector reducer',
-                'options': vector_reducers
-            }
+            # 'vector_reducer': {
+            #     'type': 'select',
+            #     'label': 'Vector reducer',
+            #     'options': vector_reducers
+            # }
         }
 
     @staticmethod

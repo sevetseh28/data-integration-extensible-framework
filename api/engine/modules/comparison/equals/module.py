@@ -18,7 +18,3 @@ class EqualsComparison(Module):
 
     def run(self, val1, val2):
         return int(val1 == val2)
-
-    @staticmethod
-    def config_json(**kwargs):
-        return {}

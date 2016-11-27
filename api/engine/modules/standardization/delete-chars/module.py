@@ -32,7 +32,7 @@ class DeleteChars(Module):
     def config_json(**kwargs):
         return {
             'chars': {
-                'label': 'Characters',
+                'label': 'Characters to delete',
                 'type': 'text'
             }
         }

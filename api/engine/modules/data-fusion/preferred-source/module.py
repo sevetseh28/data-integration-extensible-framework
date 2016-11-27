@@ -54,9 +54,12 @@ class PreferredSource(Module):
     def config_json(**kwargs):
         return {
             'preferred-source': {
-                'label': 'Preferred source',
-                'type': 'select',
-                'options': [1, 2]
+                'label': 'Select the preferred source',
+                'type': 'radio',
+                'options': [
+                    {"value": 1, "label": "Source 1"},
+                    {"value": 2, "label": "Source 2"}
+                ]
             }
         }
 

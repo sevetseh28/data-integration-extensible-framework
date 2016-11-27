@@ -1,3 +1,4 @@
+from engine.dal_mongo import DALMongo
 from engine.modules.indexing.indexing_module import IndexingModule
 from engine.modules.module import Module
 from engine.utils import dynamic_loading
@@ -14,6 +15,7 @@ class BlockingStandard(IndexingModule):
         ]
     }
     """
+
     def __init__(self, records, **kwargs):
         super(BlockingStandard, self).__init__(**kwargs)
         self.records = records
@@ -47,15 +49,51 @@ class BlockingStandard(IndexingModule):
         return concat
 
     @staticmethod
-    def config_json(**kwargs):
+    def config_json(project_id):
+        dal = DALMongo(project_id)
+
+        cols1 = [c.name for c in dal.get_schema(1)]
+        cols2 = [c.name for c in dal.get_schema(2)]
+
+        encoding_configs = dynamic_loading.list_modules('encoding')
+
+        rowmodel = {
+            'type': 'row',
+            'cols': [
+                {
+                    'type': 'dropdown',
+                    'label': 'Select a column',
+                    'selectedoption': {},
+                    'options': cols1
+                },
+                {
+                    "type": "dropdown",
+                    'label': 'Select encoding',
+                    'selectedoption': {},
+                    'options': encoding_configs
+                }
+            ]
+        }
+
         return {
             'keys': {
+                'type': 'rows',
+                'rows': [],
                 'label': 'Keys',
-                'type': 'list'
-            },
-            'encoding': {
-                'label': 'Encoding',
-                'type': 'select',
-                'options': dynamic_loading.list_modules('encoding')
+                "rowmodel": rowmodel
             }
         }
+
+        # @staticmethod
+        # def config_json(**kwargs):
+        #     return {
+        #         'keys': {
+        #             'label': 'Keys',
+        #             'type': 'list'
+        #         },
+        #         'encoding': {
+        #             'label': 'Encoding',
+        #             'type': 'select',
+        #             'options': dynamic_loading.list_modules('encoding')
+        #         }
+        #     }
