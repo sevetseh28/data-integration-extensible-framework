@@ -1,4 +1,4 @@
-<div ng-repeat="r in config.rows track by $index">
+<div ng-repeat="(k, r) in config.rows track by $index" ng-init="initControls(k)">
     <div class="card-header">
 
         <ul class="actions">
@@ -15,7 +15,7 @@
 
 
     <!--<row-input></row-input>-->
-    <dynamic-input config='r'></dynamic-input>
+    <dynamic-input config='r' return-value="childReturnValues[k]" config-id='{{ configId }}' nested-check="nestedChecks[k]"></dynamic-input>
 
 
 

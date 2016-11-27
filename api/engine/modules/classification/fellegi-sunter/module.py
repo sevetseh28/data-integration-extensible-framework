@@ -17,8 +17,10 @@ class FellegiSunterClassification(Module):
 
         Formato config:
         {
-            "lower_bound": [numero],
-            "upper_bound": [numero],
+            thresholds:{
+                "from": [numero],
+                "to": [numero
+            }
             "vector_reducer": [funcion de reduccion]
         }
     """
@@ -32,8 +34,8 @@ class FellegiSunterClassification(Module):
 
         self.compute_similarity = getattr(self, "_vector_" + self.config['vector_reducer'])
 
-        self.lower_bound = self.config['lower_bound']
-        self.upper_bound = self.config['upper_bound']
+        self.lower_bound = self.config["thresholds"]['from']
+        self.upper_bound = self.config["thresholds"]['to']
 
     @staticmethod
     def pretty_name():

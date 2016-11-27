@@ -26,6 +26,8 @@ router.register(r'step-config', views.StepConfigViewSet)
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
+    url(r'^columns/(?P<project_id>\d+)?', views.schema),
+    url(r'^output-fields/(?P<project_id>\d+)?', views.output_fields),
     url(r'^available-modules/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.available_modules),
     url(r'^run/', views.run),
 ]

@@ -6,7 +6,6 @@
             <div class="fg-line">
                 <div class="select">
                     <select class="form-control" ng-model="export.selectedModule"
-
                             ng-options="m as m.name for m in export.modules">
                     </select>
                 </div>
@@ -15,7 +14,7 @@
 
 
         <div>
-            <dynamic-input ng-repeat="(k, c) in export.selectedModule['config']" config='c'></dynamic-input>
+            <dynamic-input ng-repeat="(k, c) in export.selectedModule['config']" return-value='export.returnValue.selected_module.config' config-id='{{ k }}' config='c'></dynamic-input>
         </div>
 
     </div>

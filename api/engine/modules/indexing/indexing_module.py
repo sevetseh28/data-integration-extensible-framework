@@ -11,11 +11,14 @@ class IndexingModule(Module):
 
         # si no hay config de encoding, crea una por defecto
         if 'encoding' not in self.config or not self.config['encoding']:
-            self.config['encoding'] = 'nop'
+            self.config['encoding'] = {
+                'name': 'nop'
+            }
 
         self.schema = []
         self.records = []
-        self.encoding_module = load_module("encoding", self.config['encoding'])
+        self.encoding_module = load_module("encoding", self.config['encoding']['name'],
+                                           config=self.config['encoding'])
 
     def encode(self, value):
         return self.encoding_module.run(value)

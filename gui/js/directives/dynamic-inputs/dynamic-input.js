@@ -6,7 +6,8 @@ angular.module("materialAdmin")
             scope: {
                 config: '=',
                 returnValue: '=',
-                configId: '@'
+                configId: '@',
+                nestedCheck: '=?'
             },
             link: function (scope, element, attrs) {
 

@@ -7,7 +7,18 @@ angular.module("materialAdmin")
             restrict: "E",
             templateUrl: "template/directives/datafusion-step.html",
             controller: function ($scope) {
-                $scope.classification['title'] = 'Data Fusion';
+                $scope.datafusion['title'] = 'Data Fusion';
+
+                $scope.datafusion.returnValue = {
+                    selected_module: {
+                        name: '',
+                        config: {}
+                    }
+                };
+
+                $scope.$watch('datafusion.selectedModule', function(){
+                    $scope.datafusion.returnValue.selected_module.name = $scope.datafusion.selectedModule.id;
+                }, true);
             }
         }
     });

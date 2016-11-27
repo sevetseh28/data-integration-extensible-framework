@@ -6,6 +6,6 @@
 
 <br/>
 
-<div ng-repeat="(k,c) in config.selectedoption.config track by $index" ng-init="loadChildControl(k)">
-    <dynamic-input config="c" return-value="childReturnValues[k]" config-id='{{ k }}'></dynamic-input>
+<div ng-repeat="(k,c) in config.selectedoption.config track by $index" ng-init="initControls(k)">
+    <dynamic-input config="c" return-value="childReturnValues[k]" config-id='{{ k }}' nested-check="nestedChecks[k]"></dynamic-input>
 </div>

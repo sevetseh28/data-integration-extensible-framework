@@ -10,13 +10,19 @@ angular.module("materialAdmin")
             link: function (scope, element, attrs) {
 
                 scope.childReturnValues = [];
-                scope.loadChildControls = function () {
-                    for(var k in scope.config.selectedoption.config){
-                        scope.childReturnValues[k] = {};
-                    }
-                };
+                scope.nestedChecks = {};
+
                 scope.loadChildControl = function (k) {
                     scope.childReturnValues[k] = {};
+                };
+
+                scope.loadNestedCheck = function (k) {
+                    scope.nestedChecks[k] = {'check':0};
+                };
+
+                scope.initControls = function(k){
+                    scope.loadChildControl(k);
+                    scope.loadNestedCheck(k);
                 };
 
                 function appendReturnValue() {
@@ -26,10 +32,15 @@ angular.module("materialAdmin")
                         ret[id] = scope.childReturnValues[id][id]
                     }
 
-                    scope.returnValue[scope.configId] = ret
+
+                    scope.returnValue[scope.configId] = ret;
+
+                    if ('nestedCheck' in scope) {
+                        scope.nestedCheck['check']++
+                    }
                 }
 
-                scope.$watch('config',appendReturnValue, true);
+                scope.$watch('nestedChecks', appendReturnValue, true);
 
             }
 

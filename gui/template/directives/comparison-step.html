@@ -1,13 +1,10 @@
-<div ng-repeat="match in comparison.outputFields">
-    <h5>Output fields in matched colums '{{match.matchedColumns}}':</h5>
-    <br/>
-        <div ng-repeat="outputField in match.outputFields">
+<div ng-repeat="outputField in comparison.outputFields">
             Select module to compare output field: {{outputField.name}}
 
             <div class="form-group">
                 <div class="fg-line">
                     <div class="select">
-                        <select  class="form-control" ng-model="outputField.selectedModule"
+                        <select ng-change="comparison.updateReturnValue()" class="form-control" ng-model="outputField.selectedModule"
                                  ng-options="m as m.name for m in outputField.modules">
                             <option value=""></option>
                         </select>
@@ -17,7 +14,7 @@
 
 
             <div>
-                <dynamic-input ng-repeat="(k, c) in outputField.selectedModule['config']" config='c'></dynamic-input>
+                <dynamic-input ng-repeat="(k, c) in outputField.selectedModule['config']" return-value='c.returnValue' ng-init="c.returnValue = {}" config-id='{{ k }}' config='c'></dynamic-input>
             </div>
 
         </div>

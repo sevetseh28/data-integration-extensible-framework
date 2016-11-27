@@ -1,9 +1,9 @@
 angular.module("materialAdmin")
-    .directive('textInput', function () {
+    .directive('hiddenInput', function () {
         return {
             restrict: "E",
             scope: true,
-            templateUrl: "template/directives/dynamic-inputs/text-input.html",
+            templateUrl: "template/directives/dynamic-inputs/hidden-input.html",
             link: function (scope, element, attrs) {
 
                 function appendReturnValue() {

@@ -166,14 +166,58 @@ class DALMongo:
 
         return [Column.from_json(c) for c in schema]
 
-    def get_schema_matching(self):
+    def get_output_fields_matched_cols(self):
         """
-        Retorna el esquema matching
+        Retorna el los output fields de columnas matcheadas
         """
-        schema = self.get_all("SchemaMatchingStep", "")
-        json = [match for match in schema]
+        records = self.get_all("SchemaMatchingStep", "source1_records")
+        ret = []
 
-        return SchemaMatch.from_json(json)
+        for r in records:
+            for c in r['columns']:
+                if c['name'].startswith('__new__'):
+                    for f in c['fields']:
+                        if f['output_field'] not in [of['name'] for of in ret]:
+                            ret.append({'name':f['output_field']})
+
+        # def getMatchedColObject(ret, col):
+        #     for r in ret:
+        #         if r['matchedColumns'] == col:
+        #             return r
+        #     newObject = {
+        #         'matchedColumns': col,
+        #         'outputFields': []
+        #     }
+        #     ret.append(newObject)
+        #     return newObject
+        #
+        # for r in records:
+        #     for c in r['columns']:
+        #         if c['name'].startswith('__new__'):
+        #             obj = getMatchedColObject(ret, c['name'])
+        #             for f in c['fields']:
+        #                 if f['output_field'] not in [o['name'] for o in obj['outputFields']]:
+        #                     obj['outputFields'].append({'name':f['output_field']})
+
+        return ret
+
+    def get_global_schema(self):
+        """
+        Retorna el esquema global luego de aplicado el schema matching
+        """
+        first_record = self.get_all("SchemaMatchingStep", "source1_records").next()
+        cols = [c['name'] for c in first_record['columns']]
+
+        return cols
+
+    # def get_schema_matching(self):
+    #     """
+    #     Retorna el esquema matching
+    #     """
+    #     schema = self.get_all("SchemaMatchingStep", "")
+    #     json = [match for match in schema]
+    #
+    #     return SchemaMatch.from_json(json)
 
     def get_all(self, step, suffix="", with_id=False, filters=None):
         """

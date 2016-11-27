@@ -7,7 +7,18 @@ angular.module("materialAdmin")
             restrict: "E",
             templateUrl: "template/directives/export-step.html",
             controller: function ($scope) {
-                $scope.classification['title'] = 'Export';
+                $scope.export['title'] = 'Export';
+
+                $scope.export.returnValue = {
+                    selected_module: {
+                        name: '',
+                        config: {}
+                    }
+                };
+
+                $scope.$watch('export.selectedModule', function(){
+                    $scope.export.returnValue.selected_module.name = $scope.export.selectedModule.id;
+                }, true);
             }
         }
     });

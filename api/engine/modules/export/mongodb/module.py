@@ -31,7 +31,7 @@ class MongoDBExport(IndexingModule):
     def run(self):
         json_values = [r.to_json() for r in self.records]
 
-        connection = MongoClient(self.host, self.port)
+        connection = MongoClient(self.host, int(self.port))
         connection[self.db][self.collection].insert_many(json_values)
         connection.close()
 

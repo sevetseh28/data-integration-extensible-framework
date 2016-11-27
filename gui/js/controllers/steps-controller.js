@@ -31,10 +31,13 @@ materialAdmin
 
             } else if (step == 'standardisation') {
                 $scope[step]['modules'] = APIService.getModules(step);
-                $scope.standardisation['columns'] = {
-                    'source1': APIService.getColumnsSource1(),
-                    'source2': APIService.getColumnsSource2()
-                }
+
+                APIService.getColumnsSources($stateParams.id).then(function (response) {
+                    $scope.standardisation['columns'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
 
             } else if (step == 'segmentation') {
                 $scope[step]['modules'] = APIService.getModules(step);
@@ -46,10 +49,8 @@ materialAdmin
                 $scope[step]['outputFields'] = APIService.getOutputFields();
                 $scope[step]['modules'] = APIService.getModules(step);
                 for (var i = 0; i < $scope[step]['outputFields'].length; i++) {
-                    for (var j = 0; j < $scope[step]['outputFields'][i]['outputFields'].length; j++) {
-                        $scope[step]['outputFields'][i]['outputFields'][j]['modules'] = angular.copy($scope[step]['modules']);
-                        $scope[step]['outputFields'][i]['outputFields'][j]['selectedModule'] = {'name': 'Test'};
-                    }
+                    $scope[step]['outputFields'][i]['modules'] = angular.copy($scope[step]['modules']);
+                    $scope[step]['outputFields'][i]['selectedModule'] = {'name': 'Test'};
                 }
 
             } else if (step == 'indexing') {
@@ -87,7 +88,7 @@ materialAdmin
         };
 
         $scope.schemamatching = {
-            //selectedModule: {},
+            selectedModule: {},
             modules: []
         };
 
@@ -144,52 +145,73 @@ materialAdmin
                 title: 'Standardise',
                 directive: 'standardisation-step',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'StandardizationStep'
             },
             {
                 title: 'Segment',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'SegmentationStep'
 
             },
             {
                 title: 'Match Schemas',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'SchemaMatchingStep'
 
             },
             {
                 title: 'Index',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'IndexingStep'
             },
             {
                 title: 'Compare',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'ComparisonStep'
             },
             {
                 title: 'Classify',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'ClassificationStep'
             },
             {
                 title: 'Fuse Data',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'DataFusionStep'
             },
             {
                 title: 'Export',
                 directive: '',
                 active: false,
-                disabled: true
+                disabled: true,
+                id: 'ExportStep'
             }
         ];
+
+        function setCurrentStep() {
+            var i = 0;
+            for (tab in $scope.tabs) {
+                if ($scope.tabs[tab].active) {
+                    $scope.currentStep = i;
+                    return;
+                }
+                i++;
+            }
+        }
+
+        $scope.$watch('tabs', setCurrentStep, true);
 
     });

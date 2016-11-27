@@ -5,7 +5,7 @@
                 <div class="col-sm-4">
                     <p class="c-black f-500 m-b-20">Column</p>
                     <div class="select">
-                        <select class="form-control" ng-model="o.columnSelected" ng-options="c.name for c in standardisation.columns[source]">
+                        <select class="form-control" ng-model="o.columnSelected" ng-options="c for c in standardisation.columns[source]" ng-change="standardisation.updateReturnValue()">
                     </select>
                     </div>
 
@@ -13,7 +13,7 @@
                 <div class="col-sm-7">
                     <p class="c-black f-500 m-b-20">Module</p>
                     <div class="select">
-                        <select class="form-control" ng-model="o.moduleSelected" ng-options="m as m.name for m in o">
+                        <select class="form-control" ng-model="o.moduleSelected" ng-options="m as m.name for m in o" ng-change="standardisation.updateReturnValue()">
                     </select>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
 
             <div class="row" ng-repeat="(k, c) in o.moduleSelected.config">
                 <div class="col-sm-12">
-                    <dynamic-input config='c'></dynamic-input>
+                    <dynamic-input config='c' return-value='c.returnValue' ng-init="c.returnValue = {}" config-id='{{ k }}' ></dynamic-input>
                 </div>
             </div>
 

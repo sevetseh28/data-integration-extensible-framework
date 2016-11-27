@@ -15,7 +15,7 @@
 
 
         <div>
-            <dynamic-input ng-repeat="(k, c) in datafusion.selectedModule['config']" config='c'></dynamic-input>
+            <dynamic-input ng-repeat="(k, c) in datafusion.selectedModule['config']" return-value='datafusion.returnValue.selected_module.config' config-id='{{ k }}' config='c'></dynamic-input>
         </div>
 
     </div>

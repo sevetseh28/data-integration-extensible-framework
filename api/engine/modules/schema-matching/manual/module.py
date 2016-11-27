@@ -77,7 +77,6 @@ class ManualSchemaMatching(Module):
         # Se renombran las columans del otro esquema con un prefijo para identificarlas
         extra_cols = ["s{}_{}".format(other_source_number, col) for col in extra_cols]
 
-
         for r in records:
             # Se unifican las columnas de cada matcheo de esquemas
             for match in schematches.schema_matches:
@@ -104,18 +103,18 @@ class ManualSchemaMatching(Module):
         cols2 = [c.name for c in dal.get_schema(2)]
 
         rowmodel = {
-                    'type': 'row',
-                    'cols': [
-                        {
-                            'type': 'multipleselect',
-                            'options': cols1
-                        },
-                        {
-                            'type': 'multipleselect',
-                            'options': cols2
-                        }
-                    ]
+            'type': 'row',
+            'cols': {
+                'source1': {
+                    'type': 'multipleselect',
+                    'options': cols1
+                },
+                'source2': {
+                    'type': 'multipleselect',
+                    'options': cols2
                 }
+            }
+        }
 
         return {
             'matches': {

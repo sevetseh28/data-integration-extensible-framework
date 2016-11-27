@@ -60,6 +60,8 @@ def list_modules(step_name, project_id=None):
 
         modules_data.append({
             'id': m[1],
+            'value': m[1],
+            'label': mod_instance.pretty_name(),
             'name': mod_instance.pretty_name(),
             'config': mod_instance.config_json(project_id=project_id)
         })

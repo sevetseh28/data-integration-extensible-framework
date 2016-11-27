@@ -1,4 +1,6 @@
 # coding=utf-8
+from unidecode import unidecode
+
 from engine.models.record import *
 from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
@@ -22,9 +24,10 @@ class DeleteChars(Module):
         return "Delete chars"
 
     def run(self, column):
+        chars = unidecode(self.config["chars"])
         for field in column.fields:
             if field.tipe.value == FieldType.string.value:
-                field.value = field.value.__str__().translate(None, self.config["chars"])
+                field.value = field.value.__str__().translate(None, chars)
 
         return column
 

@@ -80,279 +80,335 @@ angular.module('materialAdmin')
             return ['Name', 'Surname', 'Phone', 'Country', 'Birthday']
         }
 
+        function getColumnsSources(idProject) {
+            var path = 'columns/' + idProject;
+            return get(path);
+        }
+
         function getOutputFields() {
             return [
                 {
-                    'matchedColumns': 'Full name <---> Name,Surname',
-                    'outputFields': [{'name': 'Name'}, {'name': 'Last name'}]
-                },
-                {
-                    'matchedColumns': 'Phone <---> Phone',
-                    'outputFields': [{'name': 'Phone'}]
+                    "name": "Column0"
                 }
             ]
         }
 
         function getModules(step) {
             // lamo al servicio y cargo en la variable modules de step los modulos disponibles
-            if (step == 'standardisation') {
+            if (step == 'extraction') {
                 return [
                     {
-                        'name': 'Lowercase',
-                        'config': {
-                            'char': {
-                                'type': 'text',
-                                'label': 'nothing'
-                            },
-                            'char2': {
-                                'type': 'text',
-                                'label': 'nothing 2'
+                        "config": {
+                            "config1": {
+                                "type": "text",
+                                "label": "coso"
                             }
-                        }
+                        },
+                        "id": "dummy",
+                        "name": "Dummy Module"
                     },
                     {
-                        'name': 'Delete chars',
-                        'config': {
-                            'char': {
-                                'type': 'text',
-                                'label': 'Input char to delete'
+                        "config": {
+                            "config1": {
+                                "type": "text",
+                                "label": "coso"
                             }
-                        }
+                        },
+                        "id": "dummy",
+                        "name": "Dummy Module2"
                     }
                 ]
 
-            } else if (step == 'extraction') {
+            } else if (step == 'standardisation') {
                 return [
                     {
-                        'id': 'csv',
-                        'name': 'CSV Extractor',
-                        'config': {
-                            'path': {
-                                'type': 'dropdown',
-                                'label': 'Select one option',
-                                'selectedoption': {},
-                                'options': [
-                                    {
-                                        'label': 'esto es un slider',
-                                        'config': {
-                                            'input1': {
-                                                "type": "slider",
-                                                "label": "Chus a namber",
-                                                "value": 0.5,
-                                                "start": 0,
-                                                "end": 1,
-                                                "step": 0.1,
-                                                "color": "amber"
-                                            },
-                                            'path': {
-                                                'type': 'text',
-                                                'label': 'Ponga el path'
-                                            }
-                                        }
-                                    },
-                                    {
-                                        'label': 'esto es un checkbox',
-                                        'config': {
-                                            'input2': {
-                                                "type": "checkbox",
-                                                "label": "Check some boxes",
-                                                "options": [
-                                                    {"label": "Opcion 1", "value": false},
-                                                    {"label": "Opcion 2", "value": false}
-                                                ]
-                                            }
-                                        }
-                                    }
-                                ]
+                        "config": {
+                            "chars": {
+                                "type": "text",
+                                "label": "Characters to delete"
                             }
-                        }
+                        },
+                        "id": "delete-chars",
+                        "name": "Delete chars"
                     },
                     {
-                        'id': 'postgres',
-                        'name': 'PostgreSQL Extractor',
-                        'config': {
-                            'path': {
-                                'type': 'text',
-                                'label': 'Ponga el path'
-                            }
-                        }
-                    },
-                    {
-                        'id': 'mongo',
-                        'name': 'MongoDB Extractor',
-                        'config': {
-                            'path': {
-                                'type': 'text',
-                                'name': 'Ponga el path'
-                            }
-                        }
-                    }]
+                        "config": {},
+                        "id": "lowercase",
+                        "name": "To lowercase"
+                    }
+                ]
 
             } else if (step == 'segmentation') {
-                return [{
-                    'name': 'No segmentation',
-                    'config': {}
-                }]
+                return [
+                    {
+                        "config": {},
+                        "id": "nop",
+                        "name": "Nop Segmentation"
+                    }
+                ]
 
             } else if (step == 'schemamatching') {
-                return [{
-                    "name": "Manual Matching",
-                    "config": {
-                        "matches": {
-                            "type": "rows",
-                            "label": "Matches",
-                            "rows": [],
-                            "rowmodel": {
-                                "type": "row",
-                                "cols": [
-                                    {
-                                        "type": "multipleselect",
-                                        "options": getColumnsSource1()
-                                    },
-                                    {
-                                        "type": "multipleselect",
-                                        "options": getColumnsSource2()
+                return [
+                    {
+                        "config": {
+                            "matches": {
+                                "rows": [],
+                                "type": "rows",
+                                "rowmodel": {
+                                    "type": "row",
+                                    "cols": {
+                                        "source2": {
+                                            "type": "multipleselect",
+                                            "options": [
+                                                "Column0",
+                                                "Column1",
+                                                "Column2",
+                                                "Column3",
+                                                "Column4",
+                                                "Column5",
+                                                "Column6",
+                                                "Column7",
+                                                "Column8",
+                                                "Column9"
+                                            ]
+                                        },
+                                        "source1": {
+                                            "type": "multipleselect",
+                                            "options": [
+                                                "Column0",
+                                                "Column1",
+                                                "Column2",
+                                                "Column3",
+                                                "Column4",
+                                                "Column5",
+                                                "Column6",
+                                                "Column7",
+                                                "Column8",
+                                                "Column9"
+                                            ]
+                                        }
                                     }
-                                ]
+                                },
+                                "label": "Matches"
                             }
-                        }
+                        },
+                        "id": "manual",
+                        "name": "Manual matching"
                     }
-                }]
+                ]
 
             } else if (step == 'comparison') {
-                return [{
-                    "name": "Q-grams",
-                    "config": {
-                        "q": {
-                            "type": "slider",
-                            "label": "Size of Q-grams",
-                            "value": 2,
-                            "start": 1,
-                            "end": 10,
-                            "step": 1,
-                            "color": "green"
+                return [
+                    {
+                        "name": "Equal",
+                        "config": {},
+                        "id": "equals",
+                        "value": "equals",
+                        "label": "Equal"
+                    },
+                    {
+                        "name": "Q-grams",
+                        "config": {
+                            "q": {
+                                "type": "slider",
+                                "label": "Size of Q-grams",
+                                "value": 2,
+                                "start": 1,
+                                "end": 10,
+                                "step": 1,
+                                "color": "green"
+                            }
                         }
-                    }
-                },
+                    },
                     {
                         "name": "Levenshtein edit distance",
                         "config": {}
-                    }]
+                    }
+                ]
 
             } else if (step == 'indexing') {
-                return [{
-                    "name": "Full index",
-                    "config": {}
-                },
+                return [
                     {
-                        "name": "Blocking standard",
+                        "name": "Full index",
+                        "config": {}
+                    },
+                    {
                         "config": {
-                            "blocking-key": {
-                                "type": "rows",
-                                "rows": [],
-                                "rowmodel": {
-                                    "type": "row",
-                                    "cols": [
-                                        {
-                                            "type": "dropdown",
-                                            'label': 'Select a column',
-                                            'selectedoption': {},
-                                            'options': [
-                                                {
-                                                    'label': 'Fullname <---> Nombre y apellido',
-                                                    'config': {}
-                                                },
-                                                {
-                                                    'label': 'Address <---> Address',
-                                                    'config': {}
-                                                }
-                                            ]
+                            "keys": {
+                                "type": "multipleselect",
+                                "options": [
+                                    "__new__Column0"
+                                ],
+                                "label": "Keys"
+                            },
+                            "encoding": {
+                                "type": "dropdown",
+                                "options": [
+                                    {
+                                        "name": "Generic Module",
+                                        "config": {
+                                            "name": {
+                                                "type": "hidden",
+                                                "value": "nop"
+                                            }
                                         },
-                                        {
-                                            "type": "dropdown",
-                                            'label': 'Select encoding',
-                                            'selectedoption': {},
-                                            'options': [
-                                                {
-                                                    'label': 'Soundex',
-                                                    'config': {}
-                                                },
-                                                {
-                                                    'label': 'Keep first N chars',
-                                                    'config': {
-                                                        "n": {
-                                                            "type": "slider",
-                                                            "label": "Value of N",
-                                                            "value": 2,
-                                                            "start": 1,
-                                                            "end": 10,
-                                                            "step": 1,
-                                                            "color": "red"
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
+                                        "id": "nop",
+                                        "value": "nop",
+                                        "label": "Generic Module"
+                                    },
+                                    {
+                                        "name": "Generic Module",
+                                        "config": {
+                                            "first_n": {
+                                                "end": 10,
+                                                "color": "red",
+                                                "value": 2,
+                                                "label": "Value of N",
+                                                "start": 1,
+                                                "step": 1,
+                                                "type": "slider"
+                                            },
+                                            "name": {
+                                                "type": "hidden",
+                                                "value": "first-n"
+                                            }
+                                        },
+                                        "id": "first-n",
+                                        "value": "first-n",
+                                        "label": "Generic Module"
+                                    },
+                                ],
+                                "selectedoption": {},
+                                "label": "Select encoding"
                             }
-                        }
+                        },
+                        "id": "blocking-standard",
+                        "name": "Blocking Standard"
+                        // "name": "Blocking standard",
+                        // "config": {
+                        //     "keys": {
+                        //         "type": "rows",
+                        //         "rows": [],
+                        //         "rowmodel": {
+                        //             "type": "row",
+                        //             "cols": {
+                        //                 key:{
+                        //                     "type": "dropdown",
+                        //                     'label': 'Select a column',
+                        //                     'selectedoption': {},
+                        //                     'options': [
+                        //                         {
+                        //                             "value": "__new__Column0",
+                        //                             "label": "__new__Column0"
+                        //                         }
+                        //                     ]
+                        //                 },
+                        //                 encoding:{
+                        //                     "type": "dropdown",
+                        //                     'label': 'Select encoding',
+                        //                     'selectedoption': {},
+                        //                     'options': [
+                        //                         {
+                        //                             "id": "nop",
+                        //                             "label": "Generic Module",
+                        //                             config:{}
+                        //                         },
+                        //                         {
+                        //                             'label': 'Soundex',
+                        //                             'config': {}
+                        //                         },
+                        //                         {
+                        //                             'label': 'Keep first N chars',
+                        //                             'config': {
+                        //                                 "n": {
+                        //                                     "type": "slider",
+                        //                                     "label": "Value of N",
+                        //                                     "value": 2,
+                        //                                     "start": 1,
+                        //                                     "end": 10,
+                        //                                     "step": 1,
+                        //                                     "color": "red"
+                        //                                 }
+                        //                             }
+                        //                         }
+                        //                     ]
+                        //                 }
+                        //         }
+                        //         }
+                        //     }
+                        // }
                     }]
             } else if (step == 'classification') {
-                return [{
-                    "name": "Fellegi & Stunter",
-                    "config": {
-                        "potentialmatches": {
-                            "type": "rangeslider",
-                            "label": "Range for potential matches",
-                            "start": "0",
-                            "end": "1",
-                            "from": "0.5",
-                            "to": "0.7",
-                            "step": 0.01
-                        }
+                return [
+                    {
+                        "name": "Fellegi Sunter",
+                        "config": {
+                            "thresholds": {
+                                "from": "0.5",
+                                "to": "0.7",
+                                "label": "Range for potential matches",
+                                "start": "0",
+                                "step": 0.01,
+                                "end": "1",
+                                "type": "rangeslider"
+                            }
+                        },
+                        "id": "fellegi-sunter",
+                        "value": "fellegi-sunter",
+                        "label": "Fellegi Sunter"
                     }
-                }]
+                ]
             } else if (step == 'datafusion') {
-                return [{
-                    "name": "Source preference",
-                    "config": {
-                        "potentialmatches": {
-                            "type": "radio",
-                            "label": "Select the source to prefer",
-                            "options": [
-                                {"value": 1, "label": "Source 1"},
-                                {"value": 2, "label": "Source 2"}
-                            ]
-                        }
+                return [
+                    {
+                        "name": "Preferred source",
+                        "config": {
+                            "preferred-source": {
+                                "type": "radio",
+                                "options": [
+                                    {
+                                        "value": 1,
+                                        "label": "Source 1"
+                                    },
+                                    {
+                                        "value": 2,
+                                        "label": "Source 2"
+                                    }
+                                ],
+                                "label": "Select the preferred source"
+                            }
+                        },
+                        "id": "preferred-source",
+                        "value": "preferred-source",
+                        "label": "Preferred source"
                     }
-                }]
+                ]
             } else if (step == 'export') {
-                return [{
-                    "name": "MongoDB",
-                    "config": {
-                        "ip": {
-                            "type": "text",
-                            "label": "Database IP address"
+                return [
+                    {
+                        "name": "MongoDB",
+                        "config": {
+                            "host": {
+                                "type": "text",
+                                "label": "Host"
+                            },
+                            "db": {
+                                "type": "text",
+                                "label": "Database"
+                            },
+                            "port": {
+                                "type": "text",
+                                "label": "Port"
+                            },
+                            "collection": {
+                                "type": "text",
+                                "label": "Collection"
+                            }
                         },
-                        "user": {
-                            "type": "text",
-                            "label": "Username"
-                        },
-                        "pass": {
-                            "type": "text",
-                            "label": "Password"
-                        },
-                        "db": {
-                            "type": "text",
-                            "label": "Database name"
-                        },
-                        "collection": {
-                            "type": "text",
-                            "label": "Collection name"
-                        }
-                    }
-                },
+                        "id": "mongodb",
+                        "value": "mongodb",
+                        "label": "MongoDB"
+                    },
                     {
                         "name": "CSV",
                         "config": {}
@@ -360,11 +416,11 @@ angular.module('materialAdmin')
             }
         }
 
-        function run(project_id, step, config){
+        function run(project_id, step, config) {
             var path = 'run';
             var params = {
-                project_id:project_id,
-                step:step,
+                project_id: project_id,
+                step: step,
                 config: config
             };
             return post(path, params);
@@ -373,9 +429,10 @@ angular.module('materialAdmin')
         return {
             getColumnsSource1: getColumnsSource1,
             getColumnsSource2: getColumnsSource2,
+            getColumnsSources: getColumnsSources,
             getOutputFields: getOutputFields,
             getModules: getModules,
-            run:run,
+            run: run,
             //Projects
             getProjects: getProjects,
             deleteProject: deleteProject,

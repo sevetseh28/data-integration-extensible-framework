@@ -19,6 +19,40 @@ angular.module("materialAdmin")
 
                 $scope.standardisation['moduleSelections'] = {};
 
+                $scope.standardisation.empty = {};
+
+                $scope.standardisation.updateReturnValue = function() {
+                    $scope.standardisation.returnValue = {
+                        source1: {},
+                        source2: {}
+                    };
+
+                    var source_configs;
+                    for (var source in $scope.sources) {
+                        source = $scope.sources[source];
+                        source_configs = $scope.standardisation.returnValue[source];
+                        module_selections = $scope.standardisation['moduleSelections'][source];
+                        for (var module in module_selections) {
+                            module = module_selections[module];
+                            if (!module.columnSelected || !module.moduleSelected)
+                                continue;
+                            if (!(module.columnSelected in source_configs)) {
+                                source_configs[module.columnSelected] = []
+                            }
+                            retVal = {
+                                    name: module.moduleSelected.id,
+                                    config:{}
+                            };
+                            for (var config in module.moduleSelected.config) {
+                                retVal.config[config] = module.moduleSelected.config[config].returnValue[config]
+                            }
+                            source_configs[module.columnSelected].push(retVal)
+                        }
+                    }
+                }
+
+                $scope.$watch('standardisation.moduleSelections', $scope.standardisation.updateReturnValue, true);
+
                 $scope.standardisation['moduleSelections']['source1'] = [];
                 $scope.standardisation['moduleSelections']['source2'] = []
             }

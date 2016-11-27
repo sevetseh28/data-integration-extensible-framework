@@ -17,7 +17,10 @@ angular.module("materialAdmin")
                     scope.returnValue[scope.configId] = {
                         from: scope.config.from,
                         to: scope.config.to
+                    };
 
+                    if ('nestedCheck' in scope) {
+                        scope.nestedCheck['check'] ++
                     }
                 }
 

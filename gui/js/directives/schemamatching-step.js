@@ -6,6 +6,16 @@ angular.module("materialAdmin")
             controller: function ($scope) {
                 $scope.schemamatching['title'] = 'Schema Matching';
 
+                $scope.schemamatching.returnValue = {
+                    selected_module: {
+                        name: '',
+                        config: {}
+                    }
+                };
+
+                $scope.$watch('schemamatching.selectedModule', function(){
+                    $scope.schemamatching.returnValue.selected_module.name = $scope.schemamatching.selectedModule.id;
+                }, true);
             }
         }
     });

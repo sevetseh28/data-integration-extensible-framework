@@ -9,4 +9,11 @@ class NopEncoding(Module):
     def run(self, value):
         return value
 
-
+    @staticmethod
+    def config_json(**kwargs):
+        return {
+            'name': {
+                'type': 'hidden',
+                'value': 'nop',
+            }
+        }

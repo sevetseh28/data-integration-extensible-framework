@@ -1,12 +1,13 @@
 import json
 
 from django.http import JsonResponse
-
-from engine.utils.dynamic_loading import list_modules
 from rest_framework import viewsets
 
+from engine import dal_mongo
+from engine.utils.dynamic_loading import list_modules
 from engine.workflow.workflow import Workflow
 from serializers import *
+import engine.dal_mongo
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -25,17 +26,36 @@ class StepConfigViewSet(viewsets.ModelViewSet):
 def available_modules(request, step='', project_id=None):
     return JsonResponse(list_modules(step, project_id), safe=False)
 
+
+def schema(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+
+    schema1 = [c.name for c in dal.get_schema(1)]
+    schema2 = [c.name for c in dal.get_schema(2)]
+
+    return JsonResponse({
+        'source1': schema1,
+        'source2': schema2
+    }, safe=False)
+
+def output_fields(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+
+    ret = dal.get_output_fields_matched_cols()
+
+    return JsonResponse(ret, safe=False)
+
+
 def run(request):
     # Se obtienen los parametros del request
     params = json.loads(request.body)
     project_id = params['project_id']
     step = params['step']
-    config = params['config']
+    config = params['config'] if 'config' in params else {}
 
     # Llamado a workflow
     w = Workflow(project_id)
     w.set_current_step(step, config)
     w.execute_step()
 
-    return JsonResponse(list_modules(step, project_id), safe=False)
-
+    return JsonResponse({'status': 'ok'})
