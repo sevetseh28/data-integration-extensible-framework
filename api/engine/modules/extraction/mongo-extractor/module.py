@@ -5,7 +5,7 @@ from engine.modules.module import Module
 from pymongo import MongoClient
 from datetime import datetime
 from copy import deepcopy
-
+from unidecode import unidecode
 
 
 class MongodbExtractor(ExtractionModule):
@@ -19,7 +19,6 @@ class MongodbExtractor(ExtractionModule):
         }
     """
 
-
     def __init__(self, **kwargs):
         super(MongodbExtractor, self).__init__(**kwargs)
         self.pretty_name = 'MongodbExtractor'
@@ -29,18 +28,19 @@ class MongodbExtractor(ExtractionModule):
         self.collection = self.config["collection"]
 
     def run(self):
-        connection = MongoClient(self.host,self.port) #Se crea conexión a db Mongo
+        connection = MongoClient(self.host, self.port)  # Se crea conexión a db Mongo
         db = connection[self.db]
         collection = db[self.collection]
         documents = collection.find({})
-        for doc in documents:  #Se recorren los documentos de la colección para generar todas las columnas
-            self.get_all_columns(doc,"")
+        for doc in documents:  # Se recorren los documentos de la colección para generar todas las columnas
+            self.get_all_columns(doc, "")
         documents = collection.find({})
-        for i,doc in enumerate(documents): #Se recorren los documentos nuevamente para obtener los records
+        for i, doc in enumerate(documents):  # Se recorren los documentos nuevamente para obtener los records
             self.records.append(Record())
             for col in self.schema:
                 copycol = deepcopy(col)
-                colkeys = copycol.name.split(".") #En el caso de ser una clave compuesta se itera para acceder al valor
+                colkeys = copycol.name.split(
+                    ".")  # En el caso de ser una clave compuesta se itera para acceder al valor
                 valuefield = doc
                 for k in colkeys:
                     if type(valuefield) is dict:
@@ -51,7 +51,7 @@ class MongodbExtractor(ExtractionModule):
                     else:
                         break
                 if type(valuefield) is dict:
-                    copycol.fields.append(Field(None,FieldType.notexist))
+                    copycol.fields.append(Field(None, FieldType.notexist))
                 else:
                     field = get_field_from_mongo(valuefield)
                     if field is not None:
@@ -60,46 +60,35 @@ class MongodbExtractor(ExtractionModule):
         connection.close()
         return self.schema, self.records
 
-
-
-
-
-
-#Precondición, el documento no tiene claves con algún caracter "."
-    def get_all_columns(self,document,concat): #Se generan las columnas utilizando concatenación con "." en los casos de
-        for key,value in document.items():  #documentos embebidos
-            #Solo se aceptan claves de los siguientes tipos
-            if type(value) is int or type(value) is long or type(value) is float or type(value) is str or type(value) is unicode or type(value) is bool or type(value) is datetime or type(value) is type(None):
-                column = Column(concat+key)
+    # Precondición, el documento no tiene claves con algún caracter "."
+    def get_all_columns(self, document,
+                        concat):  # Se generan las columnas utilizando concatenación con "." en los casos de
+        for key, value in document.items():  # documentos embebidos
+            key = unidecode(key)
+            # Solo se aceptan claves de los siguientes tipos
+            if isinstance(value,int) or isinstance(value,long) or isinstance(value, float) or type(
+                    value).__name__ == 'Int64' or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, bool) or isinstance(value, datetime) or type(value) is type(None):
+                column = Column(concat + key)
                 self.add_to_schema(column)
             elif type(value) is dict:
-                self.get_all_columns(value,concat+key+".") #Si es un dict se concatena la clave con "."
+                self.get_all_columns(value, concat + key + ".")  # Si es un dict se concatena la clave con "."
             else:
                 continue
 
-#Se traduce el valor de mongo al formato interno de acuerdo al tipo
+
+# Se traduce el valor de mongo al formato interno de acuerdo al tipo
 def get_field_from_mongo(value):
-    if type(value) is str or type(value) is unicode:
+    if isinstance(value,str):
         return Field(value, FieldType.string)
-    elif type(value) is int or type(value) is long or type(value) is float:
+    elif isinstance(value,unicode):
+        return Field(unidecode(value), FieldType.string)
+    elif isinstance(value, int) or isinstance(value,long) or isinstance(value,float) or type(value).__name__ == 'Int64':
         return Field(value, FieldType.number)
-    elif type(value) is bool:
+    elif isinstance(value,bool):
         return Field(value, FieldType.boolean)
-    elif type(value) is datetime:
+    elif isinstance(value,datetime):
         return Field(value, FieldType.date)
     elif type(value) is type(None):
-        return Field(value,FieldType.null)
+        return Field(value, FieldType.null)
     else:
         return None
-
-
-
-
-
-
-
-
-
-
-
-
