@@ -20,7 +20,7 @@ angular.module("materialAdmin")
 
                 function compile_directive() {
 
-                    var directive = '<' + scope.config.type + '-input></' + scope.config.type + '-input><button ng-click="debug()">lala</button>';
+                    var directive = '<' + scope.config.type + '-input></' + scope.config.type + '-input>';
                     /*
                      $compile(directive)(scope, function(cloned, scope){
                      element.append(cloned);
