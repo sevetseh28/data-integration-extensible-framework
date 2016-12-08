@@ -20,5 +20,9 @@ class IndexingModule(Module):
         self.encoding_module = load_module("encoding", self.config['encoding']['name'],
                                            config=self.config['encoding'])
 
+    @staticmethod
+    def pretty_name():
+        return "Indexing module"
+
     def encode(self, value):
         return self.encoding_module.run(value)

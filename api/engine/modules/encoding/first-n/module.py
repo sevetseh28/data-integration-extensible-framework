@@ -11,6 +11,10 @@ class FirstNEncoding(Module):
         return str(value)[0:self.first_n]
 
     @staticmethod
+    def pretty_name():
+        return "First-n chars"
+
+    @staticmethod
     def config_json(**kwargs):
         return {
             'name': {

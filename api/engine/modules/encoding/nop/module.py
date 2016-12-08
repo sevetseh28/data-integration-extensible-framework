@@ -10,6 +10,10 @@ class NopEncoding(Module):
         return value
 
     @staticmethod
+    def pretty_name():
+        return "No encoding"
+
+    @staticmethod
     def config_json(**kwargs):
         return {
             'name': {

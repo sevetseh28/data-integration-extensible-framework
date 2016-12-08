@@ -13,6 +13,10 @@ class DummyExtractor(ExtractionModule):
         super(DummyExtractor, self).__init__(**kwargs)
         self.pretty_name = 'DummyExtractor'
 
+    @staticmethod
+    def pretty_name():
+        return "Dummy"
+
     def run(self):
         cant_cols = 10
         cant_records = 20

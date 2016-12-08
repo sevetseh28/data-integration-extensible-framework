@@ -18,3 +18,7 @@ class ExtractionModule(Module):
             return
 
         self.schema.append(deepcopy(column))
+
+    @staticmethod
+    def pretty_name():
+        return "Extraction module"

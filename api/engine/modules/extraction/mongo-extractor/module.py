@@ -27,6 +27,10 @@ class MongodbExtractor(ExtractionModule):
         self.db = self.config["db"]
         self.collection = self.config["collection"]
 
+    @staticmethod
+    def pretty_name():
+        return "MongoDB Extractor"
+
     def run(self):
         connection = MongoClient(self.host, self.port)  # Se crea conexión a db Mongo
         db = connection[self.db]
