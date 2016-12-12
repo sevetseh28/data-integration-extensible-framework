@@ -33,6 +33,15 @@ class CsvExtractor(ExtractionModule):
                     self.records[i].columns[column.name] = column
         return self.schema, self.records
 
+    @staticmethod
+    def config_json(**kwargs):
+        return {
+            'pathcsv': {
+                'label': 'CSV',
+                'type': 'text'
+            }
+        }
+
 
 
 

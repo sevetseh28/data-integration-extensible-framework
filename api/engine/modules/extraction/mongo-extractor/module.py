@@ -79,6 +79,27 @@ class MongodbExtractor(ExtractionModule):
             else:
                 continue
 
+    @staticmethod
+    def config_json(**kwargs):
+        return {
+            'host': {
+                'label': 'Host',
+                'type': 'text'
+            },
+            'port': {
+                'label': 'Port',
+                'type': 'text'
+            },
+            'db': {
+                'label': 'Database',
+                'type': 'text'
+            },
+            'collection': {
+                'label': 'Collection',
+                'type': 'text'
+            },
+                }
+
 
 # Se traduce el valor de mongo al formato interno de acuerdo al tipo
 def get_field_from_mongo(value):
