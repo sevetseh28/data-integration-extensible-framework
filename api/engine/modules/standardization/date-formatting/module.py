@@ -14,7 +14,6 @@ class DeleteChars(Module):
         {
         languages:['en','es']
         }
-        No precisa config
     """
 
     def __init__(self, **kwargs):
