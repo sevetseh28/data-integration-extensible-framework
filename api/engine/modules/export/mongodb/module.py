@@ -19,10 +19,10 @@ class MongoDBExport(IndexingModule):
     def __init__(self, records, **kwargs):
         super(MongoDBExport, self).__init__(**kwargs)
         self.records = records
-        self.host = self.config["host"]
-        self.port = self.config["port"]
-        self.db = self.config["db"]
-        self.collection = self.config["collection"]
+        self.host = self.config["host"] or 'localhost'
+        self.port = self.config["port"] or 27017
+        self.db = self.config["db"] or 'output'
+        self.collection = self.config["collection"] or 'results'
 
     @staticmethod
     def pretty_name():

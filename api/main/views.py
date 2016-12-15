@@ -24,6 +24,9 @@ class StepConfigViewSet(viewsets.ModelViewSet):
 
 
 def available_modules(request, step='', project_id=None):
+    if step == 'standardisation': step = 'standardization'
+    if step == 'schemamatching': step = 'schema-matching'
+    if step == 'datafusion': step = 'data-fusion'
     return JsonResponse(list_modules(step, project_id), safe=False)
 
 
@@ -37,6 +40,7 @@ def schema(request, project_id):
         'source1': schema1,
         'source2': schema2
     }, safe=False)
+
 
 def output_fields(request, project_id):
     dal = dal_mongo.DALMongo(project_id)

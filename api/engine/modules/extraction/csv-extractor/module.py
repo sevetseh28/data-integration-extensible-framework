@@ -19,6 +19,10 @@ class CsvExtractor(ExtractionModule):
         self.pretty_name = 'CsvExtractor'
         self.pathcsv = self.config['pathcsv']
 
+    @staticmethod
+    def pretty_name():
+        return "CSV Extractor"
+
     def run(self):
 
         with open(self.pathcsv) as csvfile:

@@ -40,6 +40,7 @@ class DALMongo:
 
             # Si la coleccion es vacia, pasa a la siguiente
             if not collection['values']:
+                db.create_collection(collection_name)
                 continue
 
             # Se pasan a Json los valores
@@ -100,7 +101,7 @@ class DALMongo:
 
     def get_non_matches(self):
         """
-        Retorna los matches de la clasificacion
+        Retorna los no-matches de la clasificacion
         """
         results = self.get_all("ClassificationStep", filters={"match_type": 1}, with_id=True)
         results = [r for r in results]

@@ -26,11 +26,14 @@ materialAdmin
 
             // llamo al servicio y cargo en la variable modules de step los modulos disponibles
             if (step == 'extraction') {
-                $scope[step]['modules']['source1'] = APIService.getModules(step);
-                $scope[step]['modules']['source2'] = angular.copy($scope[step]['modules']['source1']);
-
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules']['source1'] = data.data;
+                    $scope[step]['modules']['source2'] = angular.copy($scope[step]['modules']['source1']);
+                });
             } else if (step == 'standardisation') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
 
                 APIService.getColumnsSources($stateParams.id).then(function (response) {
                     $scope.standardisation['columns'] = {
@@ -40,27 +43,46 @@ materialAdmin
                 });
 
             } else if (step == 'segmentation') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
 
             } else if (step == 'schemamatching') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
 
             } else if (step == 'comparison') {
-                $scope[step]['outputFields'] = APIService.getOutputFields();
-                $scope[step]['modules'] = APIService.getModules(step);
-                for (var i = 0; i < $scope[step]['outputFields'].length; i++) {
-                    $scope[step]['outputFields'][i]['modules'] = angular.copy($scope[step]['modules']);
-                    $scope[step]['outputFields'][i]['selectedModule'] = {'name': 'Test'};
-                }
+                APIService.getOutputFields($stateParams.id).then(function (data) {
+                    $scope[step]['outputFields'] = data.data;
+
+                    APIService.getModules($stateParams.id, step).then(function (data) {
+                        $scope[step]['modules'] = data.data;
+                        for (var i = 0; i < $scope[step]['outputFields'].length; i++) {
+                            $scope[step]['outputFields'][i]['modules'] = angular.copy($scope[step]['modules']);
+                            $scope[step]['outputFields'][i]['selectedModule'] = {'name': 'Test'};
+                        }
+                    });
+                });
 
             } else if (step == 'indexing') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
             } else if (step == 'classification') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
             } else if (step == 'datafusion') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
+
             } else if (step == 'export') {
-                $scope[step]['modules'] = APIService.getModules(step);
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
+
             }
         };
 
