@@ -1,4 +1,10 @@
 <div class="row">
+    <div class="col-sm-12">
+        <p>Data often is represented differently, even on the same record list. These differences can spoil the integration process by leaving out true matches because
+            of uneven representations of the same data. Here you can standardize your data to improve the integration results.</p>
+    </div>
+</div>
+<div class="row">
     <div class="col-sm-6" ng-repeat="source in sources">
         <div ng-repeat="o in standardisation.moduleSelections[source] track by $index">
             <div class="row">
