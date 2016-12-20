@@ -2,10 +2,10 @@ from engine.modules.module import Module
 
 
 class FirstNEncoding(Module):
-    def __init__(self, config, **kwargs):
+    def __init__(self, **kwargs):
         super(FirstNEncoding, self).__init__(**kwargs)
         self.pretty_name = 'None'
-        self.first_n = config['first_n']
+        self.first_n = self.config['first_n']
 
     def run(self, value):
         return str(value)[0:self.first_n]
