@@ -31,7 +31,7 @@ class BlockingStandard(IndexingModule):
         for ke in self.config["keys"]:
             if ke["encoding"] not in self.encodings:
                 self.encodings[ke["encoding"]] = load_module("encoding", ke['encoding']['name'],
-                                           config=ke['encoding'])
+                                                             config=ke['encoding'])
 
     @staticmethod
     def pretty_name():
@@ -51,8 +51,9 @@ class BlockingStandard(IndexingModule):
 
         return groups
 
-   # @staticmethod
-    def _concat_cols(self,record):
+        # @staticmethod
+
+    def _concat_cols(self, record):
         concat = ""
         for ke in self.keys:
             for field in record.columns[ke["key"]].fields:
@@ -63,7 +64,17 @@ class BlockingStandard(IndexingModule):
     def config_json(project_id):
         dal = DALMongo(project_id)
 
-        cols = [{"label": c,"value": c,"id": c} for c in dal.get_global_schema() if c.startswith('__new__')]
+        cols = [{
+                    "label": c,
+                    "value": c,
+                    "id": c,
+                    "config": {
+                        "key": {
+                            'type': 'hidden',
+                            'value': c,
+                        }
+                    }
+                } for c in dal.get_global_schema() if c.startswith('__new__')]
 
         encoding_configs = dynamic_loading.list_modules('encoding')
 
@@ -71,19 +82,19 @@ class BlockingStandard(IndexingModule):
             'type': 'row',
             'cols': {
                 'key':
-                {
-                    'type': 'dropdown',
-                    'label': 'Select a column',
-                    'selectedoption': {},
-                    'options': cols
-                },
+                    {
+                        'type': 'dropdown',
+                        'label': 'Select a column',
+                        'selectedoption': {},
+                        'options': cols
+                    },
                 'encoding':
-                {
-                    "type": "dropdown",
-                    'label': 'Select encoding',
-                    'selectedoption': {},
-                    'options': encoding_configs
-                }
+                    {
+                        "type": "dropdown",
+                        'label': 'Select encoding',
+                        'selectedoption': {},
+                        'options': encoding_configs
+                    }
             }
         }
         return {
