@@ -34,8 +34,8 @@ class FellegiSunterClassification(Module):
 
         self.compute_similarity = getattr(self, "_vector_" + self.config['vector_reducer'])
 
-        self.lower_bound = self.config["thresholds"]['from']
-        self.upper_bound = self.config["thresholds"]['to']
+        self.lower_bound = float(self.config["thresholds"]['from'])
+        self.upper_bound = float(self.config["thresholds"]['to'])
 
     @staticmethod
     def pretty_name():
