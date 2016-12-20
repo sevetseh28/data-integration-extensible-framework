@@ -21,7 +21,7 @@ class DeleteChars(Module):
 
     @staticmethod
     def pretty_name():
-        return "Delete chars"
+        return "Date Formatting"
 
     def run(self, column):
         languages = self.config["languages"]

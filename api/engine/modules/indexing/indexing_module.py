@@ -10,19 +10,19 @@ class IndexingModule(Module):
         super(IndexingModule, self).__init__(**kwargs)
 
         # si no hay config de encoding, crea una por defecto
-        if 'encoding' not in self.config or not self.config['encoding']:
-            self.config['encoding'] = {
-                'name': 'nop'
-            }
+       # if 'encoding' not in self.config or not self.config['encoding']:
+      #      self.config['encoding'] = {
+       #         'name': 'nop'
+       #     }
 
         self.schema = []
         self.records = []
-        self.encoding_module = load_module("encoding", self.config['encoding']['name'],
-                                           config=self.config['encoding'])
+        #self.encoding_module = load_module("encoding", self.config['encoding']['name'],
+                                 #          config=self.config['encoding'])
 
     @staticmethod
     def pretty_name():
         return "Indexing module"
 
-    def encode(self, value):
-        return self.encoding_module.run(value)
+  #  def encode(self, value):
+     #p   return self.encoding_module.run(value)
