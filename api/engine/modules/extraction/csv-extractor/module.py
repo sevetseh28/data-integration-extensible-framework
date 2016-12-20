@@ -42,7 +42,7 @@ class CsvExtractor(ExtractionModule):
         return {
             'pathcsv': {
                 'label': 'CSV',
-                'type': 'text'
+                'type': 'file'
             }
         }
 

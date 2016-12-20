@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from django.http import JsonResponse
 from rest_framework import viewsets
@@ -40,6 +41,18 @@ def schema(request, project_id):
         'source1': schema1,
         'source2': schema2
     }, safe=False)
+
+
+def upload(request):
+    filename = uuid.uuid4()
+    file = request.FILES['file']
+    ext = file._name.split('.')[-1]
+
+    with open('uploaded-files/{}.{}'.format(filename, ext), 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+    return JsonResponse({'location': 'uploaded-files/{}.{}'.format(filename, ext)})
 
 
 def output_fields(request, project_id):

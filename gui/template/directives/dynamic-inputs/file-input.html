@@ -1,9 +1,4 @@
-<div class="fileinput fileinput-new" data-provides="fileinput">
-    <span class="btn btn-primary btn-file m-r-10">
-                    <span class="fileinput-new">{{config.name}}</span>
-    <span class="fileinput-exists">Change</span>
-    </span>
-    <span class="fileinput-filename"></span>
-    <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
-</div>
-    <input type="text" ng-model="config.value">
+<button type="file" ngf-select="uploadCSV($file, $invalidFiles)" accept="*/*"
+ class="btn btn-primary waves-effect waves-effect ">
+      Select File</button>
+<span ng-show="f.progress >= 0" ng-bind="f.name + ' | ' + f.progress + '% uploaded.'"></span>
