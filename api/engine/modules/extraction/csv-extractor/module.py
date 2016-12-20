@@ -18,6 +18,7 @@ class CsvExtractor(ExtractionModule):
         super(CsvExtractor, self).__init__(**kwargs)
         self.pretty_name = 'CsvExtractor'
         self.pathcsv = self.config['pathcsv']
+        self.delimiter = self.config['delimiter'].__str__()[0] if 'delimiter' in self.config and self.config['delimiter'] else ','
 
     @staticmethod
     def pretty_name():
@@ -26,7 +27,7 @@ class CsvExtractor(ExtractionModule):
     def run(self):
 
         with open(self.pathcsv) as csvfile:
-            reader = csv.DictReader(csvfile)
+            reader = csv.DictReader(csvfile, delimiter=self.delimiter, skipinitialspace=True, quoting=csv.QUOTE_MINIMAL)
             for fieldname in reader.fieldnames:
                 self.add_to_schema(Column(fieldname))
             for i,row in enumerate(reader):
@@ -43,6 +44,10 @@ class CsvExtractor(ExtractionModule):
             'pathcsv': {
                 'label': 'CSV',
                 'type': 'file'
+            },
+            'delimiter': {
+                'label': 'Delimiter (default: ",")',
+                'type': 'text'
             }
         }
 

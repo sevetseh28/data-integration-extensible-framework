@@ -13,8 +13,8 @@ config = {
             "selected_module": {
                 "name": "csv-extractor",
                 "config": {
-            'pathcsv': "primerocsv.csv"
-        }
+                    'pathcsv': "primerocsv.csv"
+                }
             }
         },
         "source2": {
