@@ -85,7 +85,11 @@ config = {
     "indexing1": {
         "selected_module": {
             "name": "blocking-standard",
-            "config": {"keys": ["s1_Column8", "s1_Column9"]}
+            "config": {
+                "keys":[
+                    {"encoding": {"first_n": 2, "name": "first-n"}, "key": {"key": "s1_Column8"}},
+                    {"encoding": {"first_n": 2, "name": "first-n"}, "key": {"key": "s1_Column9"}}
+                ]}
         }
     },
     "indexing2": {
@@ -104,8 +108,11 @@ config = {
         "selected_module": {
             "name": "fellegi-sunter",
             "config": {
-                "lower_bound": 0.3,
-                "upper_bound": 0.5,
+                "thresholds":{
+                    "from": 0.3,
+                    "to": 0.5
+                },
+
                 "vector_reducer": 'average'
             }
         }

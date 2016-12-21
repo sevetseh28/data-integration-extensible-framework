@@ -26,11 +26,11 @@ class BlockingStandard(IndexingModule):
     def __init__(self, records, **kwargs):
         super(BlockingStandard, self).__init__(**kwargs)
         self.records = records
-        self.keys = [{"key": unidecode(k["key"]), "encoding": k["encoding"]} for k in self.config["keys"]]
+        self.keys = [{"key": unidecode(k["key"]["key"]), "encoding": k["encoding"]} for k in self.config["keys"]]
         self.encodings = {}
         for ke in self.config["keys"]:
-            if ke["encoding"] not in self.encodings:
-                self.encodings[ke["encoding"]] = load_module("encoding", ke['encoding']['name'],
+            if ke["encoding"]["name"] not in self.encodings:
+                self.encodings[ke["encoding"]["name"]] = load_module("encoding", ke['encoding']['name'],
                                                              config=ke['encoding'])
 
     @staticmethod
@@ -42,7 +42,7 @@ class BlockingStandard(IndexingModule):
 
         for r in self.records:
             # se obtiene el valor y se codifica
-            cols_value_encoded = self._concat_cols(r, self.keys)
+            cols_value_encoded = self._concat_cols(r)
 
             # se agrega al conjunto de la clave
             if cols_value_encoded not in groups:
@@ -57,7 +57,7 @@ class BlockingStandard(IndexingModule):
         concat = ""
         for ke in self.keys:
             for field in record.columns[ke["key"]].fields:
-                concat += self.encodings[ke["encoding"]].run(str(field.value))
+                concat += self.encodings[ke["encoding"]["name"]].run(str(field.value))
         return concat
 
     @staticmethod
