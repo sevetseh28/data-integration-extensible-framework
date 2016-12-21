@@ -82,7 +82,11 @@ config = {
     "indexing1": {
         "selected_module": {
             "name": "blocking-standard",
-            "config": {"keys": ["s1_TRCURR", "s1_TROPN1"]}
+            "config": {
+                "keys": [
+                    {"encoding": {"first_n": 2, "name": "first-n"}, "key": {"key": "s1_TRCURR"}},
+                    {"encoding": {"first_n": 2, "name": "first-n"}, "key": {"key": "s1_TROPN1"}}
+                ]}
         }
     },
     "indexing2": {
