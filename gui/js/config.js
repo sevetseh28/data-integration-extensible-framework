@@ -1,7 +1,7 @@
 materialAdmin
     .config(function ($stateProvider, $urlRouterProvider, $sceDelegateProvider) {
         $sceDelegateProvider.resourceUrlWhitelist(['self', 'http://localhost:8001/**', 'http://127.0.0.1:8001/**']);
-        $urlRouterProvider.otherwise("/home");
+        $urlRouterProvider.otherwise("/");
 
 
         $stateProvider
@@ -39,40 +39,40 @@ materialAdmin
                 }
             })
 
-            .state('test', {
-                url: '/test',
-                templateUrl: 'views/test.html',
-                resolve: {
-                    loadPlugin: function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            {
-                                name: 'css',
-                                insertBefore: '#app-level',
-                                files: [
-                                    'vendors/bower_components/nouislider/jquery.nouislider.css',
-                                    'vendors/farbtastic/farbtastic.css',
-                                    'vendors/bower_components/summernote/dist/summernote.css',
-                                    'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-                                    'vendors/bower_components/chosen/chosen.min.css'
-                                ]
-                            },
-                            {
-                                name: 'vendors',
-                                files: [
-                                    'vendors/input-mask/input-mask.min.js',
-                                    'vendors/bower_components/nouislider/jquery.nouislider.min.js',
-                                    'vendors/bower_components/moment/min/moment.min.js',
-                                    'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-                                    'vendors/bower_components/summernote/dist/summernote.min.js',
-                                    'vendors/fileinput/fileinput.min.js',
-                                    'vendors/bower_components/chosen/chosen.jquery.js',
-                                    'vendors/bower_components/angular-chosen-localytics/chosen.js',
-                                ]
-                            }
-                        ])
-                    }
-                }
-            })
+            // .state('test', {
+            //     url: '/test',
+            //     templateUrl: 'views/test.html',
+            //     resolve: {
+            //         loadPlugin: function ($ocLazyLoad) {
+            //             return $ocLazyLoad.load([
+            //                 {
+            //                     name: 'css',
+            //                     insertBefore: '#app-level',
+            //                     files: [
+            //                         'vendors/bower_components/nouislider/jquery.nouislider.css',
+            //                         'vendors/farbtastic/farbtastic.css',
+            //                         'vendors/bower_components/summernote/dist/summernote.css',
+            //                         'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+            //                         'vendors/bower_components/chosen/chosen.min.css'
+            //                     ]
+            //                 },
+            //                 {
+            //                     name: 'vendors',
+            //                     files: [
+            //                         'vendors/input-mask/input-mask.min.js',
+            //                         'vendors/bower_components/nouislider/jquery.nouislider.min.js',
+            //                         'vendors/bower_components/moment/min/moment.min.js',
+            //                         'vendors/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+            //                         'vendors/bower_components/summernote/dist/summernote.min.js',
+            //                         'vendors/fileinput/fileinput.min.js',
+            //                         'vendors/bower_components/chosen/chosen.jquery.js',
+            //                         'vendors/bower_components/angular-chosen-localytics/chosen.js',
+            //                     ]
+            //                 }
+            //             ])
+            //         }
+            //     }
+            // })
 
             .state('projectview', {
                 url: '/project/:id',
@@ -111,7 +111,7 @@ materialAdmin
 
 
             .state('projects', {
-                url: '/projects',
+                url: '/',
                 templateUrl: 'views/projects.html',
                 resolve: {
                     loadPlugin: function ($ocLazyLoad) {
