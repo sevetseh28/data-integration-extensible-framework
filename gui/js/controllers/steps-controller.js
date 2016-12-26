@@ -145,15 +145,39 @@ materialAdmin
             stepName = $scope.steps[$scope.currentStep];
 
             APIService.run($stateParams.id, stepId, $scope[stepName].returnValue).then(function () {
-                $scope.tabs[$scope.currentStep]['active'] = false;
-                $scope.currentStep = $scope.currentStep + 1;
-                $scope.tabs[$scope.currentStep]['disabled'] = false;
+                    $scope.tabs[$scope.currentStep]['active'] = false;
+                    $scope.currentStep = $scope.currentStep + 1;
+                    $scope.tabs[$scope.currentStep]['disabled'] = false;
 
-                $scope.loadStep($scope.steps[$scope.currentStep]);
+                    $scope.loadStep($scope.steps[$scope.currentStep]);
 
-                $scope.tabs[$scope.currentStep]['active'] = true;
-            });
-        };
+                    $scope.tabs[$scope.currentStep]['active'] = true;
+                }, function (response) {
+                    swal({
+                            title: "An error has occured!",
+                            type: "error",
+                            text: 'Please check modules are selected and fully configured',
+                            html: true,
+                            showCancelButton: true,
+                            confirmButtonText: "Ok",
+                            cancelButtonText: "See details",
+                            closeOnConfirm: true,
+                            closeOnCancel: false
+                        },
+                        function (isConfirm) {
+                            if (!isConfirm) {
+                                swal({
+                                        title: "Error details",
+                                        text: '<div style="text-align: left" id="stacktrace"><small>' + response.data.details + '</small></div>',
+                                        html: true
+                                    }
+                                );
+                            }
+                        });
+                }
+            );
+        }
+        ;
 
         $scope.tabs = [
             {
@@ -236,4 +260,5 @@ materialAdmin
 
         $scope.$watch('tabs', setCurrentStep, true);
 
-    });
+    })
+;

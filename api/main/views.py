@@ -1,4 +1,5 @@
 import json
+import traceback
 import uuid
 
 from django.http import JsonResponse
@@ -71,8 +72,11 @@ def run(request):
     config = params['config'] if 'config' in params else {}
 
     # Llamado a workflow
-    w = Workflow(project_id)
-    w.set_current_step(step, config)
-    w.execute_step()
+    try:
+        w = Workflow(project_id)
+        w.set_current_step(step, config)
+        w.execute_step()
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
 
     return JsonResponse({'status': 'ok'})
