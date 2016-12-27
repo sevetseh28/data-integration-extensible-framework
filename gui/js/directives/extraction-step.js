@@ -39,8 +39,5 @@ angular.module("materialAdmin")
 
                 };
             },
-            link: function (scope) {
-                scope.loadStep('extraction');
-            }
         }
     });

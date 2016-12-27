@@ -65,17 +65,27 @@ def output_fields(request, project_id):
 
 
 def run(request):
-    # Se obtienen los parametros del request
-    params = json.loads(request.body)
-    project_id = params['project_id']
-    step = params['step']
-    config = params['config'] if 'config' in params else {}
-
-    # Llamado a workflow
     try:
+        # Se obtienen los parametros del request
+        params = json.loads(request.body)
+        project_id = params['project_id']
+        step = params['step']
+        config = params['config'] if 'config' in params else {}
+        step_state = params['step_state'] if 'step_state' in params else {}
+
+        # Llamado a workflow
         w = Workflow(project_id)
         w.set_current_step(step, config)
         w.execute_step()
+
+        # se guarda el estado del proyecto
+        project = Project.objects.get(id=project_id)
+        project.current_step = step
+        project.save()
+
+        saved_step, created = StepConfig.objects.get_or_create(project_id=project_id, step=step)
+        saved_step.config = step_state
+        saved_step.save()
     except Exception as e:
         return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
 

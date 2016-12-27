@@ -1,16 +1,27 @@
+import json
+
 from models import Project, StepConfig
 from rest_framework import serializers
 
 
 # ver http://www.django-rest-framework.org/tutorial/quickstart/#serializers
 
-class ProjectSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Project
-        fields = ('id', 'name', 'stepconfig_set')
-
-
 class StepConfigSerializer(serializers.HyperlinkedModelSerializer):
+    config = serializers.SerializerMethodField()
+
+    def get_config(self, obj):
+        return dict(obj.config)#json.dumps(obj.config).encode('utf-8')
+
     class Meta:
         model = StepConfig
+
+
         fields = ('project', 'step', 'config')
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    steps = StepConfigSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Project
+        fields = ('id', 'name', 'current_step', 'steps')

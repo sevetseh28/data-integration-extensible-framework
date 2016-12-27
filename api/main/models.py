@@ -13,7 +13,7 @@ STEPS = ((step.__name__, step.pretty_name()) for step in Step.__subclasses__())
 
 class Project(models.Model):
     name = models.CharField(max_length=30)
-    current_step = models.CharField(max_length=30, choices=STEPS, default=FIRST_STEP)
+    current_step = models.CharField(max_length=30, choices=STEPS, default=None, null=True)
 
     # Metodo para q se muestre con nombre para humanos en las apis navegables generadas
     def __str__(self):
@@ -21,9 +21,9 @@ class Project(models.Model):
 
 
 class StepConfig(models.Model):
-    project = models.ForeignKey(Project)
+    project = models.ForeignKey(Project, related_name='steps')
     step = models.CharField(max_length=30, choices=STEPS)
-    config = JSONField()
+    config = JSONField(True)
 
     def __str__(self):
         return self.project.__str__() + '.' + self.step
