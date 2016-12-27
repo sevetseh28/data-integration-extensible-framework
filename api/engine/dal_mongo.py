@@ -15,11 +15,10 @@ COL_STEP_PREFIXES = {
 class DALMongo:
     def __init__(self, project_id=None):
         self.db_name = 'project{}'.format(project_id)
+        self.mongoclient = MongoClient(DATABASES['mongodb']['host'], DATABASES['mongodb']['port'])
 
     def get_connection(self):
-        host = DATABASES['mongodb']['host']
-        port = DATABASES['mongodb']['port']
-        return MongoClient(host, port)
+        return self.mongoclient
 
     """""""""""""""""""""""""""""""""""""""""""""""""""
         INSERTS
@@ -248,7 +247,7 @@ class DALMongo:
         col = c[self.db_name][collection_name]
         result = col.find(filters, extra)
 
-        c.close()
+        # c.close()
         return result
 
     """""""""""""""""""""""""""""""""""""""""""""""""""
