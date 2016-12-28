@@ -22,4 +22,7 @@ class LevenshteinDistance(Module):
     def run(self, val1, val2):
         lev_distance = Levenshtein.distance(val1, val2)
         max_length = max(len(val1), len(val2))
-        return (1.0 - lev_distance/max_length)
+        if max_length == 0:
+            return 0
+        else:
+            return (1.0 - lev_distance/max_length)
