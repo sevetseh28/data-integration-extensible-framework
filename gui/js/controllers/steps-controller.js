@@ -150,26 +150,27 @@ materialAdmin
                 for(var i=0;i<steps.length;i++){
                     //se carga el estado del step
                     var step = steps[i];
-                    var state = steps[i].config;
+                    // var state = steps[i].config;
+                    //
+                    // // si el step actual es extraccion o standardization
+                    // if(['ExtractionStep'].indexOf(step.step) != -1){
+                    //     //copio el selectedModule a la lista de modulos para que quede 2 way binded
+                    //     for(s=1;s<=2;s++){
+                    //         for(var j=0;j<state.modules['source'+s].length;j++){
+                    //             if(state.selectedModules['source'+s].id == state.modules['source'+s][j].id){
+                    //                 state.modules['source'+s][j] = state.selectedModules['source'+s]
+                    //             }
+                    //         }
+                    //     }
+                    // }
 
-                    // si el step actual es extraccion o standardization
-                    if(['ExtractionStep'].indexOf(step.step) != -1){
-                        //copio el selectedModule a la lista de modulos para que quede 2 way binded
-                        for(s=1;s<=2;s++){
-                            for(var j=0;j<state.modules['source'+s].length;j++){
-                                if(state.selectedModules['source'+s].id == state.modules['source'+s][j].id){
-                                    state.modules['source'+s][j] = state.selectedModules['source'+s]
-                                }
-                            }
-                        }
-                    }
-
-
-                    $scope[$scope.steps[i]] = state;
+                    // $scope[$scope.steps[i]] = state;
 
                     //se habilita la tab actual y la proxima
                     $scope.tabs[i].disabled=false;
+                    $scope.tabs[i].reload_required=true;
                     $scope.tabs[i+1].disabled=false;
+                    $scope.tabs[i+1].reload_required=true;
 
                     //se saca el active a este step
                     $scope.tabs[i].active = false;
@@ -300,6 +301,10 @@ materialAdmin
             for (tab in $scope.tabs) {
                 if ($scope.tabs[tab].active) {
                     $scope.currentStep = i;
+                    if($scope.tabs[tab].reload_required){
+                        $scope.loadStep($scope.steps[tab]);
+                        $scope.tabs[tab].reload_required = false
+                    }
                     return;
                 }
                 i++;
