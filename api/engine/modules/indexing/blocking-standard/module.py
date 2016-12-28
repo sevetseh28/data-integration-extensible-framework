@@ -56,8 +56,7 @@ class BlockingStandard(IndexingModule):
     def _concat_cols(self, record):
         concat = ""
         for ke in self.keys:
-            for field in record.columns[ke["key"]].fields:
-                concat += self.encodings[ke["encoding"]["name"]].run(str(field.value))
+            concat += self.encodings[ke["encoding"]["name"]].run(str(record.columns[ke["key"]].concat_fields()))
         return concat
 
     @staticmethod
