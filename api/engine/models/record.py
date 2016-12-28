@@ -142,13 +142,14 @@ class Field:
 
     def to_json(self):
         json = dict(self.__dict__)
-        json["tipe"] = self.tipe.to_json()
+        json["type"] = self.tipe.to_json()
+        json.pop("tipe")
 
         return json
 
     @staticmethod
     def from_json(json):
-        return Field(json["value"], FieldType.from_json(json["tipe"]), json["tags"], json["output_field"])
+        return Field(json["value"], FieldType.from_json(json["type"]), json["tags"], json["output_field"])
 
 
 class SchemaMatch:
