@@ -22,7 +22,7 @@ angular.module("materialAdmin")
                     scope.loadNestedCheck(k);
                 };
 
-                function appendReturnValue() {
+                scope.appendReturnValue = function() {
                     var ret = [];
 
                     for (var row in scope.childReturnValues) {
@@ -30,9 +30,9 @@ angular.module("materialAdmin")
                     }
 
                     scope.returnValue[scope.configId] = ret
-                }
+                };
 
-                scope.$watch(function(){return scope.nestedChecks}, appendReturnValue, true);
+                scope.$watch(function(){return scope.nestedChecks}, scope.appendReturnValue, true);
 
             },
             controller: function ($scope) {
@@ -41,7 +41,8 @@ angular.module("materialAdmin")
                 };
 
                 $scope.removeRow = function (index) {
-                    $scope.config.rows.splice(index, 1)
+                    $scope.config.rows.splice(index, 1);
+                    $scope.appendReturnValue()
                 };
 
             }

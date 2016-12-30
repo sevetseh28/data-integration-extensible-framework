@@ -30,6 +30,7 @@ materialAdmin
                     $scope[step]['modules']['source2'] = angular.copy($scope[step]['modules']['source1']);
                 });
             } else if (step == 'standardisation') {
+                $scope[step].moduleSelections = {'source1':[], 'source2':[]};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
@@ -47,6 +48,7 @@ materialAdmin
                 });
 
             } else if (step == 'schemamatching') {
+                $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
@@ -65,19 +67,23 @@ materialAdmin
                 });
 
             } else if (step == 'indexing') {
+                $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
             } else if (step == 'classification') {
+                $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
             } else if (step == 'datafusion') {
+                $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
 
             } else if (step == 'export') {
+                $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
