@@ -117,53 +117,107 @@ class ExtractionStep(Step):
         self._append_result_collection(schema, 'source{}_schema'.format(source_number))
 
 
-class StandardizationStep(Step):
+class DataCleansingStep(Step):
     """
-    Formato del config de estandarizacion:
+    Formato del config de Data cleansing:
     {
         "source1":{
-            "[nombre_columna1]": [
+            "[column_name1]": [
                 {
-                    "name":"[nombre_modulo]",
+                    "name":"[module_name]",
                     "config":{[config]}
                 },
                 ...
             }
+        },
+        "source2": same as above
+    }
+    """
+
+    def __init__(self, **kwargs):
+        super(DataCleansingStep, self).__init__(**kwargs)
+        self.modules_directory = "data-cleansing"
+
+    @staticmethod
+    def pretty_name():
+        return "Data Cleansing"
+
+    def run_implementation(self):
+        self._clean_source(1)
+        self._clean_source(2)
+
+    def _clean_source(self, source_number):
+        # Se obtienen los registros
+        dal = DALMongo(self.project_id)
+        records = dal.get_records(ExtractionStep().class_name, source_number)
+
+        #  Do cleaning for each column of each record
+        for record in records:
+            for col, datacleansing_modules in self.config["source{}".format(source_number)].items():
+                for datacleansing_module in datacleansing_modules:
+                    module = self._load_module(datacleansing_module)
+                    record.columns[col] = module.run(record.columns[col])
+
+        self._append_result_collection(records, "source{}_records".format(source_number))
+
+    def _load_module(self, datacleansing):
+        step = self.modules_directory
+        module = datacleansing['name']
+        config = datacleansing['config']
+        return dynamic_loading.load_module(step, module, config=config)
+
+class StandardisationAndTaggingStep(Step):
+    """
+    Config format for standardisation and tagging step:
+    {
+        "source1":{
+            "[column_name1]":
+                {
+                    "name":"[module_name]",
+                    "config":{[config]}
+                }
+            }
+            "[column_name2]":
+                {
+                    "name":"[module_name]",
+                    "config":{[config]}
+                }
+            },
+            ...
         },
         "source2": idem
     }
     """
 
     def __init__(self, **kwargs):
-        super(StandardizationStep, self).__init__(**kwargs)
-        self.modules_directory = "standardization"
+        super(StandardisationAndTaggingStep, self).__init__(**kwargs)
+        self.modules_directory = "standardisation-tagging"
 
     @staticmethod
     def pretty_name():
-        return "Standardization"
+        return "Standardisation & Tagging"
 
     def run_implementation(self):
-        self._standardize_source(1)
-        self._standardize_source(2)
+        self._standardise_and_tag_source(1)
+        self._standardise_and_tag_source(2)
 
-    def _standardize_source(self, source_number):
-        # Se obtienen los registros
+    def _standardise_and_tag_source(self, source_number):
+        # Get cleansed records from MongoDB
         dal = DALMongo(self.project_id)
-        records = dal.get_records(ExtractionStep().class_name, source_number)
+        records = dal.get_records(StandardisationAndTaggingStep().class_name, source_number)
 
-        # Se aplican las estandarizaciones para cada columna de cada registro
+        # Run standardisation and tagging module for each column of each record
         for record in records:
-            for col, standardizations in self.config["source{}".format(source_number)].items():
-                for standardization in standardizations:
-                    module = self._load_module(standardization)
-                    record.columns[col] = module.run(record.columns[col])
+            for col, standardisation_tagging_module in self.config["source{}".format(source_number)].items():
+                module = self._load_module(standardisation_tagging_module)
+                record.columns[col] = module.run(record.columns[col])
 
         self._append_result_collection(records, "source{}_records".format(source_number))
 
-    def _load_module(self, standardization):
+    def _load_module(self, standardisation_tagging_module):
         step = self.modules_directory
-        module = standardization['name']
-        config = standardization['config']
+        module = standardisation_tagging_module['name']
+        config = standardisation_tagging_module['config']
         return dynamic_loading.load_module(step, module, config=config)
 
 
@@ -193,7 +247,7 @@ class SegmentationStep(Step):
     def _segment_source(self, source_number):
         dal = DALMongo(self.project_id)
 
-        records = dal.get_records(StandardizationStep().class_name, source_number)
+        records = dal.get_records(StandardisationAndTaggingStep().class_name, source_number)
         module = self._load_module(records=records)
 
         self._append_result_collection(module.run(), 'source{}_records'.format(source_number))

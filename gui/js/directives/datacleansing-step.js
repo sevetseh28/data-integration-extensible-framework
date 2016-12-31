@@ -1,28 +1,28 @@
 angular.module("materialAdmin")
-    .directive('standardisationStep', function () {
+    .directive('datacleansingStep', function () {
         return {
             restrict: "E",
-            templateUrl: "template/directives/standardisation-step.html",
+            templateUrl: "template/directives/datacleansing-step.html",
             controller: function ($scope) {
-                $scope.standardisation['title'] = 'Standardisation';
+                $scope.datacleansing['title'] = 'Data Cleansing';
 
 
                 // SELECCIONES DE MODULOS
-                $scope.standardisation['addOption'] = function (source) {
-                    $scope.standardisation['moduleSelections'][source].push(angular.copy($scope.standardisation['modules']))
+                $scope.datacleansing['addOption'] = function (source) {
+                    $scope.datacleansing['moduleSelections'][source].push(angular.copy($scope.datacleansing['modules']))
                 };
 
-                $scope.standardisation['removeOption'] = function (index, source) {
-                    $scope.standardisation['moduleSelections'][source].splice(index, 1)
+                $scope.datacleansing['removeOption'] = function (index, source) {
+                    $scope.datacleansing['moduleSelections'][source].splice(index, 1)
                 };
 
 
-                $scope.standardisation['moduleSelections'] = {};
+                $scope.datacleansing['moduleSelections'] = {};
 
-                $scope.standardisation.empty = {};
+                $scope.datacleansing.empty = {};
 
-                $scope.standardisation.updateReturnValue = function() {
-                    $scope.standardisation.returnValue = {
+                $scope.datacleansing.updateReturnValue = function() {
+                    $scope.datacleansing.returnValue = {
                         source1: {},
                         source2: {}
                     };
@@ -30,8 +30,8 @@ angular.module("materialAdmin")
                     var source_configs;
                     for (var source in $scope.sources) {
                         source = $scope.sources[source];
-                        source_configs = $scope.standardisation.returnValue[source];
-                        module_selections = $scope.standardisation['moduleSelections'][source];
+                        source_configs = $scope.datacleansing.returnValue[source];
+                        module_selections = $scope.datacleansing['moduleSelections'][source];
                         for (var module in module_selections) {
                             module = module_selections[module];
                             if (!module.columnSelected || !module.moduleSelected)
@@ -49,12 +49,12 @@ angular.module("materialAdmin")
                             source_configs[module.columnSelected].push(retVal)
                         }
                     }
-                }
+                };
 
-                $scope.$watch('standardisation.moduleSelections', $scope.standardisation.updateReturnValue, true);
+                $scope.$watch('datacleansing.moduleSelections', $scope.datacleansing.updateReturnValue, true);
 
-                $scope.standardisation['moduleSelections']['source1'] = [];
-                $scope.standardisation['moduleSelections']['source2'] = []
+                $scope.datacleansing['moduleSelections']['source1'] = [];
+                $scope.datacleansing['moduleSelections']['source2'] = []
             }
         }
     });

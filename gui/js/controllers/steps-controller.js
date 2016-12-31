@@ -11,7 +11,8 @@ materialAdmin
 
         $scope.steps = [
             'extraction',
-            'standardisation',
+            'datacleansing',
+            'standardisation-tagging',
             'segmentation',
             'schemamatching',
             'indexing',
@@ -29,14 +30,25 @@ materialAdmin
                     $scope[step]['modules']['source1'] = data.data;
                     $scope[step]['modules']['source2'] = angular.copy($scope[step]['modules']['source1']);
                 });
-            } else if (step == 'standardisation') {
-                $scope[step].moduleSelections = {'source1':[], 'source2':[]};
+            } else if (step == 'datacleansing') {
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
 
                 APIService.getColumnsSources($stateParams.id).then(function (response) {
-                    $scope.standardisation['columns'] = {
+                    $scope.datacleansing['columns'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
+            } else if (step == 'standardisationtagging') {
+                APIService.getModules($stateParams.id, step).then(function (data) {
+                    $scope[step]['modules'] = data.data;
+                });
+
+                APIService.getColumnsSources($stateParams.id).then(function (response) {
+                    $scope.standardisationtagging['columns'] = {
                         'source1': response.data.source1,
                         'source2': response.data.source2
                     }
@@ -100,7 +112,16 @@ materialAdmin
             modules: {}
         };
 
-        $scope.standardisation = {
+        $scope.datacleansing = {
+            selectedModules: {
+                'source1': [],
+                'source2': []
+            },
+            modules: [],
+            columns: {}
+        };
+
+        $scope.standardisationtagging = {
             selectedModules: {
                 'source1': [],
                 'source2': []
@@ -243,11 +264,18 @@ materialAdmin
                 id: 'ExtractionStep'
             },
             {
-                title: 'Standardise',
+                title: 'Cleanse',
+                directive: 'datacleansing-step',
+                active: false,
+                disabled: true,
+                id: 'DataCleansingStep'
+            },
+            {
+                title: 'Standardise & Tag',
                 directive: 'standardisation-step',
                 active: false,
                 disabled: true,
-                id: 'StandardizationStep'
+                id: 'StandardisationAndTaggingStep'
             },
             {
                 title: 'Segment',
