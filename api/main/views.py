@@ -28,7 +28,7 @@ class StepConfigViewSet(viewsets.ModelViewSet):
 def available_modules(request, step='', project_id=None):
     # Rename step to match modules directory
     if step == 'datacleansing': step = 'data-cleansing'
-    if step == 'standardisation-tagging': step = 'standardisation-tagging'
+    if step == 'standardisationtagging': step = 'standardisation-tagging'
     if step == 'schemamatching': step = 'schema-matching'
     if step == 'datafusion': step = 'data-fusion'
     return JsonResponse(list_modules(step, project_id), safe=False)

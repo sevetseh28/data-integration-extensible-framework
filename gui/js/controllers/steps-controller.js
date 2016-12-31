@@ -30,6 +30,7 @@ materialAdmin
                     $scope[step]['modules']['source1'] = data.data;
                     $scope[step]['modules']['source2'] = angular.copy($scope[step]['modules']['source1']);
                 });
+
             } else if (step == 'datacleansing') {
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
@@ -51,8 +52,35 @@ materialAdmin
                     $scope.standardisationtagging['columns'] = {
                         'source1': response.data.source1,
                         'source2': response.data.source2
+                    };
+
+                    for (var i = 0; i < $scope.standardisationtagging['columns']['source1'].length; i++) {
+
+                        var column = {
+                            'column': $scope.standardisationtagging['columns']['source1'][i],
+                            'modules': angular.copy($scope.standardisationtagging['modules']),
+                            'selectedModule': {}
+                        };
+                        $scope.standardisationtagging['moduleSelections']['source1']
+                            .push(column);
+
                     }
+
+                    for (var i = 0; i < $scope.standardisationtagging['columns']['source2'].length; i++) {
+                        var column = {
+                            'column': $scope.standardisationtagging['columns']['source2'][i],
+                            'modules': angular.copy($scope.standardisationtagging['modules']),
+                            'selectedModule': {}
+                        };
+                        $scope.standardisationtagging['moduleSelections']['source2']
+                            .push(column);
+                    }
+
                 });
+
+
+
+
 
             } else if (step == 'segmentation') {
                 APIService.getModules($stateParams.id, step).then(function (data) {

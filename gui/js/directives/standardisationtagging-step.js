@@ -7,12 +7,12 @@ angular.module("materialAdmin")
             restrict: "E",
             templateUrl: "template/directives/standardisationtagging-step.html",
             controller: function ($scope) {
-                $scope.datacleansing['title'] = 'Standardisation and tagging';
+                $scope.standardisationtagging['title'] = 'Standardisation and tagging';
 
 
                 // SELECCIONES DE MODULOS
                 $scope.standardisationtagging['addOption'] = function (source) {
-                    $scope.standardisationtagging['moduleSelections'][source].push(angular.copy($scope.datacleansing['modules']))
+                    $scope.standardisationtagging['moduleSelections'][source].push(angular.copy($scope.standardisationtagging['modules']))
                 };
 
                 $scope.standardisationtagging['removeOption'] = function (index, source) {
@@ -20,28 +20,11 @@ angular.module("materialAdmin")
                 };
 
 
-                $scope.standardisationtagging['moduleSelections']['source1'] = {};
-                $scope.standardisationtagging['moduleSelections']['source2'] = {};
+                $scope.standardisationtagging['moduleSelections'] = {};
+                $scope.standardisationtagging['moduleSelections']['source1'] = [];
+                $scope.standardisationtagging['moduleSelections']['source2'] = [];
 
-                for (var i = 0; i < $scope.standardisationtagging['columns']['source1'].length; i++) {
-                    $scope.standardisationtagging['moduleSelections']['source1']
-                        .push(angular.copy($scope.datacleansing['modules']));
-                    var selectedColumn = {
-                        'columnSelected': $scope.standardisationtagging['columns']['source1'][i]
-                    };
-                    $scope.standardisationtagging['moduleSelections']['source1']
-                        .push(selectedColumn);
-                }
 
-                for (var i = 0; i < $scope.standardisationtagging['columns']['source2'].length; i++) {
-                    $scope.standardisationtagging['moduleSelections']['source2']
-                        .push(angular.copy($scope.datacleansing['modules']));
-                    var selectedColumn = {
-                        'columnSelected': $scope.standardisationtagging['columns']['source1'][i]
-                    };
-                    $scope.standardisationtagging['moduleSelections']['source2']
-                        .push(selectedColumn);
-                }
 
                 $scope.standardisationtagging.empty = {};
 
@@ -56,29 +39,27 @@ angular.module("materialAdmin")
                         source = $scope.sources[source];
                         source_configs = $scope.standardisationtagging.returnValue[source];
                         module_selections = $scope.standardisationtagging['moduleSelections'][source];
-                        for (var module in module_selections) {
-                            module = module_selections[module];
-                            if (!module.columnSelected || !module.moduleSelected)
+                        for (var module_selection_idx in module_selections) {
+                            module_selection = module_selections[module_selection_idx];
+                            //module = module_selections['modules'][module];
+                            if (!module_selection.moduleSelected) // havent selected any module
                                 continue;
-                            if (!(module.columnSelected in source_configs)) {
-                                source_configs[module.columnSelected] = []
-                            }
+                            // if (!(module_selection.columnSelected in source_configs)) {
+                            //     source_configs[module.columnSelected] = []
+                            // }
                             retVal = {
-                                    name: module.moduleSelected.id,
+                                    name: module_selection.moduleSelected.id,
                                     config:{}
                             };
-                            for (var config in module.moduleSelected.config) {
-                                retVal.config[config] = module.moduleSelected.config[config].returnValue[config]
+                            for (var config in module_selection.moduleSelected.config) {
+                                retVal.config[config] = module_selection.moduleSelected.config[config].returnValue[config]
                             }
-                            source_configs[module.columnSelected].push(retVal)
+                            source_configs[module_selection.column] = retVal;
                         }
                     }
-                }
+                };
 
                 $scope.$watch('standardisationtagging.moduleSelections', $scope.standardisationtagging.updateReturnValue, true);
-
-                $scope.datacleansing['moduleSelections']['source1'] = [];
-                $scope.datacleansing['moduleSelections']['source2'] = []
             }
         }
     });

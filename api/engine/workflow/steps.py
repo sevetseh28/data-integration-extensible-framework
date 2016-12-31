@@ -204,7 +204,7 @@ class StandardisationAndTaggingStep(Step):
     def _standardise_and_tag_source(self, source_number):
         # Get cleansed records from MongoDB
         dal = DALMongo(self.project_id)
-        records = dal.get_records(StandardisationAndTaggingStep().class_name, source_number)
+        records = dal.get_records(DataCleansingStep().class_name, source_number)
 
         # Run standardisation and tagging module for each column of each record
         for record in records:

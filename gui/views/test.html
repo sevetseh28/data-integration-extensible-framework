@@ -44,34 +44,38 @@
                         </tab>
 
                         <tab heading="{{tabs[1]['title']}}" ng-attr-active='tabs[1]["active"]' disable='tabs[1]["disabled"]'>
-                            <standardisation-step></standardisation-step>
+                            <datacleansing-step></datacleansing-step>
                         </tab>
 
                         <tab heading="{{tabs[2]['title']}}" ng-attr-active='tabs[2]["active"]' disable='tabs[2]["disabled"]'>
-                            <segmentation-step></segmentation-step>
+                            <standardisationtagging-step></standardisationtagging-step>
                         </tab>
 
                         <tab heading="{{tabs[3]['title']}}" ng-attr-active='tabs[3]["active"]' disable='tabs[3]["disabled"]'>
-                            <schemamatching-step></schemamatching-step>
+                            <segmentation-step></segmentation-step>
                         </tab>
 
                         <tab heading="{{tabs[4]['title']}}" ng-attr-active='tabs[4]["active"]' disable='tabs[4]["disabled"]'>
-                            <indexing-step></indexing-step>
+                            <schemamatching-step></schemamatching-step>
                         </tab>
 
                         <tab heading="{{tabs[5]['title']}}" ng-attr-active='tabs[5]["active"]' disable='tabs[5]["disabled"]'>
-                            <comparison-step></comparison-step>
+                            <indexing-step></indexing-step>
                         </tab>
 
                         <tab heading="{{tabs[6]['title']}}" ng-attr-active='tabs[6]["active"]' disable='tabs[6]["disabled"]'>
-                            <classification-step></classification-step>
+                            <comparison-step></comparison-step>
                         </tab>
 
                         <tab heading="{{tabs[7]['title']}}" ng-attr-active='tabs[7]["active"]' disable='tabs[7]["disabled"]'>
-                            <datafusion-step></datafusion-step>
+                            <classification-step></classification-step>
                         </tab>
 
                         <tab heading="{{tabs[8]['title']}}" ng-attr-active='tabs[8]["active"]' disable='tabs[8]["disabled"]'>
+                            <datafusion-step></datafusion-step>
+                        </tab>
+
+                        <tab heading="{{tabs[9]['title']}}" ng-attr-active='tabs[9]["active"]' disable='tabs[9]["disabled"]'>
                             <export-step></export-step>
                         </tab>
 

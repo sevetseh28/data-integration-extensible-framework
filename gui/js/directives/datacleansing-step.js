@@ -49,7 +49,7 @@ angular.module("materialAdmin")
                             source_configs[module.columnSelected].push(retVal)
                         }
                     }
-                };
+                }
 
                 $scope.$watch('datacleansing.moduleSelections', $scope.datacleansing.updateReturnValue, true);
 
