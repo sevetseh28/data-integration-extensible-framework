@@ -123,6 +123,6 @@ angular.module('materialAdmin')
             getProjects: getProjects,
             getProject: getProject,
             deleteProject: deleteProject,
-            createProject: createProject,
+            createProject: createProject
         }
     });

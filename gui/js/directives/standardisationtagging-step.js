@@ -24,8 +24,23 @@ angular.module("materialAdmin")
                 $scope.standardisationtagging['moduleSelections']['source2'] = {};
 
                 for (var i = 0; i < $scope.standardisationtagging['columns']['source1'].length; i++) {
-                    $scope.standardisationtagging['moduleSelections']['source1']['columnSelected'] =
-                        $scope.standardisationtagging['columns']['source1'][i]
+                    $scope.standardisationtagging['moduleSelections']['source1']
+                        .push(angular.copy($scope.datacleansing['modules']));
+                    var selectedColumn = {
+                        'columnSelected': $scope.standardisationtagging['columns']['source1'][i]
+                    };
+                    $scope.standardisationtagging['moduleSelections']['source1']
+                        .push(selectedColumn);
+                }
+
+                for (var i = 0; i < $scope.standardisationtagging['columns']['source2'].length; i++) {
+                    $scope.standardisationtagging['moduleSelections']['source2']
+                        .push(angular.copy($scope.datacleansing['modules']));
+                    var selectedColumn = {
+                        'columnSelected': $scope.standardisationtagging['columns']['source1'][i]
+                    };
+                    $scope.standardisationtagging['moduleSelections']['source2']
+                        .push(selectedColumn);
                 }
 
                 $scope.standardisationtagging.empty = {};

@@ -12,7 +12,7 @@ materialAdmin
         $scope.steps = [
             'extraction',
             'datacleansing',
-            'standardisation-tagging',
+            'standardisationtagging',
             'segmentation',
             'schemamatching',
             'indexing',
@@ -258,21 +258,21 @@ materialAdmin
         $scope.tabs = [
             {
                 title: 'Extract',
-                directive: 'extraction-step',
+                directive: '',
                 active: true,
                 disabled: false,
                 id: 'ExtractionStep'
             },
             {
                 title: 'Cleanse',
-                directive: 'datacleansing-step',
+                directive: '',
                 active: false,
                 disabled: true,
                 id: 'DataCleansingStep'
             },
             {
                 title: 'Standardise & Tag',
-                directive: 'standardisation-step',
+                directive: '',
                 active: false,
                 disabled: true,
                 id: 'StandardisationAndTaggingStep'

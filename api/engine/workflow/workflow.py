@@ -3,10 +3,6 @@ from steps import *
 
 FIRST_STEP = ExtractionStep
 
-STEP_TABLE = {
-    ExtractionStep: StandardisationAndTaggingStep
-}
-
 
 class Workflow:
     def __init__(self, project_id):
