@@ -15,6 +15,20 @@ angular.module("materialAdmin")
                 $scope.toggle = function() {
                     $scope.config.checked = !($scope.config.checked)
                 }
+            },
+            link: function (scope, element, attrs) {
+
+                function appendReturnValue() {
+                    scope.returnValue[scope.configId] = {};
+                    scope.returnValue[scope.configId]['checked'] = scope.config.checked;
+
+                    if ('nestedCheck' in scope) {
+                        scope.nestedCheck['check'] ++
+                    }
+                }
+
+                scope.$watch('config', appendReturnValue, true);
+
             }
         }
     });
