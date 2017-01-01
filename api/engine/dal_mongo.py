@@ -200,6 +200,21 @@ class DALMongo:
         #                     obj['outputFields'].append({'name':f['output_field']})
 
         return ret
+    def get_matched_cols(self):
+        """
+        Retorna el los output fields de columnas matcheadas
+        """
+        records = self.get_all("SchemaMatchingStep", "source1_records")
+        ret = []
+
+        for r in records:
+            for c in r['columns']:
+                if c['name'].startswith('__new__'):
+                    if c['name'] not in [cl['name'] for cl in ret]:
+                            ret.append({'name':c['name']})
+
+
+        return ret
 
     def get_global_schema(self):
         """

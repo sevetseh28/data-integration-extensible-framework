@@ -60,6 +60,13 @@ class Record:
 
         return result
 
+    def get_field_col(self,Nop,col):
+        result = ""
+        col = self.columns[col]
+        for f in col.fields:
+            result+=str(f.value)
+        return result
+
     def get_sourcex_cols(self, source_number):
         return [c for c in self.columns.values() if c.name.startswith("s{}".format(source_number))]
 

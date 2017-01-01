@@ -11,7 +11,17 @@ angular.module("materialAdmin")
                     selected_module: {
                         name: '',
                         config: {}
+                    },
+                    skipstep: false,
+                };
+                $scope.segmentation.toggleskip = {
+                    config: {
+                        label: 'Skip this step and don\'t use output fields',
+                        color: "red",
                     }
+                };
+                $scope.segmentation.skiptoggler = function() {
+                    $scope.segmentation.returnValue.skipstep = !($scope.segmentation.returnValue.skipstep)
                 };
 
                 $scope.$watch('segmentation.selectedModule', function(){

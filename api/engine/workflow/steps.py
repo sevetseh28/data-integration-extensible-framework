@@ -22,13 +22,14 @@ class Step(object):
     }
     """
 
-    def __init__(self, project_id=None, config=None):
+    def __init__(self, project_id=None,segment_skipped=False, config=None):
         self.results = {
             "collections": []
         }
         self.config = config
         self.class_name = type(self).__name__
         self.project_id = project_id
+        self.segment_skipped = segment_skipped
         self.modules_directory = None
 
     def run(self):
@@ -278,8 +279,12 @@ class SchemaMatchingStep(Step):
         Implementación por defecto
         """
         dal = DALMongo(self.project_id)
-        records1 = dal.get_records("SegmentationStep", 1)
-        records2 = dal.get_records("SegmentationStep", 2)
+        if self.segment_skipped:
+            prevstep = "StandardisationAndTaggingStep"
+        else:
+            prevstep = "SegmentationStep"
+        records1 = dal.get_records(prevstep, 1)
+        records2 = dal.get_records(prevstep, 2)
 
         module = self._load_module(project_id=self.project_id, records1=records1, records2=records2)
 
@@ -363,6 +368,12 @@ class ComparisonStep(Step):
         groups = dal.get_indexing_groups()
 
         simils = []
+        # Si se salteo el paso de segmentacion se toman
+        # los valores de las columnas, sino de los output fields
+        if self.segment_skipped:
+            getvaluefrom = "get_field_col"
+        else:
+            getvaluefrom = "get_output_field_col"
 
         for group in groups:
             for r1 in group.records1:
@@ -376,8 +387,8 @@ class ComparisonStep(Step):
 
                         for out_field, comparison in self.config.items():
                             # Se obienen los valores a comparar y se comparan
-                            out_field_value1 = r1.get_output_field_col(out_field, col)
-                            out_field_value2 = r2.get_output_field_col(out_field, col)
+                            out_field_value1 = getattr(r1,getvaluefrom)(out_field,col)
+                            out_field_value2 = getattr(r2,getvaluefrom)(out_field,col)
 
                             module = self._load_module(comparison)
 

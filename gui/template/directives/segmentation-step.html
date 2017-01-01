@@ -6,7 +6,23 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
+        <div class="form-group">
+            <div class="fg-line">
+                <div>
+                    <div class="toggle-switch" data-ts-color="{{segmentation.toggleskip.config.color}}">
+                            <label class="ts-label">{{segmentation.toggleskip.config.label}}</label>
+                            <input type="checkbox" hidden="hidden" ng-model="segmentation.returnValue.skipstep">
+                            <label class="ts-helper" ng-click="segmentation.skiptoggler()"></label>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-hide="segmentation.returnValue.skipstep" class="row">
+    <div class="col-sm-12">
         <p class="c-black f-500 m-b-20">Select a segmentation module</p>
+
 
         <div class="form-group">
             <div class="fg-line">

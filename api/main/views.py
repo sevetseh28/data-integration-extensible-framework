@@ -59,9 +59,15 @@ def upload(request):
 
 
 def output_fields(request, project_id):
+    project = Project.objects.get(id=project_id)
     dal = dal_mongo.DALMongo(project_id)
-
-    ret = dal.get_output_fields_matched_cols()
+    ret = {}
+    if project.segment_skipped:
+        ret['col_or_outputfield'] = "column"
+        ret['values'] = dal.get_matched_cols()
+    else:
+        ret['col_or_outputfield'] = "output field"
+        ret['values'] = dal.get_output_fields_matched_cols()
 
     return JsonResponse(ret, safe=False)
 
@@ -74,14 +80,18 @@ def run(request):
         step = params['step']
         config = params['config'] if 'config' in params else {}
         step_state = params['step_state'] if 'step_state' in params else {}
-
-        # Llamado a workflow
-        w = Workflow(project_id)
-        w.set_current_step(step, config)
-        w.execute_step()
+        project = Project.objects.get(id=project_id)
+        #Se chequea si se skipea el paso de Segmentation
+        if step == "SegmentationStep":
+            if config['skipstep']:
+                project.segment_skipped = True
+        else:
+            # Llamado a workflow
+            w = Workflow(project_id, project.segment_skipped)
+            w.set_current_step(step, config)
+            w.execute_step()
 
         # se guarda el estado del proyecto
-        project = Project.objects.get(id=project_id)
         project.current_step = step
         project.save()
 

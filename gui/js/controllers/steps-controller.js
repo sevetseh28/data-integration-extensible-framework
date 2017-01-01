@@ -95,7 +95,8 @@ materialAdmin
 
             } else if (step == 'comparison') {
                 APIService.getOutputFields($stateParams.id).then(function (data) {
-                    $scope[step]['outputFields'] = data.data;
+                    $scope[step]['outputFields'] = data.data.values;
+                    $scope[step]['col_or_outputfield'] = data.data.col_or_outputfield
 
                     APIService.getModules($stateParams.id, step).then(function (data) {
                         $scope[step]['modules'] = data.data;
