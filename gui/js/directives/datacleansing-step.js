@@ -44,7 +44,8 @@ angular.module("materialAdmin")
                                     config:{}
                             };
                             for (var config in module.moduleSelected.config) {
-                                retVal.config[config] = module.moduleSelected.config[config].returnValue[config]
+                                if(module.moduleSelected.config[config].returnValue)
+                                    retVal.config[config] = module.moduleSelected.config[config].returnValue[config]
                             }
                             source_configs[module.columnSelected].push(retVal)
                         }

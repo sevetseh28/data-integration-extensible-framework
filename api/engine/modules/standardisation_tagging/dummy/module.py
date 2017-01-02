@@ -1,15 +1,16 @@
 # coding=utf-8
 from engine.models.record import *
 from engine.modules.module import Module
+from engine.modules.standardisation_tagging.standardisation_tagging_module import StandardisationTaggingModule
 
 
-class DummyStandardisationandTagging(Module):
+class DummyStandardisationAndTagging(StandardisationTaggingModule):
     """
         T
     """
 
     def __init__(self, **kwargs):
-        super(DummyStandardisationandTagging, self).__init__(**kwargs)
+        super(DummyStandardisationAndTagging, self).__init__(**kwargs)
 
     @staticmethod
     def pretty_name():

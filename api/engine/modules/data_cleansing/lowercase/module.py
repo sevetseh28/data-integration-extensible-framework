@@ -1,10 +1,11 @@
 # coding=utf-8
 from engine.models.record import *
+from engine.modules.data_cleansing.data_cleansing_module import DataCleansingModule
 from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
 
 
-class LowerCase(Module):
+class LowerCase(DataCleansingModule):
     """
         Pasa todos los valores de los fields de la columna a lower case
     """

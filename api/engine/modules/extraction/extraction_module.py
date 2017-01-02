@@ -1,3 +1,4 @@
+import abc
 from copy import deepcopy
 
 from engine.models.record import *
@@ -22,3 +23,7 @@ class ExtractionModule(Module):
     @staticmethod
     def pretty_name():
         return "Extraction module"
+
+    @abc.abstractmethod
+    def run(self):
+        pass

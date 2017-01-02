@@ -1,9 +1,11 @@
 from __future__ import division
+
+from engine.modules.comparison.comparison_module import ComparisonModule
 from engine.modules.module import Module
 import Levenshtein
 
 
-class LevenshteinDistance(Module):
+class LevenshteinDistance(ComparisonModule):
     """
         Applies Levenshtein edit distance and returns a value between 0 and 1
     """

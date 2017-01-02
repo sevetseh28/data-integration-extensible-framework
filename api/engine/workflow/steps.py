@@ -137,7 +137,7 @@ class DataCleansingStep(Step):
 
     def __init__(self, **kwargs):
         super(DataCleansingStep, self).__init__(**kwargs)
-        self.modules_directory = "data-cleansing"
+        self.modules_directory = "data_cleansing"
 
     @staticmethod
     def pretty_name():
@@ -192,7 +192,7 @@ class StandardisationAndTaggingStep(Step):
 
     def __init__(self, **kwargs):
         super(StandardisationAndTaggingStep, self).__init__(**kwargs)
-        self.modules_directory = "standardisation-tagging"
+        self.modules_directory = "standardisation_tagging"
 
     @staticmethod
     def pretty_name():
@@ -267,7 +267,7 @@ class SchemaMatchingStep(Step):
 
     def __init__(self, **kwargs):
         super(SchemaMatchingStep, self).__init__(**kwargs)
-        self.modules_directory = "schema-matching"
+        self.modules_directory = "schema_matching"
 
     @staticmethod
     def pretty_name():
@@ -457,7 +457,7 @@ class DataFusionStep(Step):
 
     def __init__(self, **kwargs):
         super(DataFusionStep, self).__init__(**kwargs)
-        self.modules_directory = "data-fusion"
+        self.modules_directory = "data_fusion"
 
     @staticmethod
     def pretty_name():

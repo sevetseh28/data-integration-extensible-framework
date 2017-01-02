@@ -1,7 +1,8 @@
+from engine.modules.indexing.indexing_module import IndexingModule
 from engine.modules.module import Module
 
 
-class FullIndexing(Module):
+class FullIndexing(IndexingModule):
     """
     Devuelve la agrupacion que es todos con todos
     """

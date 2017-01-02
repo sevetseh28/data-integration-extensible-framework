@@ -1,8 +1,10 @@
 from __future__ import division
+
+from engine.modules.comparison.comparison_module import ComparisonModule
 from engine.modules.module import Module
 from fuzzywuzzy import fuzz
 
-class Ratio(Module):
+class Ratio(ComparisonModule):
     """
         Applies Ratio comparison
         >>>fuzz.ratio("this is a test", "this is a test!")

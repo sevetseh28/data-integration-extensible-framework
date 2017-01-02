@@ -1,8 +1,10 @@
 from __future__ import division
+
+from engine.modules.comparison.comparison_module import ComparisonModule
 from engine.modules.module import Module
 from fuzzywuzzy import fuzz
 
-class TokenSet(Module):
+class TokenSet(ComparisonModule):
     """
         Applies Token Set comparison
         >>>fuzz.token_set_ratio("fuzzy was a bear", "fuzzy fuzzy was a bear")

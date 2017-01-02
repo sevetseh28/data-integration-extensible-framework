@@ -1,11 +1,12 @@
 from pymongo import MongoClient
 
+from engine.modules.export.export_module import ExportModule
 from engine.modules.indexing.indexing_module import IndexingModule
 from engine.modules.module import Module
 from engine.utils import dynamic_loading
 
 
-class MongoDBExport(IndexingModule):
+class MongoDBExport(ExportModule):
     """
     Formato config:
     {

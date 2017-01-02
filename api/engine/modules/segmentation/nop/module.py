@@ -1,7 +1,8 @@
 from engine.modules.module import Module
+from engine.modules.segmentation.segmentation_module import SegmentationModule
 
 
-class NopSegmentation(Module):
+class NopSegmentation(SegmentationModule):
     """
     Pone output field = columna.name
     """

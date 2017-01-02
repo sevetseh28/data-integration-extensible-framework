@@ -1,3 +1,4 @@
+import abc
 from copy import deepcopy
 
 from engine.models.record import *
@@ -23,6 +24,10 @@ class IndexingModule(Module):
     @staticmethod
     def pretty_name():
         return "Indexing module"
+
+    @abc.abstractmethod
+    def run(self):
+        pass
 
   #  def encode(self, value):
      #p   return self.encoding_module.run(value)

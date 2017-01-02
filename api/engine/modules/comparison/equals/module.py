@@ -1,10 +1,11 @@
 # coding=utf-8
 from engine.models.record import *
+from engine.modules.comparison.comparison_module import ComparisonModule
 from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
 
 
-class EqualsComparison(Module):
+class EqualsComparison(ComparisonModule):
     """
         Devuelve 1 si son iguales y 0 si no
     """

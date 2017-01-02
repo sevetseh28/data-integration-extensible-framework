@@ -1,9 +1,11 @@
 from __future__ import division
+
+from engine.modules.comparison.comparison_module import ComparisonModule
 from engine.modules.module import Module
 import Levenshtein
 
 
-class JaroComparison(Module):
+class JaroComparison(ComparisonModule):
     """
         Applies the Jaro string comparison function
     """

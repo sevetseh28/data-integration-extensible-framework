@@ -2,9 +2,10 @@
 from engine.dal_mongo import DALMongo
 from engine.models.record import *
 from engine.modules.module import Module
+from engine.modules.schema_matching.schema_matching_module import SchemaMatchingModule
 
 
-class ManualSchemaMatching(Module):
+class ManualSchemaMatching(SchemaMatchingModule):
     """
     Genera el matcheo manual
     Estandariza los registros para un esquema global que tiene las columnas matcheadas y las no matcheadas con valores null

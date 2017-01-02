@@ -1,7 +1,8 @@
+from engine.modules.encoding.encoding_module import EncodingModule
 from engine.modules.module import Module
 
 
-class FirstNEncoding(Module):
+class FirstNEncoding(EncodingModule):
     def __init__(self, **kwargs):
         super(FirstNEncoding, self).__init__(**kwargs)
         self.pretty_name = 'None'

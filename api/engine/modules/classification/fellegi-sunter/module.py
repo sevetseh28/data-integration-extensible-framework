@@ -4,11 +4,12 @@ from __future__ import division
 import re
 
 from engine.models.record import *
+from engine.modules.classification.classification_module import ClassificationModule
 from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
 
 
-class FellegiSunterClassification(Module):
+class FellegiSunterClassification(ClassificationModule):
     """
         Devuelve
             - match si la similitud esta por encima de upper bound

@@ -2,11 +2,12 @@
 from unidecode import unidecode
 
 from engine.models.record import *
+from engine.modules.data_cleansing.data_cleansing_module import DataCleansingModule
 from engine.modules.module import Module
 import dateparser
 
 
-class DeleteChars(Module):
+class DeleteChars(DataCleansingModule):
     """
         Formatea como date los valores que logra parsear, los que no, quedán como estaban.
 

@@ -2,10 +2,11 @@
 from unidecode import unidecode
 
 from engine.models.record import *
+from engine.modules.data_cleansing.data_cleansing_module import DataCleansingModule
 from engine.modules.module import Module
 
 
-class DeleteChars(Module):
+class DeleteChars(DataCleansingModule):
     """
         Elimina caracteres no deseados de los fields de la columna
 
