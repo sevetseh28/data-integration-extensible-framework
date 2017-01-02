@@ -44,6 +44,10 @@ materialAdmin
                 });
 
             } else if (step == 'standardisationtagging') {
+                $scope.standardisationtagging['moduleSelections'] = {};
+                $scope.standardisationtagging['moduleSelections']['source1'] = [];
+                $scope.standardisationtagging['moduleSelections']['source2'] = [];
+
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });

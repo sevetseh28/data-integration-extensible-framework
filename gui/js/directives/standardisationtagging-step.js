@@ -9,17 +9,6 @@ angular.module("materialAdmin")
             controller: function ($scope) {
                 $scope.standardisationtagging['title'] = 'Standardisation and tagging';
 
-
-                // SELECCIONES DE MODULOS
-                $scope.standardisationtagging['addOption'] = function (source) {
-                    $scope.standardisationtagging['moduleSelections'][source].push(angular.copy($scope.standardisationtagging['modules']))
-                };
-
-                $scope.standardisationtagging['removeOption'] = function (index, source) {
-                    $scope.standardisationtagging['moduleSelections'][source].splice(index, 1)
-                };
-
-
                 $scope.standardisationtagging['moduleSelections'] = {};
                 $scope.standardisationtagging['moduleSelections']['source1'] = [];
                 $scope.standardisationtagging['moduleSelections']['source2'] = [];
