@@ -256,6 +256,7 @@ materialAdmin
             APIService.run($stateParams.id, stepId, $scope[stepName].returnValue, $scope[stepName]).then(function () {
                     $scope.tabs[$scope.currentStep]['active'] = false;
                     $scope.currentStep = $scope.currentStep + 1;
+                    disableFollowingSteps();
                     $scope.tabs[$scope.currentStep]['disabled'] = false;
 
                     $scope.loadStep($scope.steps[$scope.currentStep]);
@@ -362,6 +363,11 @@ materialAdmin
                 id: 'ExportStep'
             }
         ];
+
+        function disableFollowingSteps(){
+            for (var i=$scope.currentStep+1;i<$scope.tabs.length;i++)
+                $scope.tabs[i].disabled=true;
+        }
 
         function setCurrentStep() {
             var i = 0;
