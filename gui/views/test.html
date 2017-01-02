@@ -7,15 +7,16 @@
         <div class="container">
 
             <div class="block-header">
+
                 <h2>Data Integration</h2>
 
                 
             </div>
 
             <!-- TABS -->
-            <div class="card">
+            <div class="card" data-ng-controller="StepsCtrl" >
                 <div class="card-header">
-                    <h2>Main Workflow</h2>
+                    <h2>Project: {{ projectName }}</h2>
 
 
                     <ul class="actions">
@@ -33,7 +34,7 @@
                     </ul>
                 </div>
 
-                <div class="card-body card-padding" data-ng-controller="StepsCtrl">
+                <div class="card-body card-padding" >
 
                     <p>Go through the following 9 steps in order to integrate your data.</p>
 

@@ -202,6 +202,8 @@ materialAdmin
             APIService.getProject($stateParams.id).then(function(response){
                 var steps = response.data.steps;
 
+                $scope.projectName = response.data.name;
+
                 if(steps.length == 0){
                     $scope.loadStep('extraction');
                     return;
