@@ -73,7 +73,7 @@ materialAdmin
                     for (var i = 0; i < $scope.standardisationtagging['columns']['source2'].length; i++) {
                         var column = {
                             'column': $scope.standardisationtagging['columns']['source2'][i],
-                            'modules': angular.copy($scope.standardisationtNagging['modules']),
+                            'modules': angular.copy($scope.standardisationtagging['modules']),
                             'selectedModule': {}
                         };
                         $scope.standardisationtagging['moduleSelections']['source2']

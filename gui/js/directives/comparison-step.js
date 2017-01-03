@@ -11,11 +11,11 @@ angular.module("materialAdmin")
 
                 $scope.comparison.returnValue = {};
 
-                $scope.comparison.updateReturnValue = function() {
+                $scope.comparison.updateReturnValue = function () {
                     $scope.comparison.returnValue = {};
-                    for(var of in $scope.comparison.outputFields){
-                        if(of.selectedModule) {
-                            of = $scope.comparison.outputFields[of];
+                    for (var of in $scope.comparison.outputFields) {
+                        of = $scope.comparison.outputFields[of];
+                        if (of.selectedModule) {
                             ofRet = {};
                             $scope.comparison.returnValue[of.name] = ofRet;
                             ofRet.name = of.selectedModule.id;

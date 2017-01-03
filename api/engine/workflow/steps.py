@@ -377,11 +377,7 @@ class ComparisonStep(Step):
                 for r2 in group.records2:
                     # Inicializa el vector de comparacion vacio
                     sv = SimilarityVector(r1._id, r2._id)
-
-                    for col in r1.matched_cols():
-                        # Inicializa la comparacion con 0
-                        sv.vector.append(0)
-
+                    for col in r1.matched_cols(): # could be r2.matched_cols() as well (they return the same)
                         if not self.segment_skipped:
                             for out_field, comparison_module in self.config.items():
                                 # Se obienen los valores a comparar y se comparan
@@ -395,7 +391,8 @@ class ComparisonStep(Step):
                                 # Actualiza el valor de la comparacion en el vector
                                 sim_value = module.run(out_field_value1, out_field_value2)
                                 sim_value_weighted = sim_value * weight / max_weight
-                                sv.vector[-1] = sim_value_weighted
+                                sv.vector.append(sim_value_weighted)
+                                sv.comparisons.append([out_field_value1, out_field_value2])
                         else:
                             comparison_module = self.config[col]
 
@@ -410,8 +407,8 @@ class ComparisonStep(Step):
                             # Actualiza el valor de la comparacion en el vector
                             sim_value = module.run(column_value_s1, column_value_s2)
                             sim_value_weighted = sim_value * weight / max_weight
-                            sv.vector[-1] = sim_value_weighted
-
+                            sv.vector.append(sim_value_weighted)
+                            sv.comparisons.append([column_value_s1, column_value_s2])
                     simils.append(sv)
 
         self._append_result_collection(simils)

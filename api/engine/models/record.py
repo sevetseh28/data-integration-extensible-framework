@@ -227,6 +227,7 @@ class SimilarityVector:
         if vector is None:
             vector = []
 
+        self.comparisons = []
         self.record1 = r1_id
         self.record2 = r2_id
 
