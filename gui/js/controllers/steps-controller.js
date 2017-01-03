@@ -87,8 +87,42 @@ materialAdmin
 
 
             } else if (step == 'segmentation') {
+                $scope.segmentation['moduleSelections'] = {};
+                $scope.segmentation['moduleSelections']['source1'] = [];
+                $scope.segmentation['moduleSelections']['source2'] = [];
+
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
+                });
+
+                APIService.getColumnsSources($stateParams.id).then(function (response) {
+                    $scope.segmentation['columns'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    };
+
+                    for (var i = 0; i < $scope.segmentation['columns']['source1'].length; i++) {
+
+                        var column = {
+                            'column': $scope.segmentation['columns']['source1'][i],
+                            'modules': angular.copy($scope.segmentation['modules']),
+                            'selectedModule': {}
+                        };
+                        $scope.segmentation['moduleSelections']['source1']
+                            .push(column);
+
+                    }
+
+                    for (var i = 0; i < $scope.segmentation['columns']['source2'].length; i++) {
+                        var column = {
+                            'column': $scope.segmentation['columns']['source2'][i],
+                            'modules': angular.copy($scope.segmentation['modules']),
+                            'selectedModule': {}
+                        };
+                        $scope.segmentation['moduleSelections']['source2']
+                            .push(column);
+                    }
+
                 });
 
             } else if (step == 'schemamatching') {
