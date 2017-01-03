@@ -60,7 +60,12 @@ class Record:
 
         return result
 
-    def get_field_col(self,Nop,col):
+    def get_field_col(self, col):
+        """
+        Returns the value of all the fields in a column as a single string
+        :param col: Column object
+        :return: string
+        """
         result = ""
         col = self.columns[col]
         for f in col.fields:

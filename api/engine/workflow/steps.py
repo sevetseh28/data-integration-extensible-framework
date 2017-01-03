@@ -347,6 +347,7 @@ class ComparisonStep(Step):
         "[output_field]":{
             "name":"[nombre_modulo]",
             "config":{[config]}
+            "weight": <<float>>,
         },
         ...
     }
@@ -368,12 +369,8 @@ class ComparisonStep(Step):
         groups = dal.get_indexing_groups()
 
         simils = []
-        # Si se salteo el paso de segmentacion se toman
-        # los valores de las columnas, sino de los output fields
-        if self.segment_skipped:
-            getvaluefrom = "get_field_col"
-        else:
-            getvaluefrom = "get_output_field_col"
+
+        max_weight = max([float(module['weight']) for idx, module in self.config.items()])
 
         for group in groups:
             for r1 in group.records1:
@@ -385,15 +382,35 @@ class ComparisonStep(Step):
                         # Inicializa la comparacion con 0
                         sv.vector.append(0)
 
-                        for out_field, comparison in self.config.items():
-                            # Se obienen los valores a comparar y se comparan
-                            out_field_value1 = getattr(r1,getvaluefrom)(out_field,col)
-                            out_field_value2 = getattr(r2,getvaluefrom)(out_field,col)
+                        if not self.segment_skipped:
+                            for out_field, comparison_module in self.config.items():
+                                # Se obienen los valores a comparar y se comparan
+                                out_field_value1 = r1.get_output_field_col(out_field,col)
+                                out_field_value2 = r2.get_output_field_col(out_field,col)
 
-                            module = self._load_module(comparison)
+                                module = self._load_module(comparison_module)
+
+                                weight = float(comparison_module['weight'])
+
+                                # Actualiza el valor de la comparacion en el vector
+                                sim_value = module.run(out_field_value1, out_field_value2)
+                                sim_value_weighted = sim_value * weight / max_weight
+                                sv.vector[-1] = sim_value_weighted
+                        else:
+                            comparison_module = self.config[col]
+
+                            # Se obienen los valores completos de la columna
+                            column_value_s1 = r1.get_field_col(col)
+                            column_value_s2 = r2.get_field_col(col)
+
+                            module = self._load_module(comparison_module)
+
+                            weight = float(comparison_module['weight'])
 
                             # Actualiza el valor de la comparacion en el vector
-                            sv.vector[-1] = module.run(out_field_value1, out_field_value2)
+                            sim_value = module.run(column_value_s1, column_value_s2)
+                            sim_value_weighted = sim_value * weight / max_weight
+                            sv.vector[-1] = sim_value_weighted
 
                     simils.append(sv)
 

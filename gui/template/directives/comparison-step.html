@@ -1,27 +1,47 @@
 <div class="row">
     <div class="col-sm-12">
-        <p>Now you must select how to compare each output field. Each comparison module works best for different kind of data.
+        <p>Now you must select how to compare each output field. Each comparison module works best for different kind of
+            data.
             For example, there are some modules to compare numbers, and others for dates.</p>
     </div>
 </div>
-<div ng-repeat="outputField in comparison.outputFields">
-            Select module to compare {{ comparison.col_or_outputfield }}: {{outputField.name}}
 
+<div ng-repeat="outputField in comparison.outputFields">
+    Select module to compare {{ comparison.col_or_outputfield }}: {{ outputField.name }}
+
+    <div class="row">
+        <div class="col-sm-9">
             <div class="form-group">
                 <div class="fg-line">
                     <div class="select">
-                        <select ng-change="comparison.updateReturnValue()" class="form-control" ng-model="outputField.selectedModule"
-                                 ng-options="m as m.name for m in outputField.modules">
+                        <select ng-change="comparison.updateReturnValue()" class="form-control"
+                                ng-model="outputField.selectedModule"
+                                ng-options="m as m.name for m in outputField.modules">
                             <option value=""></option>
                         </select>
                     </div>
                 </div>
             </div>
-
-
-            <div>
-                <dynamic-input ng-repeat="(k, c) in outputField.selectedModule['config']" return-value='c.returnValue' ng-init="c.returnValue = {}" config-id='{{ k }}' config='c'></dynamic-input>
-            </div>
-
         </div>
+        <div class="col-sm-3">
+            <div class="form-group fg-float">
+                <div class="fg-line">
+                    <input type="text" ng-change="comparison.updateReturnValue()" ng-model="outputField.weight"
+                           class="form-control fg-input">
+                </div>
+                <label class="fg-label">Weight</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div>
+                <dynamic-input ng-repeat="(k, c) in outputField.selectedModule['config']" return-value='c.returnValue'
+                               ng-init="c.returnValue = {}" config-id='{{ k }}' config='c'></dynamic-input>
+            </div>
+        </div>
+    </div>
+
+
+</div>
 </div>
