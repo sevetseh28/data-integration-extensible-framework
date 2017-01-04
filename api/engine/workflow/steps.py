@@ -224,14 +224,27 @@ class StandardisationAndTaggingStep(Step):
 
 class SegmentationStep(Step):
     """
-    Formato del config de Segmentation:
+    Config format for segmentation step:
     {
-        "selected_module": {
-            "name": "[nombre_modulo]",
-            "config": {}
-        }
+        "source1":{
+            "[column_name1]":
+                {
+                    "name":"[module_name]",
+                    "config":{[config]}
+                }
+            }
+            "[column_name2]":
+                {
+                    "name":"[module_name]",
+                    "config":{[config]}
+                }
+            },
+            ...
+        },
+        "source2": idem
     }
     """
+
 
     def __init__(self, **kwargs):
         super(SegmentationStep, self).__init__(**kwargs)
@@ -249,10 +262,21 @@ class SegmentationStep(Step):
         dal = DALMongo(self.project_id)
 
         records = dal.get_records(StandardisationAndTaggingStep().class_name, source_number)
-        module = self._load_module(records=records)
+        # module = self._load_module(records=records)
 
-        self._append_result_collection(module.run(), 'source{}_records'.format(source_number))
+        # Run segmentation module for each column of each record
+        for record in records:
+            for col, segmentation_module in self.config["source{}".format(source_number)].items():
+                module = self._load_module(segmentation_module)
+                record.columns[col] = module.run(record.columns[col])
 
+        self._append_result_collection(records, 'source{}_records'.format(source_number))
+
+    def _load_module(self, segmentation_module):
+        step = self.modules_directory
+        module = segmentation_module['name']
+        config = segmentation_module['config']
+        return dynamic_loading.load_module(step, module, config=config)
 
 class SchemaMatchingStep(Step):
     """

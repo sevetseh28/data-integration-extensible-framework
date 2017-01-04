@@ -83,8 +83,12 @@ def run(request):
         project = Project.objects.get(id=project_id)
         #Se chequea si se skipea el paso de Segmentation
         if step == "SegmentationStep":
-            if config['skipstep']:
-                project.segment_skipped = True
+            project.segment_skipped = config['skipstep']
+            if not project.segment_skipped:
+                # Llamado a workflow
+                w = Workflow(project_id, project.segment_skipped)
+                w.set_current_step(step, config)
+                w.execute_step()
         else:
             # Llamado a workflow
             w = Workflow(project_id, project.segment_skipped)

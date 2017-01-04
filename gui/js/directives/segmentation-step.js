@@ -11,26 +11,24 @@ angular.module("materialAdmin")
                 $scope.segmentation['moduleSelections']['source2'] = [];
 
                 $scope.segmentation.returnValue = {
-                    selected_module: {
-                        name: '',
-                        config: {}
-                    },
                     skipstep: false
                 };
                 $scope.segmentation.toggleskip = {
                     config: {
                         label: 'Skip this step (output fields will not be used)',
-                        color: "red"
+                        color: "red",
+                        checked: false
                     }
                 };
-                $scope.segmentation.skiptoggler = function() {
-                    $scope.segmentation.returnValue.skipstep = !($scope.segmentation.returnValue.skipstep)
-                };
+                // $scope.segmentation.skiptoggler = function() {
+                //     $scope.segmentation.returnValue.skipstep = !($scope.segmentation.returnValue.skipstep)
+                // };
 
                 $scope.segmentation.updateReturnValue = function() {
                     $scope.segmentation.returnValue = {
                         source1: {},
-                        source2: {}
+                        source2: {},
+                        skipstep: $scope.segmentation.toggleskip.config.checked
                     };
 
                     var source_configs;

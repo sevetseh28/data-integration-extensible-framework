@@ -2,7 +2,7 @@
 This file contains all the tags that must be used by the framework
 Each tag has its own semantics which should be explained here
 """
-WAYFARER_NAME = {
+WAYFARE_NAME = {
     'id': 'WN',
     'description': 'Wayfare (street) name',
     'component': 'Address'

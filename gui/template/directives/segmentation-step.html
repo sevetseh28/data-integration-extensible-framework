@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-sm-12">
-        <p>Segmentation tries to split each field on its components. For example, an address field may be split on
-            street number, street, city, etc.
-            This smaller segments help you compare with smaller granularity, thus getting better results, and some
+        <p>Segmentation tries to split each field on its components (called output fields). For example, an address field may be split on
+            street number, street, city, etc. Each output field has its own semantic and should be self-explanatory.
+            The generation of output fields for each column lets you compare with smaller granularity, thus getting better results, and some
             schema matching algorithms may even take advantage of them.</p>
     </div>
 </div>
@@ -13,7 +13,7 @@
                 <div>
                     <div class="toggle-switch" data-ts-color="{{ segmentation.toggleskip.config.color }}">
                         <label class="ts-label">{{ segmentation.toggleskip.config.label }}</label>
-                        <input type="checkbox" hidden="hidden" ng-model="segmentation.returnValue.skipstep">
+                        <input type="checkbox" hidden="hidden" ng-model="segmentation.toggleskip.config.checked">
                         <label class="ts-helper" ng-click="segmentation.skiptoggler()"></label>
                     </div>
                 </div>
