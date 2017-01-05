@@ -55,7 +55,7 @@ class MongodbExtractor(ExtractionModule):
                     else:
                         break
                 if type(valuefield) is dict:
-                    copycol.fields.append(Field(None, FieldType.notexist))
+                    copycol.fields.append(Field(None, EnumType.notexist))
                 else:
                     field = get_field_from_mongo(valuefield)
                     if field is not None:
@@ -104,16 +104,16 @@ class MongodbExtractor(ExtractionModule):
 # Se traduce el valor de mongo al formato interno de acuerdo al tipo
 def get_field_from_mongo(value):
     if isinstance(value,str):
-        return Field(value, FieldType.string)
+        return Field(value, EnumType.string)
     elif isinstance(value,unicode):
-        return Field(unidecode(value), FieldType.string)
+        return Field(unidecode(value), EnumType.string)
     elif isinstance(value, int) or isinstance(value,long) or isinstance(value,float) or type(value).__name__ == 'Int64':
-        return Field(value, FieldType.number)
+        return Field(value, EnumType.number)
     elif isinstance(value,bool):
-        return Field(value, FieldType.boolean)
+        return Field(value, EnumType.boolean)
     elif isinstance(value,datetime):
-        return Field(value, FieldType.date)
+        return Field(value, EnumType.date)
     elif type(value) is type(None):
-        return Field(value, FieldType.null)
+        return Field(value, EnumType.null)
     else:
         return None

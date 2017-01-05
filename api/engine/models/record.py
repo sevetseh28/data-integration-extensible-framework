@@ -109,11 +109,12 @@ class Record:
 
 
 class Column:
-    def __init__(self, name, fields=None):
+    def __init__(self, name, fields=None, type=''):
         if fields is None:
             fields = []
 
         self.name = name
+        self.type = type
         self.fields = fields
 
     @staticmethod
@@ -127,6 +128,7 @@ class Column:
     def to_json(self, with_fields=True):
         json = {
             "name": self.name,
+            "type": self.type
         }
 
         if with_fields:
@@ -161,7 +163,7 @@ class Field:
 
     @staticmethod
     def from_json(json):
-        return Field(json["value"], FieldType.from_json(json["type"]), json["tags"], json["output_field"])
+        return Field(json["value"], EnumType.from_json(json["type"]), json["tags"], json["output_field"])
 
 
 class SchemaMatch:
@@ -251,7 +253,7 @@ class MatchResultType(Enum):
 
     @staticmethod
     def from_json(json):
-        return FieldType(json)
+        return EnumType(json)
 
 
 class MatchResult:
@@ -279,7 +281,7 @@ class MatchResult:
                            MatchResultType.from_json(json['match_type']), id=json['_id'])
 
 
-class FieldType(Enum):
+class EnumType(Enum):
     string = 1
     number = 2
     date = 3
@@ -292,4 +294,4 @@ class FieldType(Enum):
 
     @staticmethod
     def from_json(json):
-        return FieldType(json)
+        return EnumType(json)

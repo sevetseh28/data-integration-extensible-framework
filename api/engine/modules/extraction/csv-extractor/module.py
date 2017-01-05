@@ -70,7 +70,7 @@ def get_field_from_csv(value):
     checkfloat = ignore_exception()(float)
     floatvalue = checkfloat(value)
     if floatvalue is not None:
-        return Field(floatvalue,FieldType.number)
+        return Field(floatvalue, EnumType.number)
     else:
-        return Field(value,FieldType.string)
+        return Field(value, EnumType.string)
 

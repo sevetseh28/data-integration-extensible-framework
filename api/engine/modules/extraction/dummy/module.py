@@ -32,7 +32,7 @@ class DummyExtractor(ExtractionModule):
 
                 column.fields.append(Field(
                     value="Val_Rec{0}_col{1}".format(i, j),
-                    tipe=FieldType.string
+                    tipe=EnumType.string
                 ))
 
                 self.records[i].columns[column.name] = column

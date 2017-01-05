@@ -19,7 +19,7 @@ class LowerCase(DataCleansingModule):
 
     def run(self, column):
         for field in column.fields:
-            if field.tipe.value == FieldType.string.value:
+            if field.tipe.value == EnumType.string.value:
                 field.value = field.value.lower()
 
         return column

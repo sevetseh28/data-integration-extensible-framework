@@ -3,7 +3,9 @@ from copy import deepcopy
 
 from engine.models.record import *
 from engine.modules.module import Module
-
+from datetime import datetime
+from copy import deepcopy
+from unidecode import unidecode
 
 class ExtractionModule(Module):
     def __init__(self, **kwargs):
@@ -23,6 +25,28 @@ class ExtractionModule(Module):
     @staticmethod
     def pretty_name():
         return "Extraction module"
+
+    def get_field_from_value(self, value):
+        """
+        this method receives a raw extracted value by a specific Extraction module and returns a Field object
+        with the corrrect type
+        :return:
+        """
+        if isinstance(value, str):
+            return Field(value, EnumType.string)
+        elif isinstance(value, unicode):
+            return Field(unidecode(value), EnumType.string)
+        elif isinstance(value, int) or isinstance(value, long) or isinstance(value, float) or type(
+                value).__name__ == 'Int64':
+            return Field(value, EnumType.number)
+        elif isinstance(value, bool):
+            return Field(value, EnumType.boolean)
+        elif isinstance(value, datetime):
+            return Field(value, EnumType.date)
+        elif type(value) is type(None):
+            return Field(value, EnumType.null)
+        else:
+            return None
 
     @abc.abstractmethod
     def run(self):

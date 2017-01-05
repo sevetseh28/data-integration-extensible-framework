@@ -27,11 +27,11 @@ class DeleteChars(DataCleansingModule):
     def run(self, column):
         languages = self.config["languages"]
         for field in column.fields:
-            if field.tipe.value == FieldType.string.value:
+            if field.tipe.value == EnumType.string.value:
                 parsed = dateparser.parse(field.value,languages=languages)
                 if parsed is not None:
                     field.value = parsed
-                    field.tipe = FieldType.date
+                    field.tipe = EnumType.date
 
         return column
 

@@ -26,7 +26,7 @@ class DeleteChars(DataCleansingModule):
     def run(self, column):
         chars = unidecode(self.config["chars"])
         for field in column.fields:
-            if field.tipe.value == FieldType.string.value:
+            if field.tipe.value == EnumType.string.value:
                 field.value = field.value.__str__().translate(None, chars)
 
         return column
