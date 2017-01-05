@@ -6,21 +6,21 @@
 <div class="row">
     <div class="col-sm-6" ng-repeat='s in sources track by $index'>
         <p class="c-black f-500 m-b-20">Select source {{$index + 1}}</p>
-
         <div class="form-group">
             <div class="fg-line">
-                <div>
-                    <select class="w-100" ng-model="extraction.selectedModules[s]"
-                    ng-options="m as m.name for m in extraction.modules[s]">
-                        <option value=""></option>
+                <div class="select">
+                    <select class="form-control" ng-model="extraction.selectedModules[s]"
+                            ng-options="m as m.name for m in extraction.modules[s]">
+                        <option></option>
                     </select>
                 </div>
             </div>
         </div>
 
-
-        <div> 
-            <dynamic-input ng-repeat="(k, c) in extraction.selectedModules[s]['config']" return-value='extraction.returnValue[s].selected_module.config' config-id='{{ k }}' config='c'></dynamic-input>
+        <div>
+            <dynamic-input ng-repeat="(k, c) in extraction.selectedModules[s]['config']"
+                           return-value='extraction.returnValue[s].selected_module.config' config-id='{{ k }}'
+                           config='c'></dynamic-input>
         </div>
 
     </div>

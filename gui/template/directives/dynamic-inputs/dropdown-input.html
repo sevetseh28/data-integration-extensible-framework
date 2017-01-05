@@ -1,11 +1,24 @@
-<select chosen data-placeholder="{{ config.label }}" class="w-100"
+<!--<select chosen data-placeholder="{{ config.label }}" class="w-100"
         ng-model="config.selectedoption"
         ng-options="o as o.label for o in config.options">
     <option></option>
-</select>
+</select>-->
+
+<div class="form-group">
+    <div class="fg-line">
+        <div class="select">
+            <select data-placeholder="{{ config.label }}" class="form-control"
+                    ng-model="config.selectedoption"
+                    ng-options="o as o.label for o in config.options">
+                <option></option>
+            </select>
+        </div>
+    </div>
+</div>
 
 <br/>
 
 <div ng-repeat="(k,c) in config.selectedoption.config track by $index" ng-init="initControls(k)">
-    <dynamic-input config="c" return-value="childReturnValues[k]" config-id='{{ k }}' nested-check="nestedChecks[k]"></dynamic-input>
+    <dynamic-input config="c" return-value="childReturnValues[k]" config-id='{{ k }}'
+                   nested-check="nestedChecks[k]"></dynamic-input>
 </div>
