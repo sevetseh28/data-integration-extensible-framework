@@ -28,6 +28,7 @@ angular.module("materialAdmin")
                 }
 
                 scope.$watch('config', appendReturnValue, true);
+                scope.config.checked = false;
 
             }
         }

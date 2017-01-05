@@ -22,7 +22,9 @@ angular.module("materialAdmin")
                             ofRet.config = {};
                             ofRet.weight = of.weight;
                             for (var config in of.selectedModule['config']) {
-                                ofRet.config[config] = of.selectedModule['config'][config].returnValue[config]
+                                if(of.selectedModule['config'][config].returnValue){
+                                    ofRet.config[config] = of.selectedModule['config'][config].returnValue[config]
+                                }
                             }
                         }
                     }
