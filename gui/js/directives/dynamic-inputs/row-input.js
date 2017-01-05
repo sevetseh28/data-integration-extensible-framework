@@ -37,7 +37,9 @@ angular.module("materialAdmin")
 
                     scope.returnValue[scope.configId] = ret;
 
-                    scope.nestedCheck['check'] ++
+                    if(scope.nestedCheck){
+                        scope.nestedCheck['check'] ++;
+                    }
                 }
 
                 scope.$watch(function(){return scope.nestedChecks}, appendReturnValue, true);
