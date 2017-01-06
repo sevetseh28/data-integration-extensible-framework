@@ -27,6 +27,8 @@ class BlockingStandard(IndexingModule):
         super(BlockingStandard, self).__init__(**kwargs)
         self.records = records
         self.keys = [{"key": unidecode(k["key"]["key"]), "encoding": k["encoding"]} for k in self.config["keys"]]
+
+        # encodings attribute will mantain all selected encoding modules
         self.encodings = {}
         for ke in self.config["keys"]:
             if ke["encoding"]["name"] not in self.encodings:
@@ -74,6 +76,7 @@ class BlockingStandard(IndexingModule):
                         }
                     }
                 } for c in dal.get_global_schema() if c.startswith('__new__')]
+        # TODO arreglar la porqueria de arriba con el __new__ hardcodeado
 
         encoding_configs = dynamic_loading.list_modules('encoding')
 
