@@ -25,8 +25,10 @@
         </div>
         <div class="col-sm-3">
             <div class="form-group fg-float">
-                <div class="fg-line">
-                    <input type="text" ng-change="comparison.updateReturnValue()" ng-model="outputField.weight"
+                <div class="fg-line fg-toggled">
+                    <input type="text" ng-change="comparison.updateReturnValue()"
+                           ng-init="outputField.weight = 1"
+                           ng-model="outputField.weight"
                            class="form-control fg-input">
                 </div>
                 <label class="fg-label">Weight</label>
