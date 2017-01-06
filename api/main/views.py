@@ -103,7 +103,9 @@ def run(request):
         saved_step.config = step_state
         saved_step.save()
     except Exception as e:
-        traceback.print_stack()
-        return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
+        #DEBUG PURPOSES
+        #traceback.print_stack()
+        #return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
+        return JsonResponse({'status': 'error', 'details': e.message}, status=500)
 
     return JsonResponse({'status': 'ok'})
