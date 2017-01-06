@@ -312,10 +312,11 @@ class SchemaMatchingStep(Step):
 
         module = self._load_module(project_id=self.project_id, records1=records1, records2=records2)
 
-        records1, records2 = module.run()
+        new_schema, records1, records2 = module.run()
 
         self._append_result_collection(records1, 'source1_records')
         self._append_result_collection(records2, 'source2_records')
+        self._append_result_collection(new_schema, 'new_schema')
 
 
 class IndexingStep(Step):

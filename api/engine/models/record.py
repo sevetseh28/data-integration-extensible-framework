@@ -188,7 +188,8 @@ class SchemaMatch:
 
     def add_match(self, columns_source1, columns_source2):
         self.schema_matches.append({
-            "col_name": "__new__" + "-".join([c.name for c in columns_source1]),
+            "col_name": "__new__" + "-".join([c.name for c in columns_source1]) + "__"
+                        + "-".join([c.name for c in columns_source2]),
             "source1": columns_source1,
             "source2": columns_source2,
         })

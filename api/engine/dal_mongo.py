@@ -176,7 +176,6 @@ class DALMongo:
 
         for r in records:
             for c in r['columns']:
-                # TODO ARREGLAR ESTO!!!!! no puede ir un __new__ aca
                 if c['name'].startswith('__new__'):
                     for f in c['fields']:
                         if f['output_field'] not in [of['name'] for of in ret]:
@@ -187,14 +186,12 @@ class DALMongo:
         """
         Returns the matched columns
         """
-        records = self.get_all("SchemaMatchingStep", "source1_records")
+        cols = self.get_all("SchemaMatchingStep", "new_schema")
         ret = []
 
-        for r in records:
-            for c in r['columns']:
-                if c['name'].startswith('__new__'):
-                    if c['name'] not in [cl['name'] for cl in ret]:
-                        ret.append({'name': c['name']})
+        for c in cols:
+            if c['name'] not in [cl['name'] for cl in ret]:
+                ret.append({'name': c['name']})
 
         return ret
 

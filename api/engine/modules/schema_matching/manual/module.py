@@ -58,14 +58,19 @@ class ManualSchemaMatching(SchemaMatchingModule):
 
             schematches.add_match(cols1, cols2)
 
-        # Se estandarizadn los esquemas
-        self.records1 = self._estandarize_schema(self.records1, schematches, 1, schema2)
-        self.records2 = self._estandarize_schema(self.records2, schematches, 2, schema1)
+        # Schemas are standardised
+        self.records1 = self._standardise_schema(self.records1, schematches, 1, schema2)
+        self.records2 = self._standardise_schema(self.records2, schematches, 2, schema1)
 
-        return self.records1, self.records2
+        # Create the global schema
+        # taking one record and getting the matched schema will be enough
+        for col_name, col_obj in self.records1[0].columns.iteritems():
+            if col_name.startswith("__new__"):
+                self.add_to_schema(Column(col_name))
+        return self.schema, self.records1, self.records2
 
     @staticmethod
-    def _estandarize_schema(records, schematches, source_number, other_schema):
+    def _standardise_schema(records, schematches, source_number, other_schema):
         # Estas son las columnas del otro esquema. Quedaran vacias en los registros de este esquema
         extra_cols = [col.name for col in other_schema.values()]
         other_source_number = 1 if source_number == 2 else 2
