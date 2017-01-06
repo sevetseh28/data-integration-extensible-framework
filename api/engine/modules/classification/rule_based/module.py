@@ -56,21 +56,55 @@ class RuleBasedClassification(ClassificationModule):
         dal = DALMongo(self.project_id)
 
         # TODO Hacer compatible con los output fields
-        cols = [{c['name']: idx} for idx, c in enumerate(dal.get_matched_cols())]
+        #cols = [{c['name']: idx} for idx, c in enumerate(dal.get_matched_cols())]
+        cols_order = {}
+        for idx, c in enumerate(dal.get_matched_cols()):
+            cols_order[c['name']] = idx
 
-        rules_evaluation = False
+        rules_logical_op = self.logical_operator
+
+        # Initialization of rules total evaluation
+        if rules_logical_op == 1:  # apply AND
+            rules_evaluation = True
+        elif rules_logical_op == 0:
+            rules_evaluation = False
+
         for rule in self.rules:
-            if self.logical_operator == 1: # apply AND
-                pass
+            col_or_outf_to_compare = rule['output-field-column']['val']
+            idx_col_or_outf_to_compare = cols_order[col_or_outf_to_compare]  # index of the simil vector to compare
+            logical_op = rule['logical-op']['val']
 
+            if rules_logical_op == 1: # apply AND
+                if logical_op == 0: # greater than
+                    rules_evaluation = rules_evaluation and rule['value'] < vector[idx_col_or_outf_to_compare]
+                elif logical_op == 1:  # less than
+                    rules_evaluation = rules_evaluation and rule['value'] > vector[idx_col_or_outf_to_compare]
+                elif logical_op == 2:  # equal
+                    rules_evaluation = rules_evaluation and rule['value'] == vector[idx_col_or_outf_to_compare]
+                elif logical_op == 3:  # equal or greater than
+                    rules_evaluation = rules_evaluation and rule['value'] <= vector[idx_col_or_outf_to_compare]
+                elif logical_op == 4:  # equal or less than
+                    rules_evaluation = rules_evaluation and rule['value'] >= vector[idx_col_or_outf_to_compare]
 
+            elif rules_logical_op == 0: # apply or
+                if logical_op == 0: # greater than
+                    rules_evaluation = rules_evaluation or rule['value'] < vector[idx_col_or_outf_to_compare]
+                elif logical_op == 1:  # less than
+                    rules_evaluation = rules_evaluation or rule['value'] > vector[idx_col_or_outf_to_compare]
+                elif logical_op == 2:  # equal
+                    rules_evaluation = rules_evaluation or rule['value'] == vector[idx_col_or_outf_to_compare]
+                elif logical_op == 3:  # equal or greater than
+                    rules_evaluation = rules_evaluation or rule['value'] <= vector[idx_col_or_outf_to_compare]
+                elif logical_op == 4:  # equal or less than
+                    rules_evaluation = rules_evaluation or rule['value'] >= vector[idx_col_or_outf_to_compare]
 
-        if similarity >= self.upper_bound:
-            match_type = MatchResultType.match
-        elif similarity < self.lower_bound:
-            match_type = MatchResultType.no_match
+        match_type = MatchResultType.match if rules_evaluation else MatchResultType.no_match
 
-        return MatchResult(simil.record1, simil.record2, similarity, match_type)
+        return MatchResult(simil.record1, simil.record2, None, match_type)
+
+    @staticmethod
+    def _vector_average(vector):
+        return sum(vector) / len(vector)
 
     @staticmethod
     def config_json(project_id):
@@ -84,10 +118,15 @@ class RuleBasedClassification(ClassificationModule):
         dal = DALMongo(project_id)
 
         # TODO Hacer compatible con los output fields
-        cols = [{'label': c['name'], 'config': {}} for c in dal.get_matched_cols()]
-
-        #for c in cols:
-
+        cols = [{
+                    "label": c['name'],
+                    "config": {
+                        "val": {
+                            'type': 'hidden',
+                            'value': c['name'],
+                        }
+                    }
+                } for c in dal.get_matched_cols()]
 
         rowmodel = {
             'type': 'row',
@@ -105,23 +144,48 @@ class RuleBasedClassification(ClassificationModule):
                     'options': [
                         {
                             'label': 'Greater than',
-                            'config': {}
+                            'config': {
+                                "val": {
+                                    'type': 'hidden',
+                                    'value': 0
+                                }
+                            }
                         },
                         {
                             'label': 'Less than',
-                            'config': {}
+                            'config': {
+                                "val": {
+                                    'type': 'hidden',
+                                    'value': 1
+                                }
+                            }
                         },
                         {
                             'label': 'Equal to',
-                            'config': {}
+                            'config': {
+                                "val": {
+                                    'type': 'hidden',
+                                    'value': 2
+                                }
+                            }
                         },
                         {
                             'label': 'Greater than or equal to',
-                            'config': {}
+                            'config': {
+                                "val": {
+                                    'type': 'hidden',
+                                    'value': 3
+                                }
+                            }
                         },
                         {
                             'label': 'Less than or equal to',
-                            'config': {}
+                            'config': {
+                                "val": {
+                                    'type': 'hidden',
+                                    'value': 4
+                                }
+                            }
                         }
                     ]
                 },
@@ -130,7 +194,7 @@ class RuleBasedClassification(ClassificationModule):
                     "type": "slider",
                     "start": "0",
                     "end": "1",
-                    "step": 0.001,
+                    "step": 0.01,
                     "color": "amber"
                 }
             }
@@ -159,6 +223,4 @@ class RuleBasedClassification(ClassificationModule):
             }
         }
 
-    @staticmethod
-    def _vector_average(vector):
-        return sum(vector) / len(vector)
+
