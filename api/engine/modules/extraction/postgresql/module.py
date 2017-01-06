@@ -24,12 +24,12 @@ class PostgreSQLExtractor(ExtractionModule):
     def __init__(self, **kwargs):
         super(PostgreSQLExtractor, self).__init__(**kwargs)
         self.pretty_name = 'PostgreSQL Extractor'
-        self.host = self.config["host-port"]
-        self.port = self.config["port"]
-        self.user = self.config['username']
-        self.password = self.config['password']
-        self.db = self.config["db"]
-        self.table = self.config["table"]
+        self.host = self.config['host-port']['0']
+        self.port = self.config['host-port']['1']
+        self.user = self.config['auth']['0']
+        self.password = self.config['auth']['1']
+        self.db = self.config["db-table"]['0']
+        self.table = self.config["db-table"]['1']
 
     @staticmethod
     def pretty_name():
@@ -42,7 +42,11 @@ class PostgreSQLExtractor(ExtractionModule):
                                                                                        self.password)
 
         # get a connection, if a connect cannot be made an exception will be raised here
-        conn = psycopg2.connect(conn_string)
+        try:
+            conn = psycopg2.connect(conn_string)
+        except Exception as e:
+            raise
+
 
         # conn.cursor will return a cursor object, you can use this cursor to perform queries
         cursor_schema = conn.cursor()
@@ -50,7 +54,7 @@ class PostgreSQLExtractor(ExtractionModule):
                               "from INFORMATION_SCHEMA.COLUMNS where table_name = '{}';"
                               .format(self.table))
         for db_column in cursor_schema:
-            self.add_to_schema(Column(db_column[0], type=db_column[1]))
+            self.add_to_schema(Column(db_column[0]))
 
         cursor_rows = conn.cursor()
         cursor_rows.execute("SELECT * FROM \"{}\"".format(self.table))
@@ -79,7 +83,7 @@ class PostgreSQLExtractor(ExtractionModule):
                     },
                     {
                         'label': 'Port',
-                        'type': 'text'
+                        'type': 'number'
                     }
                 ]
             },
@@ -92,16 +96,21 @@ class PostgreSQLExtractor(ExtractionModule):
                     },
                     {
                         'label': 'Password',
-                        'type': 'text'
+                        'type': 'password'
                     }
                 ]
             },
-            'db': {
-                'label': 'Database',
-                'type': 'text'
-            },
-            'table': {
-                'label': 'Table',
-                'type': 'text'
+            'db-table': {
+                'type': 'row',
+                'cols': [
+                    {
+                        'label': 'Database',
+                        'type': 'text'
+                    },
+                    {
+                        'label': 'Table',
+                        'type': 'text'
+                    }
+                ]
             }
         }
