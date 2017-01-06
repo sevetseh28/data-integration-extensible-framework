@@ -304,7 +304,7 @@ materialAdmin
                             type: "error",
                             text: 'Please check modules are selected and fully configured',
                             showCancelButton: true,
-                            confirmButtonText: "Ok",
+                            confirmButtonText: "OK",
                             cancelButtonText: "See details",
                             closeOnConfirm: true,
                             closeOnCancel: false

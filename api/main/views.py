@@ -110,9 +110,9 @@ def run(request):
     except Exception as e:
         # DEBUG PURPOSES
         traceback.print_stack()
-        return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
+        #return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
 
         # TODO Should be in the final version instead
-        #return JsonResponse({'status': 'error', 'details': e.message}, status=500)
+        return JsonResponse({'status': 'error', 'details': e.message}, status=500)
 
     return JsonResponse({'status': 'ok'})

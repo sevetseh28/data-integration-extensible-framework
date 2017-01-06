@@ -472,7 +472,7 @@ class ClassificationStep(Step):
         simils = dal.get_similarity_vectors()
 
         match_results = []
-        module = self._load_module()
+        module = self._load_module(project_id=self.project_id)
 
         for simil in simils:
             match_results.append(module.run(simil))

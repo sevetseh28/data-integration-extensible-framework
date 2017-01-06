@@ -185,7 +185,7 @@ class DALMongo:
 
     def get_matched_cols(self):
         """
-        Retorna el los output fields de columnas matcheadas
+        Returns the matched columns
         """
         records = self.get_all("SchemaMatchingStep", "source1_records")
         ret = []
