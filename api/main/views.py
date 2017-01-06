@@ -62,7 +62,7 @@ def output_fields(request, project_id):
     project = Project.objects.get(id=project_id)
     dal = dal_mongo.DALMongo(project_id)
     ret = {}
-    if project.segment_skipped:
+    if project.segmentation_skipped:
         ret['col_or_outputfield'] = "column"
         ret['values'] = dal.get_matched_cols()
     else:
@@ -73,6 +73,11 @@ def output_fields(request, project_id):
 
 
 def run(request):
+    """
+    This is the run function for the current step.
+    :param request: the request object
+    :return: status json with ok message or error message.
+    """
     try:
         # Se obtienen los parametros del request
         params = json.loads(request.body)
@@ -81,17 +86,17 @@ def run(request):
         config = params['config'] if 'config' in params else {}
         step_state = params['step_state'] if 'step_state' in params else {}
         project = Project.objects.get(id=project_id)
-        #Se chequea si se skipea el paso de Segmentation
+        # Se chequea si se skipea el paso de Segmentation
         if step == "SegmentationStep":
-            project.segment_skipped = config['skipstep']
-            if not project.segment_skipped:
+            project.segmentation_skipped = config['skipstep']
+            if not project.segmentation_skipped:
                 # Llamado a workflow
-                w = Workflow(project_id, project.segment_skipped)
+                w = Workflow(project_id, project.segmentation_skipped)
                 w.set_current_step(step, config)
                 w.execute_step()
         else:
             # Llamado a workflow
-            w = Workflow(project_id, project.segment_skipped)
+            w = Workflow(project_id, project.segmentation_skipped)
             w.set_current_step(step, config)
             w.execute_step()
 
@@ -103,9 +108,11 @@ def run(request):
         saved_step.config = step_state
         saved_step.save()
     except Exception as e:
-        #DEBUG PURPOSES
-        #traceback.print_stack()
-        #return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
-        return JsonResponse({'status': 'error', 'details': e.message}, status=500)
+        # DEBUG PURPOSES
+        traceback.print_stack()
+        return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
+
+        # TODO Should be in the final version instead
+        #return JsonResponse({'status': 'error', 'details': e.message}, status=500)
 
     return JsonResponse({'status': 'ok'})

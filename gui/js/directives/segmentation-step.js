@@ -20,9 +20,9 @@ angular.module("materialAdmin")
                         checked: false
                     }
                 };
-                // $scope.segmentation.skiptoggler = function() {
-                //     $scope.segmentation.returnValue.skipstep = !($scope.segmentation.returnValue.skipstep)
-                // };
+                $scope.segmentation.toggle = function() {
+                     $scope.segmentation.toggleskip.config.checked = !($scope.segmentation.toggleskip.config.checked)
+                };
 
                 $scope.segmentation.updateReturnValue = function() {
                     $scope.segmentation.returnValue = {
@@ -57,6 +57,7 @@ angular.module("materialAdmin")
                 };
 
                 $scope.$watch('segmentation.moduleSelections', $scope.segmentation.updateReturnValue, true);
+                $scope.$watch('segmentation.toggleskip', $scope.segmentation.updateReturnValue, true);
             }
         }
     });

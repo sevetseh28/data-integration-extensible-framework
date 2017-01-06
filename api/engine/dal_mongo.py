@@ -12,6 +12,7 @@ COL_STEP_PREFIXES = {
 
 }
 
+
 class DALMongo:
     def __init__(self, project_id=None):
         self.db_name = 'project{}'.format(project_id)
@@ -175,31 +176,13 @@ class DALMongo:
 
         for r in records:
             for c in r['columns']:
+                # TODO ARREGLAR ESTO!!!!! no puede ir un __new__ aca
                 if c['name'].startswith('__new__'):
                     for f in c['fields']:
                         if f['output_field'] not in [of['name'] for of in ret]:
-                            ret.append({'name':f['output_field']})
-
-        # def getMatchedColObject(ret, col):
-        #     for r in ret:
-        #         if r['matchedColumns'] == col:
-        #             return r
-        #     newObject = {
-        #         'matchedColumns': col,
-        #         'outputFields': []
-        #     }
-        #     ret.append(newObject)
-        #     return newObject
-        #
-        # for r in records:
-        #     for c in r['columns']:
-        #         if c['name'].startswith('__new__'):
-        #             obj = getMatchedColObject(ret, c['name'])
-        #             for f in c['fields']:
-        #                 if f['output_field'] not in [o['name'] for o in obj['outputFields']]:
-        #                     obj['outputFields'].append({'name':f['output_field']})
-
+                            ret.append({'name': f['output_field']})
         return ret
+
     def get_matched_cols(self):
         """
         Retorna el los output fields de columnas matcheadas
@@ -211,8 +194,7 @@ class DALMongo:
             for c in r['columns']:
                 if c['name'].startswith('__new__'):
                     if c['name'] not in [cl['name'] for cl in ret]:
-                            ret.append({'name':c['name']})
-
+                        ret.append({'name': c['name']})
 
         return ret
 

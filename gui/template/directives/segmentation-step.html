@@ -14,14 +14,14 @@
                     <div class="toggle-switch" data-ts-color="{{ segmentation.toggleskip.config.color }}">
                         <label class="ts-label">{{ segmentation.toggleskip.config.label }}</label>
                         <input type="checkbox" hidden="hidden" ng-model="segmentation.toggleskip.config.checked">
-                        <label class="ts-helper" ng-click="segmentation.skiptoggler()"></label>
+                        <label class="ts-helper" ng-click="segmentation.toggle()"></label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div ng-hide="segmentation.returnValue.skipstep" class="row">
+<div ng-hide="segmentation.toggleskip.config.checked" class="row">
 
     <div class="col-sm-6" ng-repeat="source in sources">
         <div ng-repeat="o in segmentation.moduleSelections[source] track by $index">
@@ -30,7 +30,6 @@
                     <p class="c-black f-500 m-b-20">Column</p>
                     <div>
                         {{ o.column }}
-
                     </div>
                 </div>
                 <div class="col-sm-7">

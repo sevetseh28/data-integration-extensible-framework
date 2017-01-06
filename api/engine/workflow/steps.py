@@ -22,14 +22,14 @@ class Step(object):
     }
     """
 
-    def __init__(self, project_id=None,segment_skipped=False, config=None):
+    def __init__(self, project_id=None, segmentation_skipped=False, config=None):
         self.results = {
             "collections": []
         }
         self.config = config
         self.class_name = type(self).__name__
         self.project_id = project_id
-        self.segment_skipped = segment_skipped
+        self.segmentation_skipped = segmentation_skipped
         self.modules_directory = None
 
     def run(self):
@@ -303,7 +303,7 @@ class SchemaMatchingStep(Step):
         Implementación por defecto
         """
         dal = DALMongo(self.project_id)
-        if self.segment_skipped:
+        if self.segmentation_skipped:
             prevstep = "StandardisationAndTaggingStep"
         else:
             prevstep = "SegmentationStep"
@@ -402,7 +402,7 @@ class ComparisonStep(Step):
                     # Inicializa el vector de comparacion vacio
                     sv = SimilarityVector(r1._id, r2._id)
                     for col in r1.matched_cols(): # could be r2.matched_cols() as well (they return the same)
-                        if not self.segment_skipped:
+                        if not self.segmentation_skipped:
                             for out_field, comparison_module in self.config.items():
                                 # Se obienen los valores a comparar y se comparan
                                 out_field_value1 = r1.get_output_field_col(out_field,col)

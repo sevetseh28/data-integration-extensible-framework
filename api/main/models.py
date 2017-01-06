@@ -14,7 +14,7 @@ STEPS = ((step.__name__, step.pretty_name()) for step in Step.__subclasses__())
 class Project(models.Model):
     name = models.CharField(max_length=30)
     current_step = models.CharField(max_length=30, choices=STEPS, default=None, null=True)
-    segment_skipped = models.BooleanField(default=False)
+    segmentation_skipped = models.BooleanField(default=False)
 
     # Metodo para q se muestre con nombre para humanos en las apis navegables generadas
     def __str__(self):
