@@ -303,7 +303,6 @@ materialAdmin
                             title: "An error has occured!",
                             type: "error",
                             text: 'Please check modules are selected and fully configured',
-                            html: true,
                             showCancelButton: true,
                             confirmButtonText: "Ok",
                             cancelButtonText: "See details",
@@ -314,7 +313,7 @@ materialAdmin
                             if (!isConfirm) {
                                 swal({
                                         title: "Error details",
-                                        text: '<div style="text-align: left" id="stacktrace"><small>' + response.data.details + '</small></div>',
+                                        text: response.data.details,
                                         html: true
                                     }
                                 );
