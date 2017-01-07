@@ -4,7 +4,7 @@ import logging
 from abc import abstractmethod
 
 from engine.dal_mongo import DALMongo
-from engine.models.record import IndexingGroup, SimilarityVector, Column
+from engine.models.record import IndexingGroup, SimilarityVector, Column, Field
 from engine.utils import dynamic_loading
 
 
@@ -281,13 +281,37 @@ class SegmentationStep(Step):
         records = dal.get_records(StandardisationAndTaggingStep().class_name, source_number)
         # module = self._load_module(records=records)
 
+        # Initialize columns to store new segmented schema
+        orig_schema = {}
+        for c_obj in dal.get_schema(source_number):
+            orig_schema[c_obj.name] = c_obj
+
+        new_cols = orig_schema
+
         # Run segmentation module for each column of each record
         for record in records:
-            for col, segmentation_module in self.config["source{}".format(source_number)].items():
+            for col_name, segmentation_module in self.config["source{}".format(source_number)].items():
                 module = self._load_module(segmentation_module)
-                record.columns[col] = module.run(record.columns[col])
+                record.columns[col_name] = module.run(record.columns[col_name])
+
+                # This is to create the new segmented schema
+                for field_obj in record.columns[col_name].fields:
+                    new_col_fields = new_cols[col_name].fields
+                    # If a new output field was found in this column then add it to the new schema
+                    if field_obj.output_field is not None and \
+                        field_obj.output_field not in [field.output_field for field in new_col_fields]:
+                        # TODO tags could be appended as well but for now we leave it empty
+                        new_of = Field(value="n/A", tipe=field_obj.tipe, output_field=field_obj.output_field,
+                                       tags=[])
+                        new_cols[col_name].fields.append(new_of)
+
+        # Reconstruct new_cols object so that the DAL can store it
+        segmented_schema = []
+        for col_name, col_obj in new_cols.items():
+            segmented_schema.append(col_obj)
 
         self._append_result_collection(records, 'source{}_records'.format(source_number))
+        self._append_result_collection(segmented_schema, 'source{}_schema'.format(source_number))
 
     def _load_module(self, segmentation_module):
         step = self.modules_directory
@@ -390,6 +414,28 @@ class ComparisonStep(Step):
             "name":"[nombre_modulo]",
             "config":{[config]}
             "weight": <<float>>,
+        },
+        ...
+    }
+    {
+        "[column1]":{
+            "[output_field_1]":{
+                "name":"[nombre_modulo]",
+                "config":{[config]}
+                "weight": <<float>>,
+            },
+            "[output_field_Wayfare_name]":{
+                "name":"[nombre_modulo]",
+                "config":{[config]}
+                "weight": <<float>>,
+            },
+        },
+        "[column2]":{
+            "[output_field_Wayfare_name]":{
+                "name":"[nombre_modulo]",
+                "config":{[config]}
+                "weight": <<float>>,
+            },
         },
         ...
     }
