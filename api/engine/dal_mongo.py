@@ -156,20 +156,26 @@ class DALMongo:
 
         return groups
 
-    def get_schema(self, source_number):
+    def get_schema(self, source_number, current_step):
         """
         Retorna el esquema original de una fuente
 
         :param source_number: numero de fuente (1 o 2)
         :return: columnas del esquema de la fuente
         """
+        # If we are in a step after doing data cleansing then we have to retrieve the pruned cleansed schema.
+        #if current_step == "ExtractionStep":
+        #    schema = self.get_all("ExtractionStep", "source{}_schema".format(source_number))
+        #else:
+        #    schema = self.get_all("DataCleansingStep", "source{}_new_schema".format(source_number))
         schema = self.get_all("ExtractionStep", "source{}_schema".format(source_number))
+
 
         return [Column.from_json(c) for c in schema]
 
     def get_output_fields_matched_cols(self):
         """
-        Retorna el los output fields de columnas matcheadas
+        Returns the output fields of matched columns`
         """
         records = self.get_all("SchemaMatchingStep", "source1_records")
         ret = []

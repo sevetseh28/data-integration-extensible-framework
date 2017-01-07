@@ -4,7 +4,7 @@ import logging
 from abc import abstractmethod
 
 from engine.dal_mongo import DALMongo
-from engine.models.record import IndexingGroup, SimilarityVector
+from engine.models.record import IndexingGroup, SimilarityVector, Column
 from engine.utils import dynamic_loading
 
 
@@ -152,14 +152,31 @@ class DataCleansingStep(Step):
         dal = DALMongo(self.project_id)
         records = dal.get_records(ExtractionStep().class_name, source_number)
 
-        #  Do cleaning for each column of each record
+        # Make a list with columns specified by the user
+        # used_cols = []
+        # for col, datacleansing_modules in self.config["source{}".format(source_number)].items():
+        #     if col not in used_cols:
+        #         used_cols.append(col)
+        #
+        # all_cols = [col_obj.name for col_obj in dal.get_schema(source_number, 'ExtractionStep')]
+        # extra_cols = [col for col in all_cols if col not in used_cols]
+
+        #  Do cleansing for each column of each record
         for record in records:
             for col, datacleansing_modules in self.config["source{}".format(source_number)].items():
                 for datacleansing_module in datacleansing_modules:
                     module = self._load_module(datacleansing_module)
                     record.columns[col] = module.run(record.columns[col])
 
+            # Remove extra columns
+            # for extra_col in extra_cols:
+            #     record.columns.pop(extra_col)
+
         self._append_result_collection(records, "source{}_records".format(source_number))
+
+        #new_schema = [Column(c_name) for c_name in used_cols]
+        #self._append_result_collection(new_schema, 'source{}_new_schema'.format(source_number))
+
 
     def _load_module(self, datacleansing):
         step = self.modules_directory

@@ -36,9 +36,10 @@ def available_modules(request, step='', project_id=None):
 
 def schema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
+    project = Project.objects.get(id=project_id)
 
-    schema1 = [c.name for c in dal.get_schema(1)]
-    schema2 = [c.name for c in dal.get_schema(2)]
+    schema1 = [c.name for c in dal.get_schema(1, project.current_step)]
+    schema2 = [c.name for c in dal.get_schema(2, project.current_step)]
 
     return JsonResponse({
         'source1': schema1,
@@ -59,6 +60,12 @@ def upload(request):
 
 
 def output_fields(request, project_id):
+    """
+    Method to return the output fields
+    :param request:
+    :param project_id:
+    :return:
+    """
     project = Project.objects.get(id=project_id)
     dal = dal_mongo.DALMongo(project_id)
     ret = {}
