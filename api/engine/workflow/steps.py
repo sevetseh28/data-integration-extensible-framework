@@ -417,6 +417,8 @@ class ComparisonStep(Step):
         },
         ...
     }
+
+    # TODO comparison per output field per column
     {
         "[column1]":{
             "[output_field_1]":{
