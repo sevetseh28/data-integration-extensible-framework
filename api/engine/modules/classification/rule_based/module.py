@@ -2,6 +2,7 @@
 from __future__ import division
 
 import re
+from main.models import Project
 from engine.dal_mongo import DALMongo
 from engine.models.record import *
 from engine.modules.classification.classification_module import ClassificationModule
@@ -54,12 +55,15 @@ class RuleBasedClassification(ClassificationModule):
         # Given the fact that the simil vector is sorted I must obtain the columns/ofs again from the DAL because
         # the user can send the rules per column/of in any order
         dal = DALMongo(self.project_id)
+        project = Project.objects.get(id=self.project_id)
 
-        # TODO Hacer compatible con los output fields
-        #cols = [{c['name']: idx} for idx, c in enumerate(dal.get_matched_cols())]
         cols_order = {}
-        for idx, c in enumerate(dal.get_matched_cols()):
-            cols_order[c['name']] = idx
+        if project.segmentation_skipped:
+            for idx, c in enumerate(dal.get_matched_cols()):
+                cols_order[c['name']] = idx
+        else:
+            for idx, c in enumerate(dal.get_output_fields_matched_cols()):
+                cols_order[c['name']] = idx
 
         rules_logical_op = self.logical_operator
 
@@ -116,17 +120,28 @@ class RuleBasedClassification(ClassificationModule):
         #         vector_reducers.append(m.group(1))
 
         dal = DALMongo(project_id)
+        project = Project.objects.get(id=project_id)
 
-        # TODO Hacer compatible con los output fields
-        cols = [{
-                    "label": c['name'],
-                    "config": {
-                        "val": {
-                            'type': 'hidden',
-                            'value': c['name'],
+        if project.segmentation_skipped:
+            cols = [{
+                        "label": c['name'],
+                        "config": {
+                            "val": {
+                                'type': 'hidden',
+                                'value': c['name'],
+                            }
                         }
-                    }
-                } for c in dal.get_matched_cols()]
+                    } for c in dal.get_matched_cols()]
+        else:
+            cols = [{
+                        "label": c['name'],
+                        "config": {
+                            "val": {
+                                'type': 'hidden',
+                                'value': c['name'],
+                            }
+                        }
+                    } for c in dal.get_output_fields_matched_cols()]
 
         rowmodel = {
             'type': 'row',
