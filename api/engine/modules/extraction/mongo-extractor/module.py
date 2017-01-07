@@ -23,7 +23,7 @@ class MongodbExtractor(ExtractionModule):
         super(MongodbExtractor, self).__init__(**kwargs)
         self.pretty_name = 'MongodbExtractor'
         self.host = self.config["host"]
-        self.port = self.config["port"]
+        self.port = int(self.config["port"])
         self.db = self.config["db"]
         self.collection = self.config["collection"]
 
