@@ -166,16 +166,28 @@ class Field:
         return Field(json["value"], EnumType.from_json(json["type"]), json["tags"], json["output_field"])
 
 
+# class MatchedCols:
+#     """
+#     This class represents objects containing information about matched columns and
+#     are used to store the new schema
+#     {
+#
+#     }
+#     """
+#
+
 class SchemaMatch:
     """
     Representa la coleccion de columnas matcheadas.
     Es una lista de pares de conjuntos de columnas donde los elementos del par son las columnas que matchean con las otras.
     [
         {
+            "col_name": __new__[s1col]-...-[s1col]__[s2col]-...-[s2col]
             "source1": [col11, col12, ..],
             "source2": [col21, col22, ..]
         },
         {
+            "col_name": __new__[s1col]-...-[s1col]__[s2col]-...-[s2col]
             "source1": [col14, col15, ..],
             "source2": [col24, col25, ..]
         },

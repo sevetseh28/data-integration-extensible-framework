@@ -18,7 +18,7 @@ class DALMongo:
         self.db_name = 'project{}'.format(project_id)
         self.mongoclient = MongoClient(DATABASES['mongodb']['host'], DATABASES['mongodb']['port'])
 
-    def get_connection(self):
+    def get_mongoclient(self):
         return self.mongoclient
 
     """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -26,7 +26,7 @@ class DALMongo:
     """""""""""""""""""""""""""""""""""""""""""""""""""
 
     def store_step_results(self, results, step):
-        c = self.get_connection()
+        c = self.get_mongoclient()
 
         db = c[self.db_name]
 
@@ -137,7 +137,7 @@ class DALMongo:
         Retorna los grupos dados por el paso de indexacion
         :return: Lista de IndexingGroup
         """
-        c = self.get_connection()
+        c = self.get_mongoclient()
         col = c[self.db_name]["IndexingStep"]
 
         # Se obtienen las keys de los grupos
@@ -172,6 +172,19 @@ class DALMongo:
 
 
         return [Column.from_json(c) for c in schema]
+
+    def get_output_fields_name(self, column_name):
+        """
+        Returns a list with the output fields name for the given column name. It there are no output fields then
+        returns an empty list
+        :param column_name:
+        :return:
+        """
+        mongoclient = self.get_mongoclient()
+
+        db = mongoclient[self.db_name]
+        cursor = db.find_all('')
+
 
     def get_output_fields_matched_cols(self):
         """
@@ -238,7 +251,7 @@ class DALMongo:
         """
         if filters is None:
             filters = {}
-        c = self.get_connection()
+        c = self.get_mongoclient()
 
         extra = {'_id': False}
         if with_id:
@@ -260,6 +273,6 @@ class DALMongo:
         return step
 
     def drop_database(self):
-        c = self.get_connection()
+        c = self.get_mongoclient()
         c.drop_database(self.db_name)
         c.close()

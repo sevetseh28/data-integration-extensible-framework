@@ -66,7 +66,7 @@ class ManualSchemaMatching(SchemaMatchingModule):
         # taking one record and getting the matched schema will be enough
         for col_name, col_obj in self.records1[0].columns.iteritems():
             if col_name.startswith("__new__"):
-                self.add_to_schema(Column(col_name))
+                self.add_to_schema(Column(col_name), self.project_id)
         return self.schema, self.records1, self.records2
 
     @staticmethod
