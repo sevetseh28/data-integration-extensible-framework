@@ -13,8 +13,8 @@ angular.module("materialAdmin")
 
                 $scope.comparison.updateReturnValue = function () {
                     $scope.comparison.returnValue = {};
-                    for (var of in $scope.comparison.outputFields) {
-                        of = $scope.comparison.outputFields[of];
+                    for (var idx in $scope.comparison.outputFields) {
+                        of = $scope.comparison.outputFields[idx];
                         if (of.selectedModule) {
                             ofRet = {};
                             $scope.comparison.returnValue[of.name] = ofRet;
@@ -24,6 +24,13 @@ angular.module("materialAdmin")
                             for (var config in of.selectedModule['config']) {
                                 if(of.selectedModule['config'][config].returnValue){
                                     ofRet.config[config] = of.selectedModule['config'][config].returnValue[config]
+                                }
+                            }
+
+                            // This is used to display spaces if module has config options
+                            if (of.selectedModule.config) {
+                                if (Object.keys(of.selectedModule.config).length > 0) {
+                                    $scope.comparison.outputFields[idx].selectedModule['hasConfig'] = true;
                                 }
                             }
                         }

@@ -35,15 +35,18 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-repeat="(k, c) in outputField.selectedModule['config']">
         <div class="col-sm-12">
             <div>
-                <dynamic-input ng-repeat="(k, c) in outputField.selectedModule['config']" return-value='c.returnValue'
+                <dynamic-input return-value='c.returnValue'
+                               style="margin-bottom: 20px"
                                ng-init="c.returnValue = {}" config-id='{{ k }}' config='c'></dynamic-input>
             </div>
         </div>
     </div>
 
+    <div ng-if="outputField.selectedModule['hasConfig']">
+        <br><br><br><br>
+    </div>
 
-</div>
 </div>

@@ -19,8 +19,7 @@ angular.module("materialAdmin")
             link: function (scope, element, attrs) {
 
                 function appendReturnValue() {
-                    scope.returnValue[scope.configId] = {};
-                    scope.returnValue[scope.configId]['checked'] = scope.config.checked;
+                    scope.returnValue[scope.configId] = { 'checked': scope.config.checked };
 
                     if ('nestedCheck' in scope) {
                         scope.nestedCheck['check'] ++
