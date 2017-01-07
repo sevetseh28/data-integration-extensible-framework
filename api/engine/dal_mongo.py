@@ -156,7 +156,7 @@ class DALMongo:
 
         return groups
 
-    def get_schema(self, source_number, current_step):
+    def get_schema(self, source_number): #, current_step):
         """
         Retorna el esquema original de una fuente
 
