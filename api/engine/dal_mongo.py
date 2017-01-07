@@ -190,15 +190,14 @@ class DALMongo:
         """
         Returns the output fields of matched columns`
         """
-        records = self.get_all("SchemaMatchingStep", "source1_records")
+        records = self.get_all("SchemaMatchingStep", "new_schema")
         ret = []
 
-        for r in records:
-            for c in r['columns']:
-                if c['name'].startswith('__new__'):
-                    for f in c['fields']:
-                        if f['output_field'] not in [of['name'] for of in ret]:
-                            ret.append({'name': f['output_field']})
+        for c in records:
+            if c['name'].startswith('__new__'):
+                for f in c['fields']:
+                    if f['output_field'] not in [of['name'] for of in ret]:
+                        ret.append({'name': f['output_field']})
         return ret
 
     def get_matched_cols(self):

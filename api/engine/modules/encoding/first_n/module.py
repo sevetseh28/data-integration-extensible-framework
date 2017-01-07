@@ -20,7 +20,7 @@ class FirstNEncoding(EncodingModule):
         return {
             'name': {
                 'type': 'hidden',
-                'value': 'first-n',
+                'value': 'first_n',
             },
             'first_n': {
                 "type": "slider",
