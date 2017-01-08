@@ -134,13 +134,13 @@ materialAdmin
             } else if (step == 'comparison') {
                 APIService.getOutputFields($stateParams.id).then(function (data) {
                     $scope[step]['outputFields'] = data.data.values;
-                    $scope[step]['col_or_outputfield'] = data.data.col_or_outputfield
+                    $scope[step]['col_or_outputfield'] = data.data.col_or_outputfield;
 
                     APIService.getModules($stateParams.id, step).then(function (data) {
                         $scope[step]['modules'] = data.data;
                         for (var i = 0; i < $scope[step]['outputFields'].length; i++) {
                             $scope[step]['outputFields'][i]['modules'] = angular.copy($scope[step]['modules']);
-                            $scope[step]['outputFields'][i]['selectedModule'] = {'name': 'Test'};
+                            $scope[step]['outputFields'][i]['selectedModule'] = {};
                         }
                     });
                 });
