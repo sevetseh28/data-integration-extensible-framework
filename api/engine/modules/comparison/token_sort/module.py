@@ -4,19 +4,19 @@ from engine.modules.comparison.comparison_module import ComparisonModule
 from engine.modules.module import Module
 from fuzzywuzzy import fuzz
 
-class TokenSet(ComparisonModule):
+class TokenSort(ComparisonModule):
     """
-        Applies Token Set comparison
-        >>>fuzz.token_set_ratio("fuzzy was a bear", "fuzzy fuzzy was a bear")
+        Applies Token Sort comparison
+        >>>fuzz.token_sort_ratio("fuzzy wuzzy was a bear", "wuzzy fuzzy was a bear")
         100
     """
 
     def __init__(self, **kwargs):
-        super(TokenSet, self).__init__(**kwargs)
+        super(TokenSort, self).__init__(**kwargs)
 
     @staticmethod
     def pretty_name():
-        return "Token Set"
+        return "Token Sort"
 
     @staticmethod
     def config_json(**kwargs):
@@ -24,7 +24,8 @@ class TokenSet(ComparisonModule):
             'partial': {
                 'type': 'toggleswitch',
                 'label': 'Partial',
-                "color": 'green'
+                "color": 'green',
+                'checked': False
             }
         }
 
