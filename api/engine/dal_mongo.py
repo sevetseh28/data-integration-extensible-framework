@@ -217,8 +217,8 @@ class DALMongo:
         """
         Retorna el esquema global luego de aplicado el schema matching
         """
-        first_record = self.get_all("SchemaMatchingStep", "source1_records").next()
-        cols = [c['name'] for c in first_record['columns']]
+        new_schema = self.get_all("SchemaMatchingStep", "new_schema")
+        cols = [c for c in new_schema]
 
         return cols
 

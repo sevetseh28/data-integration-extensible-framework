@@ -66,17 +66,17 @@ class BlockingStandard(IndexingModule):
         dal = DALMongo(project_id)
 
         cols = [{
-                    "label": c,
-                    "value": c,
-                    "id": c,
+                    "label": c['name'],
+                    "value": c['name'],
+                    "id": c['name'],
                     "config": {
                         "key": {
                             'type': 'hidden',
-                            'value': c,
+                            'value': c['name'],
                         }
                     }
-                } for c in dal.get_global_schema() if c.startswith('__new__')]
-        # TODO arreglar la porqueria de arriba con el __new__ hardcodeado
+                } for c in dal.get_global_schema() if c['name'].startswith('__new__')]
+        # Above checking of __new__ prefix is unncessary I think...
 
         encoding_configs = dynamic_loading.list_modules('encoding')
 
