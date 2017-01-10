@@ -30,12 +30,12 @@ class AddressParsing(StandardisationTaggingModule):
         for idx, field in enumerate(column.fields):
             # it is safe to assume that at this point each field has zero or more tags assigned
             # this module will only assign an output field if a specific tag is encountered on the field
-            if global_tags.WAYFARE_NAME['id'] in field.tags:
+            if global_tags.WN['id'] in field.tags:
                 field.output_field = global_output_fields.WAYFARE_NAME
                 column.fields[idx] = field
                 continue
 
-            if global_tags.NUMBER_3_4_DIGITS['id'] in field.tags:
+            if global_tags.N34['id'] in field.tags:
                 field.output_field = global_output_fields.WAYFARE_NUMBER
                 column.fields[idx] = field
                 continue

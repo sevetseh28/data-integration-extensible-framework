@@ -37,13 +37,13 @@ class AddressesTokenization(StandardisationTaggingModule):
 
         fields = []
         if address_name != "":
-            address_name_field = Field(address_name, EnumType.string, tags=[global_tags.WAYFARE_NAME['id']],
+            address_name_field = Field(address_name, EnumType.string, tags=[global_tags.WN['id']],
                                        output_field=None)
             fields.append(address_name_field)
 
         # only append number if it was found
         if address_number != "":
-            address_number_field = Field(address_number, EnumType.number, tags=[global_tags.NUMBER_3_4_DIGITS['id']],
+            address_number_field = Field(address_number, EnumType.number, tags=[global_tags.N34['id']],
                                          output_field=None)
             fields.append(address_number_field)
 
