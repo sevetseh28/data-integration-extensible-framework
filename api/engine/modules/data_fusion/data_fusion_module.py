@@ -11,5 +11,5 @@ class DataFusionModule(Module):
         super(DataFusionModule, self).__init__(**kwargs)
 
     @abc.abstractmethod
-    def run(self, val1, val2):
+    def run(self):
         pass

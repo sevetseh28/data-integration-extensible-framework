@@ -12,4 +12,9 @@ class DataCleansingModule(Module):
 
     @abc.abstractmethod
     def run(self, column):
+        """
+
+        :param column: a Column object
+        :return: a Column object cleansed
+        """
         pass

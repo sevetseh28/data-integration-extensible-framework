@@ -30,7 +30,7 @@ class ExtractionModule(Module):
         """
         this method receives a raw extracted value by a specific Extraction module and returns a Field object
         with the corrrect type
-        :return:
+        :return: Field object
         """
         if isinstance(value, str):
             return Field(value, EnumType.string)

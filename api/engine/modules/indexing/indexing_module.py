@@ -10,24 +10,22 @@ class IndexingModule(Module):
     def __init__(self, **kwargs):
         super(IndexingModule, self).__init__(**kwargs)
 
-        # si no hay config de encoding, crea una por defecto
-       # if 'encoding' not in self.config or not self.config['encoding']:
-      #      self.config['encoding'] = {
-       #         'name': 'nop'
-       #     }
-
-        self.schema = []
-        self.records = []
-        #self.encoding_module = load_module("encoding", self.config['encoding']['name'],
-                                 #          config=self.config['encoding'])
-
     @staticmethod
     def pretty_name():
         return "Indexing module"
 
     @abc.abstractmethod
     def run(self):
+        """
+        Runs the indexing module.
+        :return: must return a Dict containing the groups. See below.
+         format of return dict
+            ret = {
+                group_key_1: List[Record]
+                group_key_2: List[Record]
+                group_key_3: List[Record]
+                ...
+                group_key_n: List[Records]
+            }
+        """
         pass
-
-  #  def encode(self, value):
-     #p   return self.encoding_module.run(value)

@@ -11,5 +11,5 @@ class SegmentationModule(Module):
         super(SegmentationModule, self).__init__(**kwargs)
 
     @abc.abstractmethod
-    def run(self):
+    def run(self, column):
         pass
