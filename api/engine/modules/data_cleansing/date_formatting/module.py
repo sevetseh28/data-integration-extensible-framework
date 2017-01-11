@@ -7,7 +7,7 @@ from engine.modules.module import Module
 import dateparser
 
 
-class DeleteChars(DataCleansingModule):
+class DateFormatting(DataCleansingModule):
     """
         Formatea como date los valores que logra parsear, los que no, quedán como estaban.
 
@@ -18,7 +18,7 @@ class DeleteChars(DataCleansingModule):
     """
 
     def __init__(self, **kwargs):
-        super(DeleteChars, self).__init__(**kwargs)
+        super(DateFormatting, self).__init__(**kwargs)
 
     @staticmethod
     def pretty_name():
@@ -42,13 +42,11 @@ class DeleteChars(DataCleansingModule):
                 "label": "Languages",
                 "type": "multipleselect",
                 "options": [
-                    "es",
-                    "en",
-                    "pt",
-                    "fr",
-                    "ru"
+                    "ES",
+                    "EN",
+                    "PT",
+                    "FR",
+                    "RU"
                 ]
             }
-
-
         }
