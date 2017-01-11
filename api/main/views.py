@@ -116,7 +116,7 @@ def run(request):
         saved_step.save()
     except Exception as e:
         # DEBUG PURPOSES
-#        traceback.print_stack()
+        print(traceback.format_exc())
         #return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
 
         # TODO Should be in the final version instead

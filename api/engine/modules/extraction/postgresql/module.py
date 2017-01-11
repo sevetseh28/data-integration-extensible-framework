@@ -30,6 +30,7 @@ class PostgreSQLExtractor(ExtractionModule):
         self.password = self.config['auth']['1']
         self.db = self.config["db-table"]['0']
         self.table = self.config["db-table"]['1']
+        self.limit = self.config["db-table"]['2']
 
     @staticmethod
     def pretty_name():
@@ -43,32 +44,34 @@ class PostgreSQLExtractor(ExtractionModule):
 
         # get a connection, if a connect cannot be made an exception will be raised here
         try:
-            conn = psycopg2.connect(conn_string)
+            with psycopg2.connect(conn_string) as conn:
+                # conn.cursor will return a cursor object, you can use this cursor to perform queries
+                cursor_schema = conn.cursor()
+                cursor_schema.execute("select column_name, data_type, character_maximum_length "
+                                      "from INFORMATION_SCHEMA.COLUMNS where table_name = '{}';"
+                                      .format(self.table))
+                for db_column in cursor_schema:
+                    self.add_to_schema(Column(db_column[0]))
+
+                cursor_rows = conn.cursor()
+                query = "SELECT * FROM \"{}\"".format(self.table) if self.limit is '' else \
+                    "SELECT * FROM \"{}\" LIMIT {}".format(self.table, self.limit)
+
+                cursor_rows.execute(query)
+
+                for row in cursor_rows:
+                    # Create new Record
+                    self.records.append(Record())
+                    for idx, col_value in enumerate(row):
+                        column_obj = Column(self.schema[idx].name)
+                        # Create one field per column
+                        new_field = self.get_field_from_value(col_value)
+                        column_obj.fields.append(new_field)
+                        self.records[cursor_rows.rownumber - 1].columns[column_obj.name] = column_obj
+
+                return self.schema, self.records
         except Exception as e:
             raise
-
-
-        # conn.cursor will return a cursor object, you can use this cursor to perform queries
-        cursor_schema = conn.cursor()
-        cursor_schema.execute("select column_name, data_type, character_maximum_length "
-                              "from INFORMATION_SCHEMA.COLUMNS where table_name = '{}';"
-                              .format(self.table))
-        for db_column in cursor_schema:
-            self.add_to_schema(Column(db_column[0]))
-
-        cursor_rows = conn.cursor()
-        cursor_rows.execute("SELECT * FROM \"{}\"".format(self.table))
-
-        for row in cursor_rows:
-            # Create new Record
-            self.records.append(Record())
-            for idx, col_value in enumerate(row):
-                column_obj = Column(self.schema[idx].name)
-                # Create one field per column
-                column_obj.fields.append(self.get_field_from_value(col_value))
-                self.records[cursor_rows.rownumber - 1].columns[column_obj.name] = column_obj
-
-        return self.schema, self.records
 
     @staticmethod
     def config_json(**kwargs):
@@ -110,6 +113,10 @@ class PostgreSQLExtractor(ExtractionModule):
                     {
                         'label': 'Table',
                         'type': 'text'
+                    },
+                    {
+                        'label': 'Limit',
+                        'type': 'number'
                     }
                 ]
             }
