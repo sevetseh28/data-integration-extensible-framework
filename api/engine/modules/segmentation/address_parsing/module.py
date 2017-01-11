@@ -3,8 +3,9 @@ from engine.models.record import *
 from engine.modules.module import Module
 import re
 from engine import global_tags, global_output_fields
-from engine.modules.standardisation_tagging.standardisation_tagging_module import StandardisationTaggingModule
-class AddressParsing(StandardisationTaggingModule):
+from engine.modules.segmentation.segmentation_module import SegmentationModule
+
+class AddressParsing(SegmentationModule):
     """
         This modules performs a regex search to tokenize an address in address name and address number
         applying a tag for each token group.
