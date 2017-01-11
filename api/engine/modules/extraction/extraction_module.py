@@ -1,6 +1,6 @@
 import abc
 from copy import deepcopy
-
+from decimal import *
 from engine.models.record import *
 from engine.modules.module import Module
 from datetime import datetime
@@ -45,8 +45,10 @@ class ExtractionModule(Module):
             return Field(value, EnumType.date)
         elif type(value) is type(None):
             return Field(value, EnumType.null)
+        elif type(value) is Decimal:
+            return Field(str(value), EnumType.number)
         else:
-            return None
+            return Field(str(value), EnumType.string)
 
     @abc.abstractmethod
     def run(self):
