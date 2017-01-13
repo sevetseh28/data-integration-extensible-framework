@@ -28,4 +28,4 @@ class IndexingModule(Module):
                 group_key_n: List[Records]
             }
         """
-        pass
+        raise NotImplementedError

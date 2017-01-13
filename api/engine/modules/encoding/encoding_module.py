@@ -16,4 +16,5 @@ class EncodingModule(Module):
 
     @abc.abstractmethod
     def run(self, value):
-        pass
+        raise NotImplementedError
+

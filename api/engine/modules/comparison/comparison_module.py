@@ -12,4 +12,5 @@ class ComparisonModule(Module):
 
     @abc.abstractmethod
     def run(self, val1, val2):
-        pass
+        raise NotImplementedError
+

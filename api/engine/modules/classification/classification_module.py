@@ -12,4 +12,4 @@ class ClassificationModule(Module):
 
     @abc.abstractmethod
     def run(self, simil):
-        pass
+        raise NotImplementedError

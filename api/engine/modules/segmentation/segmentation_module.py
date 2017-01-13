@@ -12,4 +12,4 @@ class SegmentationModule(Module):
 
     @abc.abstractmethod
     def run(self, column):
-        pass
+        raise NotImplementedError

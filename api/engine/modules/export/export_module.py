@@ -12,4 +12,5 @@ class ExportModule(Module):
 
     @abc.abstractmethod
     def run(self):
-        pass
+        raise NotImplementedError
+

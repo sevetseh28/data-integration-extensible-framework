@@ -14,7 +14,7 @@ class SchemaMatchingModule(Module):
 
     @abc.abstractmethod
     def run(self):
-        pass
+        raise NotImplementedError
 
     def add_to_schema(self, column, project_id):
         """

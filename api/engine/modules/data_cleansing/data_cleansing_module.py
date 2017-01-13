@@ -17,4 +17,5 @@ class DataCleansingModule(Module):
         :param column: a Column object
         :return: a Column object cleansed
         """
-        pass
+        raise NotImplementedError
+
