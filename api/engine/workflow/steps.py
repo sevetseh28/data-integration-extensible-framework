@@ -51,12 +51,12 @@ class Step(object):
         """
         Firma del run particular de cada step
         """
-        pass
+        raise NotImplementedError
 
     @staticmethod
     @abstractmethod
     def pretty_name():
-        pass
+        raise NotImplementedError
 
     def _load_module(self, **kwargs):
         """
