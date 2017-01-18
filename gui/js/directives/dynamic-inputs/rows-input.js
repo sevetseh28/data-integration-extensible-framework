@@ -42,6 +42,7 @@ angular.module("materialAdmin")
 
                 $scope.removeRow = function (index) {
                     $scope.config.rows.splice(index, 1);
+                    $scope.childReturnValues.splice(index, 1);
                     $scope.appendReturnValue()
                 };
 
