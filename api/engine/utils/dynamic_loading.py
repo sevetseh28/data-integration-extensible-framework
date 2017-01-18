@@ -5,6 +5,13 @@ MODULE_PREFIX = NAMESPACE_PREFIX + 'modules.'
 
 
 def class_from_string(module_name, class_name):
+    """
+    Imports a python module and returns a class within that module
+
+    :param module_name: Python module from which load the class
+    :param class_name: class to load
+    :return: said class
+    """
     # Import dinamico
     module = __import__(module_name, fromlist=[class_name])
 
@@ -15,6 +22,13 @@ def class_from_string(module_name, class_name):
 
 
 def _load_module(step_name, module_directory):
+    """
+    Dynamically loads and returns a module from the framework
+
+    :param step_name: Step to which the module belongs
+    :param module_directory: directory where the module resides
+    :return: said module
+    """
     generic_module_class_name = "Module"
 
     module_name = MODULE_PREFIX + "{}.{}.module".format(step_name, module_directory)
@@ -29,10 +43,25 @@ def _load_module(step_name, module_directory):
 
 
 def load_module(step_name, module_directory, **kwargs):
+    """
+    Returns an instance of a module from the framework initialized with the received kwargs
+
+    :param step_name: Step to which the module belongs
+    :param module_directory: directory where the module resides
+    :param kwargs: initializations params for the module
+    :return: initialized module
+    """
     return _load_module(step_name, module_directory)(**kwargs)
 
 
 def load_step(step_name, **kwargs):
+    """
+    Returns an instance of a step from the framework initialized with the received kwargs
+
+    :param step_name: the name of the step
+    :param kwargs: initializations params
+    :return: initialized step
+    """
     module_name = NAMESPACE_PREFIX + "workflow.steps"
     step = class_from_string(module_name, step_name)
 
@@ -46,6 +75,13 @@ LIST
 
 
 def list_modules(step_name, project_id=None):
+    """
+    Lists all modules within a step including their required config
+
+    :param step_name: Step to get the modules from
+    :param project_id: Required to load some configs from some modules
+    :return: list of modules with their config
+    """
     module = __import__(MODULE_PREFIX + step_name, fromlist=[str(step_name)])
 
     modules = pkgutil.iter_modules(module.__path__)
@@ -70,6 +106,12 @@ def list_modules(step_name, project_id=None):
 
 
 def _get_all_subclasses(cls):
+    """
+    Gets all subclasses from a class
+
+    :param cls: class from which get subclasses
+    :return: list of cls' sublcasses
+    """
     all_subclasses = []
 
     for subclass in cls.__subclasses__():
