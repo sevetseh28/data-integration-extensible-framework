@@ -610,6 +610,8 @@ class ExportStep(Step):
 
         records = dal.get_fused_records()
         records += dal.get_non_matches()
+        schema = dal.get_matched_cols()
 
-        self._load_module(records=records).run()
+        self._load_module(records=records,schema=schema).run()
+
 
