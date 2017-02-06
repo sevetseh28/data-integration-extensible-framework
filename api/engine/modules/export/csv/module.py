@@ -37,7 +37,7 @@ class CSVExport(ExportModule):
                 for column in columnnames:
                     row[column] = record.get_field_col(column)
                 writer.writerow(row)
-
+        return self.name,str(filename)+'.csv'
 
 
 

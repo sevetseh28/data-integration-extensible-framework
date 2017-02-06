@@ -94,6 +94,7 @@ def run(request):
         step_state = params['step_state'] if 'step_state' in params else {}
         project = Project.objects.get(id=project_id)
         # Se chequea si se skipea el paso de Segmentation
+        downloadfile = False
         if step == "SegmentationStep":
             project.segmentation_skipped = config['skipstep']
             if not project.segmentation_skipped:
@@ -105,7 +106,11 @@ def run(request):
             # Llamado a workflow
             w = Workflow(project_id, project.segmentation_skipped)
             w.set_current_step(step, config)
-            w.execute_step()
+
+            if step == "ExportStep":
+                downloadfile = w.execute_step()
+            else:
+                w.execute_step()
 
         # se guarda el estado del proyecto
         project.current_step = step
@@ -122,4 +127,7 @@ def run(request):
         # TODO Should be in the final version instead
         return JsonResponse({'status': 'error', 'details': e.message}, status=500)
 
-    return JsonResponse({'status': 'ok'})
+    if not downloadfile:
+        return JsonResponse({'status': 'ok'})
+    else:
+        return JsonResponse({'status':'ok','downloadfile':{'name':downloadfile[0],'filename':downloadfile[1]}})

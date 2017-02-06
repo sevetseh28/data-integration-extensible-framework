@@ -38,13 +38,14 @@ class Step(object):
         """
         logging.info("Starting step " + self.class_name)
 
-        self.run_implementation()
+        ret =self.run_implementation()
 
         # se guardan los resultados
         dal = DALMongo(self.project_id)
         dal.store_step_results(step=self.class_name, results=self.results)
 
         logging.info("Finished step " + self.class_name)
+        return ret
 
     @abstractmethod
     def run_implementation(self):
@@ -612,6 +613,6 @@ class ExportStep(Step):
         records += dal.get_non_matches()
         schema = dal.get_matched_cols()
 
-        self._load_module(records=records,schema=schema).run()
+        return self._load_module(records=records,schema=schema).run()
 
 
