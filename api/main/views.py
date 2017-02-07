@@ -2,7 +2,9 @@ import json
 import traceback
 import uuid
 
+from django.http import Http404
 from django.http import JsonResponse
+from django.http import HttpResponse
 from rest_framework import viewsets
 
 from engine import dal_mongo
@@ -36,7 +38,7 @@ def available_modules(request, step='', project_id=None):
 
 def schema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
-    #project = Project.objects.get(id=project_id)
+    # project = Project.objects.get(id=project_id)
 
     schema1 = [c.name for c in dal.get_schema(1)]
     schema2 = [c.name for c in dal.get_schema(2)]
@@ -57,6 +59,18 @@ def upload(request):
             destination.write(chunk)
 
     return JsonResponse({'location': 'uploaded-files/{}.{}'.format(filename, ext)})
+
+
+def download(request, filename, name):
+    try:
+        with open('files-to-download/{}'.format(filename), 'rb') as f:
+            response = HttpResponse(f.read(), content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="{}.csv"'.format(name)
+            return response
+    except IOError as e:
+        raise Http404
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'details': e.message}, status=500)
 
 
 def output_fields(request, project_id):
@@ -122,7 +136,7 @@ def run(request):
     except Exception as e:
         # DEBUG PURPOSES
         print(traceback.format_exc())
-        #return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
+        # return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
 
         # TODO Should be in the final version instead
         return JsonResponse({'status': 'error', 'details': e.message}, status=500)
@@ -130,4 +144,4 @@ def run(request):
     if not downloadfile:
         return JsonResponse({'status': 'ok'})
     else:
-        return JsonResponse({'status':'ok','downloadfile':{'name':downloadfile[0],'filename':downloadfile[1]}})
+        return JsonResponse({'status': 'ok', 'downloadfile': {'name': downloadfile[0], 'filename': downloadfile[1]}})
