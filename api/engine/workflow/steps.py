@@ -609,10 +609,10 @@ class ExportStep(Step):
         # Se obtienen los resultados del data fusion
         dal = DALMongo(self.project_id)
 
-        records = dal.get_fused_records()
-        records += dal.get_non_matches()
+        matches = dal.get_fused_records()
+        non_matches = dal.get_non_matches()
         schema = dal.get_matched_cols()
 
-        return self._load_module(records=records,schema=schema).run()
+        return self._load_module(matches=matches, non_matches=non_matches, schema=schema).run()
 
 
