@@ -462,8 +462,9 @@ class ComparisonStep(Step):
         output_fields_schema = {}
         matched_cols = []
         for column in segmented_schema:
-            output_fields_schema[column['name']] = column['fields']
-            matched_cols.append(column['name'])
+            if column['name'].startswith("__new__"):
+                output_fields_schema[column['name']] = column['fields']
+                matched_cols.append(column['name'])
         simils = []
 
         max_weight = max([float(module['weight']) for idx, module in self.config.items()])
@@ -613,7 +614,7 @@ class ExportStep(Step):
 
         matches = dal.get_fused_records()
         non_matches = dal.get_non_matches()
-        schema = dal.get_matched_cols()
+        schema = dal.get_global_schema()
 
         return self._load_module(matches=matches, non_matches=non_matches, schema=schema).run()
 

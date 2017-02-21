@@ -38,6 +38,8 @@ class ManualSchemaMatching(SchemaMatchingModule):
 
         self.matches = self.config['matches']
         self.deduplicate_custom_names()
+        self.remaining_columns = self.config['remaining_columns']['checked'] if "remaining_columns" in self.config \
+                                                                        and self.config["remaining_columns"] else False
 
     @staticmethod
     def pretty_name():
@@ -66,7 +68,7 @@ class ManualSchemaMatching(SchemaMatchingModule):
         # Create the global schema
         # taking one record and getting the matched schema will be enough
         for col_name, col_obj in self.records1[0].columns.iteritems():
-            if col_name.startswith("__new__"):
+            if col_name.startswith("__new__") or self.remaining_columns:
                 self.add_to_schema(Column(col_name, [], col_obj.type, col_obj.is_new, col_obj.custom_name),
                                    self.project_id)
         return self.schema, self.records1, self.records2
@@ -134,7 +136,13 @@ class ManualSchemaMatching(SchemaMatchingModule):
                 'rows': [],
                 'label': 'Matches',
                 "rowmodel": rowmodel
-            }
+            },
+            'remaining_columns': {
+                'label': 'Add remaining columns to the final schema',
+                'type': 'toggleswitch',
+                "color": 'blue',
+                'checked': False
+            },
         }
 
     def deduplicate_custom_names(self):
