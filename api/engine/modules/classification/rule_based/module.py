@@ -41,6 +41,7 @@ class RuleBasedClassification(ClassificationModule):
         self.project_id = project_id
         self.logical_operator = int(config['logical-op'])
         self.rules = config['rules']
+        self.dal = DALMongo(self.project_id)
 
     @staticmethod
     def pretty_name():
@@ -54,16 +55,16 @@ class RuleBasedClassification(ClassificationModule):
 
         # Given the fact that the simil vector is sorted I must obtain the columns/ofs again from the DAL because
         # the user can send the rules per column/of in any order
-        dal = DALMongo(self.project_id)
         project = Project.objects.get(id=self.project_id)
 
         cols_order = {}
         if project.segmentation_skipped:
-            for idx, c in enumerate(dal.get_matched_cols()):
+            for idx, c in enumerate(self.dal.get_matched_cols()):
                 cols_order[c['name']] = idx
         else:
-            for idx, c in enumerate(dal.get_output_fields_matched_cols()):
+            for idx, c in enumerate(self.dal.get_output_fields_matched_cols()):
                 cols_order[c['name']] = idx
+
 
         rules_logical_op = self.logical_operator
 

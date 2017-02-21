@@ -11,8 +11,10 @@ class Workflow:
         self.segmentation_skipped = segmentation_skipped
 
     def set_current_step(self, current_step, config):
-        self.step = dynamic_loading.load_step(current_step, project_id=self.project_id, segmentation_skipped = self.segmentation_skipped, config=config)
+        self.step = dynamic_loading.load_step(current_step,
+                                              project_id=self.project_id,
+                                              segmentation_skipped=self.segmentation_skipped,
+                                              config=config)
 
     def execute_step(self):
-        # se ejecuta el step
         return self.step.run()

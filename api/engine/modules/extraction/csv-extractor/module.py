@@ -1,8 +1,16 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
 
 from engine.models.record import *
 from engine.modules.extraction.extraction_module import ExtractionModule
 from engine.modules.module import Module
 import csv
+import unicodedata
+
+def _clean(data):
+    if not isinstance(data, unicode):
+        data = unicode(data, 'iso-8859-1')
+    return unicodedata.normalize('NFKD', data).encode('ascii', 'ignore')
 
 class CsvExtractor(ExtractionModule):
 
@@ -34,7 +42,7 @@ class CsvExtractor(ExtractionModule):
                 self.records.append(Record())
                 for key,value in row.items():
                     column = Column(key)
-                    column.fields.append(get_field_from_csv(value))
+                    column.fields.append(get_field_from_csv(_clean(value)))
                     self.records[i].columns[column.name] = column
         return self.schema, self.records
 
