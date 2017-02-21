@@ -42,11 +42,11 @@ class DateFormatting(DataCleansingModule):
                 "label": "Languages",
                 "type": "multipleselect",
                 "options": [
-                    "ES",
-                    "EN",
-                    "PT",
-                    "FR",
-                    "RU"
+                    "es",
+                    "en",
+                    "pt",
+                    "fr",
+                    "ru"
                 ]
             }
         }

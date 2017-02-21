@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^columns/(?P<project_id>\d+)?', views.schema),
     url(r'^upload-file', views.upload),
+    url(r'^download-file/(?P<filename>.+)/(?P<name>.+)/$',views.download),
     url(r'^output-fields/(?P<project_id>\d+)?', views.output_fields),
     url(r'^available-modules/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.available_modules),
     url(r'^run/', views.run),

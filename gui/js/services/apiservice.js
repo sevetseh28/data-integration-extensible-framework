@@ -111,6 +111,10 @@ angular.module('materialAdmin')
             };
             return post(path, params);
         }
+        function downloadFile(filename,name){
+            path = baseUrl+"download-file/"+filename+"/"+name+"/";
+            window.open(path, '_blank', '');
+        }
 
         return {
             getColumnsSource1: getColumnsSource1,
@@ -123,6 +127,8 @@ angular.module('materialAdmin')
             getProjects: getProjects,
             getProject: getProject,
             deleteProject: deleteProject,
-            createProject: createProject
+            createProject: createProject,
+            //Download file
+            downloadFile: downloadFile
         }
     });

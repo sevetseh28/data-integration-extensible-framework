@@ -17,9 +17,12 @@ class MongoDBExport(ExportModule):
     }
     """
 
-    def __init__(self, records, **kwargs):
+    def __init__(self, matches, non_matches, **kwargs):
         super(MongoDBExport, self).__init__(**kwargs)
-        self.records = records
+        self.matches = matches
+        self.non_matches = non_matches
+        self.only_matches = self.config['only_matches']['checked'] if "only_matches" in self.config and \
+                                                                      self.config["only_matches"] else False
         self.host = self.config["host"] if "host" in self.config and self.config["host"] else 'localhost'
         self.port = self.config["port"] if "port" in self.config and self.config["port"] else 27017
         self.db = self.config["db"] if "db" in self.config and self.config["db"] else 'output'
@@ -31,6 +34,11 @@ class MongoDBExport(ExportModule):
         return "MongoDB"
 
     def run(self):
+        self.records = self.matches
+
+        if not self.only_matches:
+            self.records += self.non_matches
+
         json_values = [r.to_json() for r in self.records]
 
         connection = MongoClient(self.host, int(self.port))
@@ -60,6 +68,13 @@ class MongoDBExport(ExportModule):
                 'label': 'Collection (default: results)',
                 'type': 'text'
             },
+            'only_matches': {
+                'label': 'Export only matches',
+                'type': 'toggleswitch',
+                "color": 'blue',
+                'checked': False
+            },
+
             # 'clear_collection': {
             #     'label': 'Clear collection before savinb',
             #     'type': 'checkbox'

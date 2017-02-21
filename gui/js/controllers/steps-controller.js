@@ -289,13 +289,18 @@ materialAdmin
             stepId = $scope.tabs[$scope.currentStep].id;
             stepName = $scope.steps[$scope.currentStep];
 
-            APIService.run($stateParams.id, stepId, $scope[stepName].returnValue, $scope[stepName]).then(function () {
+            APIService.run($stateParams.id, stepId, $scope[stepName].returnValue, $scope[stepName]).then(function (data) {
                     $scope.tabs[$scope.currentStep]['active'] = false;
                     $scope.currentStep = $scope.currentStep + 1;
                     disableFollowingSteps();
-                    $scope.tabs[$scope.currentStep]['disabled'] = false;
-
-                    $scope.loadStep($scope.steps[$scope.currentStep]);
+                     if ($scope.tabs[$scope.currentStep]){
+                          $scope.tabs[$scope.currentStep]['disabled'] = false;
+                          $scope.loadStep($scope.steps[$scope.currentStep]);
+                     }
+                     if (data.data && data.data.downloadfile){
+                         APIService.downloadFile(data.data.downloadfile.filename,data.data.downloadfile.name);
+                     }
+                    console.log(data);
 
                     $scope.tabs[$scope.currentStep]['active'] = true;
                 }, function (response) {

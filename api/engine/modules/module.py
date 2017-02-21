@@ -1,8 +1,10 @@
 class Module(object):
     config_json = {}
 
-    def __init__(self, config=None):
-        if config is None:
+    def __init__(self, **kwargs):
+        if "config" in kwargs:
+            config = kwargs["config"]
+        else:
             config = {}
         self.config = config
 

@@ -38,7 +38,6 @@ def _load_module(step_name, module_directory):
     module = [m for m in _get_all_subclasses(gen_module)
               if m.__module__.startswith(MODULE_PREFIX + "{}.{}".format(step_name, module_directory))][0]
 
-    # Se retorna el modulo creado con los atrs que reciba el constructor
     return module
 
 

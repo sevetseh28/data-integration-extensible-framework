@@ -75,10 +75,5 @@ def ignore_exception(IgnoreException=Exception,DefaultVal=None):
 
 
 def get_field_from_csv(value):
-    checkfloat = ignore_exception()(float)
-    floatvalue = checkfloat(value)
-    if floatvalue is not None:
-        return Field(floatvalue, EnumType.number)
-    else:
         return Field(value, EnumType.string)
 
