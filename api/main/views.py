@@ -48,6 +48,37 @@ def schema(request, project_id):
         'source2': schema2
     }, safe=False)
 
+def previewdata(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+
+    previewdata1 = dal.get_aggregated_records('ExtractionStep', 1,
+                                              pipeline= [{ '$sample': {'size': 5 }}],
+                                              json_format=True)
+
+    previewdata2 = dal.get_aggregated_records('ExtractionStep', 2,
+                                              pipeline= [{ '$sample': {'size': 5 }}],
+                                              json_format=True)
+
+    new_previewdata1 = []
+    new_previewdata2 = []
+
+    for r in previewdata1:
+            new_row = {}
+            for col in r['columns']:
+                new_row[col['name']] = col['fields']
+            new_previewdata1.append(new_row)
+
+    for r in previewdata2:
+        new_row = {}
+        for col in r['columns']:
+            new_row[col['name']] = col['fields']
+        new_previewdata2.append(new_row)
+
+    return JsonResponse({
+        'source1': new_previewdata1,
+        'source2': new_previewdata2
+    }, safe=False)
+
 
 def upload(request):
     filename = uuid.uuid4()

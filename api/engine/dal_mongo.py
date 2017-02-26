@@ -60,8 +60,15 @@ class DALMongo:
     """""""""""""""""""""""""""""""""""""""""""""""""""
         GETS
     """""""""""""""""""""""""""""""""""""""""""""""""""
+    def get_aggregated_records(self, step, source_number, pipeline, json_format=True):
+        records = self.get_aggregated(step, "source{}_records".format(source_number), with_id=False, pipeline=pipeline)
 
-    def get_records(self, step, source_number):
+        if not json_format:
+            return [Record.from_json(r) for r in records]
+        else:
+            return [r for r in records]
+
+    def get_records(self, step, source_number, limit=None, json_format=False):
         """
         Retorna los records de una fuente para un step
 
@@ -69,9 +76,17 @@ class DALMongo:
         :param source_number: numero de fuente (1 o 2)
         :return: registros de la fuente resultado de ejecutar el step
         """
-        records = self.get_all(step, "source{}_records".format(source_number), with_id=True)
+        filter = None
+        if limit:
+            filter = { '$sample': { 'size': limit } }
+        records = self.get_all(step, "source{}_records".format(source_number), with_id=True, filters=filter)
 
-        return [Record.from_json(r) for r in records]
+        if not json_format:
+            return [Record.from_json(r) for r in records]
+        else:
+            for r in records:
+                r.pop('_id', None)
+            return records
 
     def get_fused_records(self):
         """
@@ -262,6 +277,30 @@ class DALMongo:
         # c.close()
         return result
 
+    def get_aggregated(self, step, suffix="", with_id=False, pipeline=None):
+        """
+        Retorna una coleccion dado el step y suffix
+
+        :param step: nombre de la clase del step
+        :param suffix: sufijo de la coleccion
+        :return: documentos de la coleccion de ese step con ese sufijo
+        """
+        return self._get_aggregated(self._col_from_step_and_suffix(step, suffix), pipeline)
+
+    def _get_aggregated(self, collection_name, pipeline=None):
+        """
+        Retorna toda una coleccion
+
+        :param collection_name: nombre de coleccion
+        :return: documentos de la coleccion
+        """
+        c = self.get_mongoclient()
+
+        col = c[self.db_name][collection_name]
+        result = col.aggregate(pipeline)
+
+        # c.close()
+        return result
     """""""""""""""""""""""""""""""""""""""""""""""""""
         UTILS
     """""""""""""""""""""""""""""""""""""""""""""""""""

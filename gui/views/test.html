@@ -3,7 +3,7 @@
 
 <section id="main">
 
-    <section id="content">
+    <section id="content" data-ng-controller="StepsCtrl">
         <div class="container">
 
             <div class="block-header">
@@ -14,7 +14,7 @@
             </div>
 
             <!-- TABS -->
-            <div class="card" data-ng-controller="StepsCtrl" >
+            <div class="card" >
                 <div class="card-header">
                     <h2>Project: {{ projectName }}</h2>
 
@@ -89,6 +89,7 @@
                 </div>
             </div>
 
+            <export-preview></export-preview>
 
         </div>
     </section>
