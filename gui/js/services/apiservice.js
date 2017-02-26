@@ -77,14 +77,6 @@ angular.module('materialAdmin')
             return del(path);
         }
 
-        function getColumnsSource1() {
-            return ['Full name', 'Phone', 'Address', 'ID']
-        }
-
-        function getColumnsSource2() {
-            return ['Name', 'Surname', 'Phone', 'Country', 'Birthday']
-        }
-
         function getColumnsSources(idProject) {
             var path = 'columns/' + idProject;
             return get(path);
@@ -116,19 +108,26 @@ angular.module('materialAdmin')
             window.open(path, '_blank', '');
         }
 
+        function previewData(project_id, step) {
+            var path = 'preview-data/' + step + '/'+project_id;
+            return get(path);
+        }
+
         return {
-            getColumnsSource1: getColumnsSource1,
-            getColumnsSource2: getColumnsSource2,
             getColumnsSources: getColumnsSources,
             getOutputFields: getOutputFields,
             getModules: getModules,
             run: run,
+
             //Projects
             getProjects: getProjects,
             getProject: getProject,
             deleteProject: deleteProject,
             createProject: createProject,
+
             //Download file
-            downloadFile: downloadFile
+            downloadFile: downloadFile,
+
+            previewData: previewData
         }
     });

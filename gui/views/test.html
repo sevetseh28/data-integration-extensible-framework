@@ -89,7 +89,8 @@
                 </div>
             </div>
 
-            <export-preview></export-preview>
+            <export-preview title="Extracted data" ng-show="currentStep == 1"></export-preview>
+            <datacleansed-preview title="Cleansed data" ng-show="currentStep == 2"></datacleansed-preview>
 
         </div>
     </section>

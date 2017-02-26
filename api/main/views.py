@@ -48,14 +48,14 @@ def schema(request, project_id):
         'source2': schema2
     }, safe=False)
 
-def previewdata(request, project_id):
+def previewdata(request, project_id, step):
     dal = dal_mongo.DALMongo(project_id)
 
-    previewdata1 = dal.get_aggregated_records('ExtractionStep', 1,
+    previewdata1 = dal.get_aggregated_records(step, 1,
                                               pipeline= [{ '$sample': {'size': 5 }}],
                                               json_format=True)
 
-    previewdata2 = dal.get_aggregated_records('ExtractionStep', 2,
+    previewdata2 = dal.get_aggregated_records(step, 2,
                                               pipeline= [{ '$sample': {'size': 5 }}],
                                               json_format=True)
 

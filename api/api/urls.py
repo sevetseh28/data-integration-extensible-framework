@@ -32,5 +32,5 @@ urlpatterns = [
     url(r'^output-fields/(?P<project_id>\d+)?', views.output_fields),
     url(r'^available-modules/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.available_modules),
     url(r'^run/', views.run),
-    url(r'^preview_data/(?P<project_id>\d+)?', views.previewdata),
+    url(r'^preview-data/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.previewdata),
 ]
