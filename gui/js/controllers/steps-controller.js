@@ -116,6 +116,20 @@ materialAdmin
                 $scope.segmentation['moduleSelections']['source1'] = [];
                 $scope.segmentation['moduleSelections']['source2'] = [];
 
+                APIService.previewData($stateParams.id, 'StandardisationAndTaggingStep').then(function (response) {
+                    $scope[step]['previewdata'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
+                APIService.getColumnsSources($stateParams.id).then(function (response) {
+                    $scope[step]['previewdataschema'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
