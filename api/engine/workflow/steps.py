@@ -460,8 +460,10 @@ class ComparisonStep(Step):
         groups = dal.get_indexing_groups()
         segmented_schema = dal.get_global_schema()
         output_fields_schema = {}
+        matched_cols = []
         for column in segmented_schema:
             output_fields_schema[column['name']] = column['fields']
+            matched_cols.append(column['name'])
         simils = []
 
         max_weight = max([float(module['weight']) for idx, module in self.config.items()])
@@ -471,7 +473,7 @@ class ComparisonStep(Step):
                 for r2 in group.records2:
                     # Initialize similarity vector
                     sv = SimilarityVector(r1._id, r2._id)
-                    for col in r1.matched_cols(): # could be r2.matched_cols() as well (they return the same)
+                    for col in matched_cols: # could be r2.matched_cols() as well (they return the same)
                         if not self.segmentation_skipped:
                             for out_field, comparison_module in self.config.items():
                                 # Check that the output field exists in the column, otherwise it wont create an entrance
