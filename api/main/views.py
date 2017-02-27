@@ -48,6 +48,30 @@ def schema(request, project_id):
         'source2': schema2
     }, safe=False)
 
+def segmentedschema(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+    # project = Project.objects.get(id=project_id)
+
+    schema1 = []
+    schema2 = []
+    for c in dal.get_segmented_schema(1):
+        new_col = { 'colname' : c.name, 'segments': [] }
+        for segment in c.fields:
+            new_col['segments'].append(segment.output_field)
+        schema1.append(new_col)
+
+    for c in dal.get_segmented_schema(2):
+        new_col = { 'colname' : c.name, 'segments': [] }
+        for segment in c.fields:
+            new_col['segments'].append(segment.output_field)
+        schema2.append(new_col)
+
+    return JsonResponse({
+        'source1': schema1,
+        'source2': schema2
+    }, safe=False)
+
+
 def previewdata(request, project_id, step):
     dal = dal_mongo.DALMongo(project_id)
 

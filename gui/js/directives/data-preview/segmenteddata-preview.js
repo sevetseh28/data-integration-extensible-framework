@@ -1,0 +1,17 @@
+/**
+ * Created by Hernan on 23/2/2017.
+ */
+angular.module("materialAdmin")
+    .directive('segmenteddataPreview', function () {
+        return {
+            restrict: "E",
+            templateUrl: "template/directives/data-preview/segmenteddata-preview.html",
+            link: function (scope, element, attrs) {
+                //scope.previewdataschema = ["Empresa", "Direccion", "Telefono", "Mail", "Web", "Contacto", "Mail Contacto"];
+                //scope.previewdata = [{"Web":[{"output_field":null,"type":1,"value":"","tags":[]}],"Empresa":[{"output_field":null,"type":1,"value":"ECOPET S.A.","tags":[]}],"Direccion":[{"output_field":null,"type":1,"value":"San Martin 4080 - Montevideo","tags":[]}],"Mail Contacto":[{"output_field":null,"type":1,"value":"mrolando@ecopet.com.uy","tags":[]}],"Mail":[{"output_field":null,"type":1,"value":"ecopet@ecopet.com.uy","tags":[]}],"Contacto":[{"output_field":null,"type":1,"value":"Marcelo Rolando","tags":[]}],"Telefono":[{"output_field":null,"type":1,"value":"598 2 2111529","tags":[]}]},{"Web":[{"output_field":null,"type":1,"value":"www.skf.com.uy","tags":[]}],"Empresa":[{"output_field":null,"type":1,"value":"SKF URUGUAY S.A.","tags":[]}],"Direccion":[{"output_field":null,"type":1,"value":"Cerro Largo 1066 - Montevideo","tags":[]}],"Mail Contacto":[{"output_field":null,"type":1,"value":"luis.lema@skf.com","tags":[]}],"Mail":[{"output_field":null,"type":1,"value":"skfuruguay@skf.com","tags":[]}],"Contacto":[{"output_field":null,"type":1,"value":"Luis Lema","tags":[]}],"Telefono":[{"output_field":null,"type":1,"value":"598 2 9082821","tags":[]}]},{"Web":[{"output_field":null,"type":1,"value":"www.aluminios.com","tags":[]}],"Empresa":[{"output_field":null,"type":1,"value":"ALUMINIOS DEL URUGUAY S.A.","tags":[]}],"Direccion":[{"output_field":null,"type":1,"value":"Ramon Marquez 3222 - ","tags":[]}],"Mail Contacto":[{"output_field":null,"type":1,"value":"","tags":[]}],"Mail":[{"output_field":null,"type":1,"value":"aluminios@aluminios.com","tags":[]}],"Contacto":[{"output_field":null,"type":1,"value":"Roberto Punales","tags":[]}],"Telefono":[{"output_field":null,"type":1,"value":"598 2 2001435","tags":[]}]},{"Web":[{"output_field":null,"type":1,"value":"www.weyerhaeuser.com","tags":[]}],"Empresa":[{"output_field":null,"type":1,"value":"LOS PIQUES S.A.","tags":[]}],"Direccion":[{"output_field":null,"type":1,"value":"Iturriaga 3589 - Tacuarembo","tags":[]}],"Mail Contacto":[{"output_field":null,"type":1,"value":"ernesto.wagner@weyerhaeuser.com","tags":[]}],"Mail":[{"output_field":null,"type":1,"value":"ernesto.wagner@weyerhaeuser.com","tags":[]}],"Contacto":[{"output_field":null,"type":1,"value":"Ernesto Wagner","tags":[]}],"Telefono":[{"output_field":null,"type":1,"value":"598 2 6234470","tags":[]}]},{"Web":[{"output_field":null,"type":1,"value":"www.roemmers.com.uy","tags":[]}],"Empresa":[{"output_field":null,"type":1,"value":"ROEMMERS S.A.","tags":[]}],"Direccion":[{"output_field":null,"type":1,"value":"Cno. Maldonado 5634 - ","tags":[]}],"Mail Contacto":[{"output_field":null,"type":1,"value":"aestabile@uy.roemmers.com","tags":[]}],"Mail":[{"output_field":null,"type":1,"value":"dpelaez@uy.roemmers.com","tags":[]}],"Contacto":[{"output_field":null,"type":1,"value":"Andrea Estabile","tags":[]}],"Telefono":[{"output_field":null,"type":1,"value":"598 2 5130505","tags":[]}]}]
+            },
+            controller: function ($scope) {
+
+            }
+        }
+    });

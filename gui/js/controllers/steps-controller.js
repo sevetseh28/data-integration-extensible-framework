@@ -170,6 +170,20 @@ materialAdmin
                     $scope[step]['modules'] = data.data;
                 });
 
+                APIService.previewData($stateParams.id, 'SegmentationStep').then(function (response) {
+                    $scope[step]['previewdata'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
+                APIService.getSegmentedSchema($stateParams.id).then(function (response) {
+                    $scope[step]['previewdataschema'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
             } else if (step == 'comparison') {
                 APIService.getOutputFields($stateParams.id).then(function (data) {
                     $scope[step]['outputFields'] = data.data.values;

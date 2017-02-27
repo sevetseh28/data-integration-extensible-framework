@@ -1,10 +1,10 @@
 <style>
-    .color0 {
+    .colorstan0 {
         color: green;
     }
 
-    .color1 {
-        color: blue;
+    .colorstan1 {
+        color: #f10c0d;
     }
 </style>
 
@@ -26,7 +26,7 @@
                 <tbody>
                 <tr ng-repeat="row in segmentation.previewdata[source]">
                     <td ng-repeat="s in segmentation.previewdataschema[source]">
-                        <span ng-repeat="token in row[s] track by $index" ng-class="'color' + ($index % 3)">
+                        <span ng-repeat="token in row[s] track by $index" ng-class="token.tags.length > 0 ? 'colorstan' + ($index % 3) : ''">
                             <span>{{ token.value }}
                             <sup ng-repeat="tag in token.tags">
                                 {{ tag }}

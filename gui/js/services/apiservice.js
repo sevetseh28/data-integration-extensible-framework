@@ -82,6 +82,11 @@ angular.module('materialAdmin')
             return get(path);
         }
 
+        function getSegmentedSchema(idProject) {
+            var path = 'segmented-schema/' + idProject;
+            return get(path);
+        }
+
         function getOutputFields(idProject) {
             var path = 'output-fields/'+idProject;
             return get(path);
@@ -115,6 +120,7 @@ angular.module('materialAdmin')
 
         return {
             getColumnsSources: getColumnsSources,
+            getSegmentedSchema: getSegmentedSchema,
             getOutputFields: getOutputFields,
             getModules: getModules,
             run: run,

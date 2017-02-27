@@ -188,7 +188,7 @@ class DALMongo:
 
         return [Column.from_json(c) for c in schema]
 
-    def get_output_fields_name(self, column_name):
+    def get_segmented_schema(self, source_number):
         """
         Returns a list with the output fields name for the given column name. It there are no output fields then
         returns an empty list
@@ -198,7 +198,10 @@ class DALMongo:
         mongoclient = self.get_mongoclient()
 
         db = mongoclient[self.db_name]
-        cursor = db.find_all('')
+        segschema = self.get_all("SegmentationStep", "source{}_schema".format(source_number))
+
+        return [Column.from_json(c) for c in segschema]
+
 
 
     def get_output_fields_matched_cols(self):
