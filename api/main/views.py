@@ -71,6 +71,20 @@ def segmentedschema(request, project_id):
         'source2': schema2
     }, safe=False)
 
+def globalschema(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+    # project = Project.objects.get(id=project_id)
+
+    schema = {}
+    for c in dal.get_global_schema():
+        colname1 = c['name'].split('__')[2]
+        colname2 = c['name'].split('__')[3]
+        schema[colname1 + ' - ' + colname2] = []
+        for field in c['fields']:
+            schema[colname1 + ' - ' + colname2].append(field['output_field'])
+
+    return JsonResponse(schema, safe=False)
+
 
 def previewdata(request, project_id, step):
     dal = dal_mongo.DALMongo(project_id)
