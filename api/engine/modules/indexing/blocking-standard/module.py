@@ -66,7 +66,7 @@ class BlockingStandard(IndexingModule):
         dal = DALMongo(project_id)
 
         cols = [{
-                    "label": c['name'],
+                    "label": c['custom_name'],
                     "value": c['name'],
                     "id": c['name'],
                     "config": {

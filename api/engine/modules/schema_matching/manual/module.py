@@ -56,7 +56,7 @@ class ManualSchemaMatching(SchemaMatchingModule):
             cols1 = [schema1[col_name] for col_name in match['source1']]
             cols2 = [schema2[col_name] for col_name in match['source2']]
 
-            schematches.add_match(cols1, cols2)
+            schematches.add_match(cols1, cols2, match['custom_name'])
 
         # Schemas are standardised
         self.records1 = self._standardise_schema(self.records1, schematches, 1, schema2)
@@ -66,7 +66,7 @@ class ManualSchemaMatching(SchemaMatchingModule):
         # taking one record and getting the matched schema will be enough
         for col_name, col_obj in self.records1[0].columns.iteritems():
             if col_name.startswith("__new__"):
-                self.add_to_schema(Column(col_name), self.project_id)
+                self.add_to_schema(Column(col_name, [], col_obj.type, col_obj.is_new, col_obj.custom_name), self.project_id)
         return self.schema, self.records1, self.records2
 
     @staticmethod
@@ -86,7 +86,7 @@ class ManualSchemaMatching(SchemaMatchingModule):
         for r in records:
             # Se unifican las columnas de cada matcheo de esquemas
             for match in schematches.schema_matches:
-                r.join_cols(match["source{}".format(source_number)], match["col_name"])
+                r.join_cols(match["source{}".format(source_number)], match["col_name"], match['custom_name'])
 
             # Se eliminan las columnas que correspondian a los matcheos
             for match in schematches.schema_matches:
@@ -118,6 +118,10 @@ class ManualSchemaMatching(SchemaMatchingModule):
                 'source2': {
                     'type': 'multipleselect',
                     'options': cols2
+                },
+                'custom_name': {
+                    'label': 'New column name',
+                    'type': 'text'
                 }
             }
         }

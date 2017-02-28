@@ -69,22 +69,22 @@ class Record:
         result = ""
         col = self.columns[col]
         for f in col.fields:
-            result+=str(f.value)
+            result += str(f.value)
         return result
 
     def get_sourcex_cols(self, source_number):
         return [c for c in self.columns.values() if c.name.startswith("s{}".format(source_number))]
 
     def get_new_cols(self):
-            return [c for c in self.columns.values() if c.name.startswith("__new__")]
+        return [c for c in self.columns.values() if c.name.startswith("__new__")]
 
     def matched_cols(self):
         return [c for c in self.columns.keys() if c.startswith("__new__")]
 
-    def join_cols(self, cols, new_name):
+    def join_cols(self, cols, new_name, custom_name):
         col_names = [c.name for c in cols]
 
-        new_column = Column(new_name)
+        new_column = Column(new_name, is_new=True, custom_name=custom_name)
         for colname, col in self.columns.items():
             if colname in col_names:
                 new_column.fields += col.fields
@@ -109,11 +109,13 @@ class Record:
 
 
 class Column:
-    def __init__(self, name, fields=None, type=''):
+    def __init__(self, name, fields=None, type='', is_new=False, custom_name=None):
         if fields is None:
             fields = []
 
         self.name = name
+        self.is_new = is_new
+        self.custom_name = custom_name
         self.type = type
         self.fields = fields
 
@@ -123,12 +125,14 @@ class Column:
         if "fields" in json:
             fields = [Field.from_json(f) for f in json["fields"]]
 
-        return Column(json["name"], fields)
+        return Column(json["name"], fields, json["type"], json["is_new"], json['custom_name'])
 
     def to_json(self, with_fields=True):
         json = {
             "name": self.name,
-            "type": self.type
+            "type": self.type,
+            "is_new": self.is_new,
+            "custom_name": self.custom_name
         }
 
         if with_fields:
@@ -198,10 +202,11 @@ class SchemaMatch:
     def __init__(self):
         self.schema_matches = []
 
-    def add_match(self, columns_source1, columns_source2):
+    def add_match(self, columns_source1, columns_source2, custom_name):
         self.schema_matches.append({
             "col_name": "__new__" + "-".join([c.name for c in columns_source1]) + "__"
                         + "-".join([c.name for c in columns_source2]),
+            "custom_name": custom_name,
             "source1": columns_source1,
             "source2": columns_source2,
         })
@@ -209,6 +214,7 @@ class SchemaMatch:
     def to_json(self):
         return [{
                     "col_name": match["col_name"],
+                    "custom_name": match["custom_name"],
                     "source1": [c.to_json(with_fields=False) for c in match['source1']],
                     "source2": [c.to_json(with_fields=False) for c in match['source2']]
                 } for match in self.schema_matches]
@@ -221,7 +227,7 @@ class SchemaMatch:
             cols1 = [Column.from_json(c) for c in match['source1']]
             cols2 = [Column.from_json(c) for c in match['source2']]
 
-            matches.add_match(cols1, cols2)
+            matches.add_match(cols1, cols2, match['custom_name'])
 
         return matches
 

@@ -37,13 +37,15 @@ class CSVExport(ExportModule):
         filename = uuid.uuid4()
 
         with open('files-to-download/{}.csv'.format(filename),'wb') as csvfile:
-            columnnames = [column['name'] for column in self.schema]
+            columnnames = [column['custom_name'] for column in self.schema]
+            col_name_map = {col['custom_name']: col['name'] for col in self.schema}
+
             writer = csv.DictWriter(csvfile,columnnames,restval="NULL",extrasaction="ignore",delimiter=self.delimiter, skipinitialspace=True, quoting=csv.QUOTE_MINIMAL)
             writer.writeheader()
             for record in self.records:
                 row = {}
                 for column in columnnames:
-                    row[column] = record.get_field_col(column)
+                    row[column] = record.get_field_col(col_name_map[column])
                 writer.writerow(row)
         return self.name,str(filename)+'.csv'
 

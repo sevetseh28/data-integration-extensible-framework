@@ -209,7 +209,7 @@ class DALMongo:
 
         for c in cols:
             if c['name'] not in [cl['name'] for cl in ret]:
-                ret.append({'name': c['name']})
+                ret.append({'name': c['name'], 'custom_name': c['custom_name']})
 
         return ret
 

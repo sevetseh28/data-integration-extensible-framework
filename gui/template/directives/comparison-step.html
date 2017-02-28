@@ -7,7 +7,7 @@
 </div>
 
 <div ng-repeat="outputField in comparison.outputFields">
-    Select module to compare {{ comparison.col_or_outputfield }}: {{ outputField.name }}
+    Select module to compare {{ comparison.col_or_outputfield }}: {{ outputField.custom_name || outputField.name }}
 
     <div class="row">
         <div class="col-sm-9">
