@@ -37,6 +37,7 @@ class ManualSchemaMatching(SchemaMatchingModule):
         self.project_id = project_id
 
         self.matches = self.config['matches']
+        self.deduplicate_custom_names()
 
     @staticmethod
     def pretty_name():
@@ -66,7 +67,8 @@ class ManualSchemaMatching(SchemaMatchingModule):
         # taking one record and getting the matched schema will be enough
         for col_name, col_obj in self.records1[0].columns.iteritems():
             if col_name.startswith("__new__"):
-                self.add_to_schema(Column(col_name, [], col_obj.type, col_obj.is_new, col_obj.custom_name), self.project_id)
+                self.add_to_schema(Column(col_name, [], col_obj.type, col_obj.is_new, col_obj.custom_name),
+                                   self.project_id)
         return self.schema, self.records1, self.records2
 
     @staticmethod
@@ -134,3 +136,18 @@ class ManualSchemaMatching(SchemaMatchingModule):
                 "rowmodel": rowmodel
             }
         }
+
+    def deduplicate_custom_names(self):
+        while len({m['custom_name']: None for m in self.matches}) < len(self.matches):
+
+            matches = {i: self.matches[i] for i in range(len(self.matches))}
+            matches2 = {i: self.matches[i] for i in range(len(self.matches))}
+
+            for (i, m) in matches.items():
+                suffix_count = 1
+
+                matches2.pop(i)
+                for (j, m2) in matches2.items():
+                    if m['custom_name'] == m2['custom_name']:
+                        m2['custom_name'] = "{}_{}".format(m2['custom_name'], suffix_count)
+                        suffix_count += 1
