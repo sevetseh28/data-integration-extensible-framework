@@ -87,6 +87,16 @@ angular.module('materialAdmin')
             return get(path);
         }
 
+        function getGlobalSchema(idProject) {
+            var path = 'global-schema/' + idProject;
+            return get(path);
+        }
+
+        function getComparisonInfo(idProject) {
+            var path = 'comparison-data/' + idProject;
+            return get(path);
+        }
+
         function getOutputFields(idProject) {
             var path = 'output-fields/'+idProject;
             return get(path);
@@ -134,6 +144,8 @@ angular.module('materialAdmin')
             //Download file
             downloadFile: downloadFile,
 
-            previewData: previewData
+            previewData: previewData,
+            getGlobalSchema: getGlobalSchema,
+            getComparisonInfo: getComparisonInfo
         }
     });

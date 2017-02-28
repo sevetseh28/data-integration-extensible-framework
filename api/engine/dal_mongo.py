@@ -171,6 +171,18 @@ class DALMongo:
 
         return groups
 
+    def get_comparison_info(self):
+        """
+        Returns compared data along with the similarity vector (in JSON format)
+        :return:
+        """
+        c = self.get_mongoclient()
+        cursor = self.get_all('ComparisonStep', '')
+        ret_info = []
+        for rec in cursor:
+            ret_info.append({'vector': rec['vector'], 'comparisons': rec['comparisons']})
+        return ret_info
+
     def get_schema(self, source_number): #, current_step):
         """
         Retorna el esquema original de una fuente

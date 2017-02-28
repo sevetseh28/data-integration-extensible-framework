@@ -1,0 +1,44 @@
+<div class="card" style="overflow-y:scroll; max-height:500px;">
+    <div class="card-header">
+        <h2>Comparison results
+        </h2>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th colspan="{{ segments.length }}"
+                        ng-repeat="(matchedcols, segments) in classification.previewdataschema.schema">
+                        {{ matchedcols }}
+                    </th>
+                </tr>
+                <tr>
+                    <th ng-repeat="seg in classification.previewdataschema.segments track by $index">
+                        {{ seg }}
+                    </th>
+                </tr>
+
+                </thead>
+                <tbody ng-repeat="comparison in classification.comparisoninfo">
+                    <tr>
+                    <td ng-repeat="val in comparison.comparisons.record1 track by $index">
+                        {{ val }}
+                    </td>
+                    </tr>
+                    <tr>
+                    <td ng-repeat="val in comparison.comparisons.record2 track by $index">
+                        {{ val }}
+                    </td>
+                    </tr>
+                    <tr class="active">
+                    <td ng-repeat="val in comparison.vector track by $index">
+                        {{ val }}
+                    </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

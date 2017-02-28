@@ -198,6 +198,20 @@ materialAdmin
                     });
                 });
 
+                APIService.comparisonInfo($stateParams.id, 'SegmentationStep').then(function (response) {
+                    $scope[step]['previewdata'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
+                APIService.getSegmentedSchema($stateParams.id).then(function (response) {
+                    $scope[step]['previewdataschema'] = {
+                        'source1': response.data.source1,
+                        'source2': response.data.source2
+                    }
+                });
+
             } else if (step == 'indexing') {
                 $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
@@ -208,6 +222,16 @@ materialAdmin
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
                 });
+
+                APIService.getComparisonInfo($stateParams.id).then(function (response) {
+                    $scope[step]['comparisoninfo'] = response.data
+                });
+
+                APIService.getGlobalSchema($stateParams.id).then(function (response) {
+                    $scope[step]['previewdataschema'] = response.data
+                });
+
+
             } else if (step == 'datafusion') {
                 $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {

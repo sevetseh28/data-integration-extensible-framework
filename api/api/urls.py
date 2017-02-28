@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^preview-data/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.previewdata),
     url(r'^segmented-schema/(?P<project_id>\d+)?', views.segmentedschema),
     url(r'^global-schema/(?P<project_id>\d+)?', views.globalschema),
+    url(r'^comparison-data/(?P<project_id>\d+)?', views.comparisondata),
 ]

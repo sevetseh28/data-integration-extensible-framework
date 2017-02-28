@@ -75,13 +75,15 @@ def globalschema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
     # project = Project.objects.get(id=project_id)
 
-    schema = {}
+    schema = { 'cant_cols': 0, 'schema': {}, 'segments': [] }
     for c in dal.get_global_schema():
         colname1 = c['name'].split('__')[2]
         colname2 = c['name'].split('__')[3]
-        schema[colname1 + ' - ' + colname2] = []
+        schema['schema'][colname1 + ' - ' + colname2] = []
         for field in c['fields']:
-            schema[colname1 + ' - ' + colname2].append(field['output_field'])
+            schema['schema'][colname1 + ' - ' + colname2].append(field['output_field'])
+            schema['segments'].append(field['output_field'])
+            schema['cant_cols'] += 1
 
     return JsonResponse(schema, safe=False)
 
@@ -117,6 +119,21 @@ def previewdata(request, project_id, step):
         'source2': new_previewdata2
     }, safe=False)
 
+
+def comparisondata(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+    data = dal.get_comparison_info()
+    ret_data = []
+    for d in data:
+        new_d = {}
+        new_d['vector'] = d['vector']
+        new_d['comparisons'] = {'record1': [], 'record2': []}
+        for c in d['comparisons']:
+            new_d['comparisons']['record1'].append(c[0])
+            new_d['comparisons']['record2'].append(c[1])
+        ret_data.append(new_d)
+
+    return JsonResponse(ret_data, safe=False)
 
 def upload(request):
     filename = uuid.uuid4()
