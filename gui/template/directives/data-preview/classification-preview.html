@@ -1,0 +1,40 @@
+<div class="card" style="overflow-y:scroll; max-height:500px;">
+    <div class="card-header">
+        <h2>Classification results
+        </h2>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th colspan="{{ segments.length }}"
+                        ng-repeat="(matchedcols, segments) in datafusion.previewdataschema.schema">
+                        {{ matchedcols }}
+                    </th>
+                </tr>
+                <tr>
+                    <th ng-repeat="seg in datafusion.previewdataschema.segments track by $index">
+                        {{ seg }}
+                    </th>
+                </tr>
+
+                </thead>
+                <tbody ng-repeat="matchresult in datafusion.classificationinfo">
+                    <tr ng-class="matchresult.match_type == 1 ? 'success' : matchresult.match_type == 0 ?  'danger' : 'warning'">
+                    <td ng-repeat="val in matchresult.record1 track by $index">
+                        {{ val }}
+                    </td>
+                    </tr>
+                    <tr ng-class="matchresult.match_type == 1 ? 'success' : matchresult.match_type == 0 ?  'danger' : 'warning'">
+                    <td ng-repeat="val in matchresult.record2 track by $index">
+                        {{ val }}
+                    </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

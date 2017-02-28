@@ -114,6 +114,28 @@ class DALMongo:
 
         return [MatchResult.from_json(r) for r in results]
 
+    def get_matches_info(self):
+        """
+        Retorna los matches de la clasificacion
+        """
+        results = self.get_all("ClassificationStep", with_id=True)
+
+        ret = []
+        for r in results:
+            new_r = { 'record1': self._get_record_comparison_json(r['record1'], 1),
+                      'record2': self._get_record_comparison_json(r['record2'], 2),
+                      'match_type': r['match_type']}
+            ret.append(new_r)
+        return ret
+
+    def _get_record_comparison_json(self, id, source_num):
+        c = self.get_mongoclient()
+        rec = c[self.db_name]['ComparisonStep'].find({'$or': [{'record1': id}, {'record2': id}]})[0]
+        new_rec = []
+        for c in rec['comparisons']:
+            new_rec.append(c[source_num - 1])
+        return new_rec
+
     def get_non_matches(self):
         """
         Retorna los no-matches de la clasificacion

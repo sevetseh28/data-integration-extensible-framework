@@ -48,6 +48,7 @@ def schema(request, project_id):
         'source2': schema2
     }, safe=False)
 
+
 def segmentedschema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
     # project = Project.objects.get(id=project_id)
@@ -55,13 +56,13 @@ def segmentedschema(request, project_id):
     schema1 = []
     schema2 = []
     for c in dal.get_segmented_schema(1):
-        new_col = { 'colname' : c.name, 'segments': [] }
+        new_col = {'colname': c.name, 'segments': []}
         for segment in c.fields:
             new_col['segments'].append(segment.output_field)
         schema1.append(new_col)
 
     for c in dal.get_segmented_schema(2):
-        new_col = { 'colname' : c.name, 'segments': [] }
+        new_col = {'colname': c.name, 'segments': []}
         for segment in c.fields:
             new_col['segments'].append(segment.output_field)
         schema2.append(new_col)
@@ -71,12 +72,17 @@ def segmentedschema(request, project_id):
         'source2': schema2
     }, safe=False)
 
+
 def globalschema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
     # project = Project.objects.get(id=project_id)
+    schema = _transform_global_schema(dal.get_global_schema())
+    return JsonResponse(schema, safe=False)
 
-    schema = { 'cant_cols': 0, 'schema': {}, 'segments': [] }
-    for c in dal.get_global_schema():
+
+def _transform_global_schema(old_format_schema):
+    schema = {'cant_cols': 0, 'schema': {}, 'segments': []}
+    for c in old_format_schema:
         colname1 = c['name'].split('__')[2]
         colname2 = c['name'].split('__')[3]
         schema['schema'][colname1 + ' - ' + colname2] = []
@@ -84,29 +90,28 @@ def globalschema(request, project_id):
             schema['schema'][colname1 + ' - ' + colname2].append(field['output_field'])
             schema['segments'].append(field['output_field'])
             schema['cant_cols'] += 1
-
-    return JsonResponse(schema, safe=False)
+    return schema
 
 
 def previewdata(request, project_id, step):
     dal = dal_mongo.DALMongo(project_id)
 
     previewdata1 = dal.get_aggregated_records(step, 1,
-                                              pipeline= [{ '$sample': {'size': 5 }}],
+                                              pipeline=[{'$sample': {'size': 5}}],
                                               json_format=True)
 
     previewdata2 = dal.get_aggregated_records(step, 2,
-                                              pipeline= [{ '$sample': {'size': 5 }}],
+                                              pipeline=[{'$sample': {'size': 5}}],
                                               json_format=True)
 
     new_previewdata1 = []
     new_previewdata2 = []
 
     for r in previewdata1:
-            new_row = {}
-            for col in r['columns']:
-                new_row[col['name']] = col['fields']
-            new_previewdata1.append(new_row)
+        new_row = {}
+        for col in r['columns']:
+            new_row[col['name']] = col['fields']
+        new_previewdata1.append(new_row)
 
     for r in previewdata2:
         new_row = {}
@@ -134,6 +139,48 @@ def comparisondata(request, project_id):
         ret_data.append(new_d)
 
     return JsonResponse(ret_data, safe=False)
+
+
+def matchesresult(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+    data = dal.get_matches_info()
+    schema = _transform_global_schema(dal.get_global_schema())
+    new_data = []
+    for d in data:
+        new_d = {'match_type': d['match_type'],
+                 'record1': d['record1'],
+                 'record2': d['record2']}
+        new_data.append(new_d)
+    return JsonResponse(new_data, safe=False)
+
+
+def _transform_format_record(old_format_record):
+    new_format_rec = {}
+    for unsorted_col in old_format_record:
+        new_format_rec[_get_colname_pretty(unsorted_col)] = []
+        for field in unsorted_col['fields']:
+            if field['value'] is None:
+                pass
+            new_format_rec[_get_colname_pretty(unsorted_col)].append(field['value'])
+
+
+    # new_format_rec = []
+    # for unsorted_col in old_format_record:
+    #     for field in unsorted_col['fields']:
+    #         new_format_rec.append(field['value'])
+    new_format_rec_ordered = []
+    for colname, vals in new_format_rec.iteritems():
+        for val in vals:
+            new_format_rec_ordered.append(val)
+    return new_format_rec_ordered
+
+def _get_colname_pretty(c):
+    try:
+        colname1 = c['name'].split('__')[2]
+        colname2 = c['name'].split('__')[3]
+    except:
+        pass
+    return colname1 + ' - ' + colname2
 
 def upload(request):
     filename = uuid.uuid4()

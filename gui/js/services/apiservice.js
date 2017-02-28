@@ -97,6 +97,11 @@ angular.module('materialAdmin')
             return get(path);
         }
 
+        function getClassificationInfo(idProject) {
+            var path = 'matches-result/' + idProject;
+            return get(path);
+        }
+
         function getOutputFields(idProject) {
             var path = 'output-fields/'+idProject;
             return get(path);
@@ -146,6 +151,7 @@ angular.module('materialAdmin')
 
             previewData: previewData,
             getGlobalSchema: getGlobalSchema,
-            getComparisonInfo: getComparisonInfo
+            getComparisonInfo: getComparisonInfo,
+            getClassificationInfo: getClassificationInfo
         }
     });

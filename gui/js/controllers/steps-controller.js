@@ -198,7 +198,7 @@ materialAdmin
                     });
                 });
 
-                APIService.comparisonInfo($stateParams.id, 'SegmentationStep').then(function (response) {
+                APIService.getComparisonInfo($stateParams.id, 'SegmentationStep').then(function (response) {
                     $scope[step]['previewdata'] = {
                         'source1': response.data.source1,
                         'source2': response.data.source2
@@ -236,6 +236,14 @@ materialAdmin
                 $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {
                     $scope[step]['modules'] = data.data;
+                });
+
+                APIService.getClassificationInfo($stateParams.id).then(function (response) {
+                    $scope[step]['classificationinfo'] = response.data
+                });
+
+                APIService.getGlobalSchema($stateParams.id).then(function (response) {
+                    $scope[step]['previewdataschema'] = response.data
                 });
 
             } else if (step == 'export') {
