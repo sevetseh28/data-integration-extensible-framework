@@ -78,7 +78,7 @@ class DALMongo:
         """
         filter = None
         if limit:
-            filter = { '$sample': { 'size': limit } }
+            filter = {'$sample': {'size': limit}}
         records = self.get_all(step, "source{}_records".format(source_number), with_id=True, filters=filter)
 
         if not json_format:
@@ -121,11 +121,15 @@ class DALMongo:
         results = self.get_all("ClassificationStep", with_id=True)
 
         ret = []
+        i=0
         for r in results:
-            new_r = { 'record1': self._get_record_comparison_json(r['record1'], 1),
-                      'record2': self._get_record_comparison_json(r['record2'], 2),
-                      'match_type': r['match_type']}
+            new_r = {'record1': self._get_record_comparison_json(r['record1'], 1),
+                     'record2': self._get_record_comparison_json(r['record2'], 2),
+                     'match_type': r['match_type']}
             ret.append(new_r)
+            i += 1
+            if i == 5:
+                break
         return ret
 
     def _get_record_comparison_json(self, id, source_num):
@@ -201,11 +205,15 @@ class DALMongo:
         c = self.get_mongoclient()
         cursor = self.get_all('ComparisonStep', '')
         ret_info = []
+        i = 0
         for rec in cursor:
             ret_info.append({'vector': rec['vector'], 'comparisons': rec['comparisons']})
+            i += 1
+            if i == 5:
+                break
         return ret_info
 
-    def get_schema(self, source_number): #, current_step):
+    def get_schema(self, source_number):  # , current_step):
         """
         Retorna el esquema original de una fuente
 
@@ -213,12 +221,11 @@ class DALMongo:
         :return: columnas del esquema de la fuente
         """
         # If we are in a step after doing data cleansing then we have to retrieve the pruned cleansed schema.
-        #if current_step == "ExtractionStep":
+        # if current_step == "ExtractionStep":
         #    schema = self.get_all("ExtractionStep", "source{}_schema".format(source_number))
-        #else:
+        # else:
         #    schema = self.get_all("DataCleansingStep", "source{}_new_schema".format(source_number))
         schema = self.get_all("ExtractionStep", "source{}_schema".format(source_number))
-
 
         return [Column.from_json(c) for c in schema]
 
@@ -234,9 +241,7 @@ class DALMongo:
         db = mongoclient[self.db_name]
         segschema = self.get_all("SegmentationStep", "source{}_schema".format(source_number))
 
-        return [Column.from_json(c) for c in segschema]
-
-
+        return [Column.from_json(c) for c in segschema][:5]
 
     def get_output_fields_matched_cols(self):
         """
@@ -338,6 +343,7 @@ class DALMongo:
 
         # c.close()
         return result
+
     """""""""""""""""""""""""""""""""""""""""""""""""""
         UTILS
     """""""""""""""""""""""""""""""""""""""""""""""""""
