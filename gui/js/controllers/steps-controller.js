@@ -376,24 +376,33 @@ materialAdmin
             stepName = $scope.steps[$scope.currentStep];
 
             APIService.run($stateParams.id, stepId, $scope[stepName].returnValue, $scope[stepName]).then(function (data) {
-                    $scope.tabs[$scope.currentStep]['active'] = false;
-                    $scope.currentStep = $scope.currentStep + 1;
-                    disableFollowingSteps();
-                    if ($scope.tabs[$scope.currentStep]) {
-                        if ($scope.steps[$scope.currentStep - 1] == 'segmentation') {
-                            $scope['segmentationskipped'] = $scope.segmentation.toggleskip.config.checked;
+                    if($scope.currentStep < 9){
+                        $scope.tabs[$scope.currentStep]['active'] = false;
+                        $scope.currentStep = $scope.currentStep + 1;
+                        disableFollowingSteps();
+                        if ($scope.tabs[$scope.currentStep]) {
+                            if ($scope.steps[$scope.currentStep - 1] == 'segmentation') {
+                                $scope['segmentationskipped'] = $scope.segmentation.toggleskip.config.checked;
+                            }
+
+                            $scope.tabs[$scope.currentStep]['disabled'] = false;
+                            $scope.loadStep($scope.steps[$scope.currentStep]);
+
                         }
+                        if (data.data && data.data.downloadfile) {
+                            APIService.downloadFile(data.data.downloadfile.filename, data.data.downloadfile.name);
+                        }
+                        console.log(data);
 
-                        $scope.tabs[$scope.currentStep]['disabled'] = false;
-                        $scope.loadStep($scope.steps[$scope.currentStep]);
-
+                        $scope.tabs[$scope.currentStep]['active'] = true;
+                    }else{
+                        swal({
+                            title: "Data exported succesfully!",
+                            type: "success",
+                            text: '',
+                            confirmButtonText: "OK"
+                        });
                     }
-                    if (data.data && data.data.downloadfile) {
-                        APIService.downloadFile(data.data.downloadfile.filename, data.data.downloadfile.name);
-                    }
-                    console.log(data);
-
-                    $scope.tabs[$scope.currentStep]['active'] = true;
                 }, function (response) {
                     swal({
                             title: "An error has occured!",
