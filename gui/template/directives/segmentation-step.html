@@ -32,7 +32,7 @@
                         {{ o.column }}
                     </div>
                 </div>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                     <p class="c-black f-500 m-b-20">Module</p>
                     <div class="select">
                         <select class="form-control" ng-model="o.moduleSelected"
@@ -45,6 +45,7 @@
 
             <div class="row" ng-repeat="(k, c) in o.moduleSelected.config">
                 <div class="col-sm-12">
+                    <br>
                     <dynamic-input config='c' return-value='c.returnValue' ng-init="c.returnValue = {}"
                                    config-id='{{ k }}'></dynamic-input>
                 </div>
