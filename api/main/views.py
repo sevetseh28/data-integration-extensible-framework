@@ -83,13 +83,14 @@ def globalschema(request, project_id):
 def _transform_global_schema(old_format_schema):
     schema = {'cant_cols': 0, 'schema': {}, 'segments': []}
     for c in old_format_schema:
-        colname1 = c['name'].split('__')[2]
-        colname2 = c['name'].split('__')[3]
-        schema['schema'][colname1 + ' - ' + colname2] = []
-        for field in c['fields']:
-            schema['schema'][colname1 + ' - ' + colname2].append(field['output_field'])
-            schema['segments'].append(field['output_field'])
-            schema['cant_cols'] += 1
+        if c['name'].startswith('__new__'):
+            colname1 = c['name'].split('__')[2]
+            colname2 = c['name'].split('__')[3]
+            schema['schema'][colname1 + ' - ' + colname2] = []
+            for field in c['fields']:
+                schema['schema'][colname1 + ' - ' + colname2].append(field['output_field'])
+                schema['segments'].append(field['output_field'])
+                schema['cant_cols'] += 1
     return schema
 
 
