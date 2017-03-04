@@ -328,6 +328,9 @@ materialAdmin
                     return;
                 }
 
+                if(response.data.steps.length>=4)
+                    $scope['segmentationskipped'] = response.data.steps[3].config.toggleskip.config.checked;
+
                 for (var i = 0; i < steps.length; i++) {
                     //se carga el estado del step
                     var step = steps[i];
