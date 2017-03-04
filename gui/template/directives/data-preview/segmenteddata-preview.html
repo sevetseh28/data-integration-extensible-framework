@@ -32,8 +32,9 @@
                 <tbody>
                 <tr ng-repeat="row in schemamatching.previewdata[source]">
                     <td ng-repeat="s in schemamatching.previewdataschema[source]">
-                        <span ng-repeat="token in row[s.colname] track by $index" ng-class="token.output_field == null ?
-                         'striked' : 'colorseg' + ($index % 2)">
+                        <span ng-repeat="token in row[s.colname] track by $index"
+                              ng-class="((token.output_field == null) && !(segmentationskipped))?
+                              'striked' : 'colorseg' + ($index % 2)">
                             <span>{{ token.value }}
                             <sup ng-if="token.output_field != null">
                                 {{ token.output_field }}

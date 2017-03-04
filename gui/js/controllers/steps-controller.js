@@ -317,18 +317,18 @@ materialAdmin
             modules: []
         };
 
-        function loadProjectState(){
-            APIService.getProject($stateParams.id).then(function(response){
+        function loadProjectState() {
+            APIService.getProject($stateParams.id).then(function (response) {
                 var steps = response.data.steps;
 
                 $scope.projectName = response.data.name;
 
-                if(steps.length == 0){
+                if (steps.length == 0) {
                     $scope.loadStep('extraction');
                     return;
                 }
 
-                for(var i=0;i<steps.length;i++){
+                for (var i = 0; i < steps.length; i++) {
                     //se carga el estado del step
                     var step = steps[i];
                     // var state = steps[i].config;
@@ -348,25 +348,26 @@ materialAdmin
                     // $scope[$scope.steps[i]] = state;
 
                     //se habilita la tab actual y la proxima
-                    $scope.tabs[i].disabled=false;
-                    $scope.tabs[i].reload_required=true;
-                    $scope.tabs[i+1].disabled=false;
-                    $scope.tabs[i+1].reload_required=true;
+                    $scope.tabs[i].disabled = false;
+                    $scope.tabs[i].reload_required = true;
+                    $scope.tabs[i + 1].disabled = false;
+                    $scope.tabs[i + 1].reload_required = true;
 
                     //se saca el active a este step
                     $scope.tabs[i].active = false;
 
                     //se pone como activo el step proximo
-                    $scope.tabs[i+1].active = true;
+                    $scope.tabs[i + 1].active = true;
 
                     // Si se llego al ultimo step ejecutado, se deja de cargar para evitar cargar steps que se ejecutaron
                     // pero luego se ejecuto un step anterior a ese
-                    if(response.data.current_step == $scope.tabs[i].id)
+                    if (response.data.current_step == $scope.tabs[i].id)
                         break;
                 }
 
             })
         }
+
         loadProjectState();
 
 
@@ -378,13 +379,18 @@ materialAdmin
                     $scope.tabs[$scope.currentStep]['active'] = false;
                     $scope.currentStep = $scope.currentStep + 1;
                     disableFollowingSteps();
-                     if ($scope.tabs[$scope.currentStep]){
-                          $scope.tabs[$scope.currentStep]['disabled'] = false;
-                          $scope.loadStep($scope.steps[$scope.currentStep]);
-                     }
-                     if (data.data && data.data.downloadfile){
-                         APIService.downloadFile(data.data.downloadfile.filename,data.data.downloadfile.name);
-                     }
+                    if ($scope.tabs[$scope.currentStep]) {
+                        if ($scope.steps[$scope.currentStep - 1] == 'segmentation') {
+                            $scope['segmentationskipped'] = $scope.segmentation.toggleskip.config.checked;
+                        }
+
+                        $scope.tabs[$scope.currentStep]['disabled'] = false;
+                        $scope.loadStep($scope.steps[$scope.currentStep]);
+
+                    }
+                    if (data.data && data.data.downloadfile) {
+                        APIService.downloadFile(data.data.downloadfile.filename, data.data.downloadfile.name);
+                    }
                     console.log(data);
 
                     $scope.tabs[$scope.currentStep]['active'] = true;
@@ -489,9 +495,9 @@ materialAdmin
             }
         ];
 
-        function disableFollowingSteps(){
-            for (var i=$scope.currentStep+1;i<$scope.tabs.length;i++)
-                $scope.tabs[i].disabled=true;
+        function disableFollowingSteps() {
+            for (var i = $scope.currentStep + 1; i < $scope.tabs.length; i++)
+                $scope.tabs[i].disabled = true;
         }
 
         function setCurrentStep() {
@@ -499,7 +505,7 @@ materialAdmin
             for (tab in $scope.tabs) {
                 if ($scope.tabs[tab].active) {
                     $scope.currentStep = i;
-                    if($scope.tabs[tab].reload_required){
+                    if ($scope.tabs[tab].reload_required) {
                         $scope.loadStep($scope.steps[tab]);
                         $scope.tabs[tab].reload_required = false
                     }

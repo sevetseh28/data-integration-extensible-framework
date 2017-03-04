@@ -9,7 +9,11 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th colspan="{{ segments.length }}"
+                    <th ng-if="!scope.segmentationskipped" colspan="{{ segments.length }}"
+                        ng-repeat="(matchedcols, segments) in datafusion.previewdataschema.schema">
+                        {{ matchedcols }}
+                    </th>
+                    <th ng-if="scope.segmentationskipped"
                         ng-repeat="(matchedcols, segments) in datafusion.previewdataschema.schema">
                         {{ matchedcols }}
                     </th>
