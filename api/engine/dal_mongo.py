@@ -60,6 +60,7 @@ class DALMongo:
     """""""""""""""""""""""""""""""""""""""""""""""""""
         GETS
     """""""""""""""""""""""""""""""""""""""""""""""""""
+
     def get_aggregated_records(self, step, source_number, pipeline, json_format=True):
         records = self.get_aggregated(step, "source{}_records".format(source_number), with_id=False, pipeline=pipeline)
 
@@ -121,15 +122,15 @@ class DALMongo:
         results = self.get_all("ClassificationStep", with_id=True)
 
         ret = []
-        i=0
+        count = [0, 0, 0]
         for r in results:
+            if count[r['match_type']] == 5:
+                continue
             new_r = {'record1': self._get_record_comparison_json(r['record1'], 1),
                      'record2': self._get_record_comparison_json(r['record2'], 2),
                      'match_type': r['match_type']}
             ret.append(new_r)
-            i += 1
-            if i == 5:
-                break
+            count[r['match_type']] += 1
         return ret
 
     def _get_record_comparison_json(self, id, source_num):
