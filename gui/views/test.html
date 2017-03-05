@@ -92,7 +92,7 @@
             <export-preview ng-show="currentStep == 1"></export-preview>
             <datacleansed-preview ng-show="currentStep == 2"></datacleansed-preview>
             <standardisedtaggedata-preview ng-show="currentStep == 3"></standardisedtaggedata-preview>
-            <segmenteddata-preview ng-show="currentStep == 4"></segmenteddata-preview>
+            <segmenteddata-preview ng-show="currentStep == 4 && !segmentationskipped"></segmenteddata-preview>
             <comparison-preview ng-show="currentStep == 7"></comparison-preview>
             <classification-preview ng-show="currentStep == 8"></classification-preview>
 
