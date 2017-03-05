@@ -392,9 +392,6 @@ materialAdmin
                             $scope.loadStep($scope.steps[$scope.currentStep]);
 
                         }
-                        if (data.data && data.data.downloadfile) {
-                            APIService.downloadFile(data.data.downloadfile.filename, data.data.downloadfile.name);
-                        }
                         console.log(data);
 
                         $scope.tabs[$scope.currentStep]['active'] = true;
@@ -405,6 +402,9 @@ materialAdmin
                             text: '',
                             confirmButtonText: "OK"
                         });
+                    }
+                    if (data.data && data.data.downloadfile) {
+                            APIService.downloadFile(data.data.downloadfile.filename, data.data.downloadfile.name);
                     }
                 }, function (response) {
                     swal({
