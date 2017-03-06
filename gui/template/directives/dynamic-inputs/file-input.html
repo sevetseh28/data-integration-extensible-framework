@@ -1,4 +1,12 @@
-<button type="file" ngf-select="uploadCSV($file, $invalidFiles)" accept="*/*"
- class="btn btn-primary waves-effect waves-effect ">
-      Select File</button>
-<span ng-show="f.progress >= 0" ng-bind="f.name + ' | ' + f.progress + '% uploaded.'"></span>
+<div> <!-- class="form-group"> -->
+    <p class="f-500 c-black m-b-5">{{ config.label }}</p>
+    <div class="fg-line">
+        <button type="file" ngf-select="uploadCSV($file, $invalidFiles)" accept="*/*"
+                class="btn btn-primary waves-effect waves-effect ">
+            Select File
+        </button>
+        <span ng-show="f.progress >= 0" ng-bind="f.name + ' | ' + f.progress + '% uploaded.'"></span>
+    </div>
+</div>
+
+

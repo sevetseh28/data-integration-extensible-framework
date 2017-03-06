@@ -50,7 +50,7 @@ class CsvExtractor(ExtractionModule):
     def config_json(**kwargs):
         return {
             'pathcsv': {
-                'label': 'CSV',
+                'label': 'Select CSV',
                 'type': 'file'
             },
             'delimiter': {
