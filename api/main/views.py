@@ -79,18 +79,39 @@ def globalschema(request, project_id):
     schema = _transform_global_schema(dal.get_global_schema())
     return JsonResponse(schema, safe=False)
 
+def finalschema(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+    # project = Project.objects.get(id=project_id)
+    schema = _transform_final_schema(dal.get_global_schema())
+    return JsonResponse(schema, safe=False)
+
 
 def _transform_global_schema(old_format_schema):
     schema = {'cant_cols': 0, 'schema': {}, 'segments': []}
     for c in old_format_schema:
-        if c['name'].startswith('__new__'):
-            colname1 = c['name'].split('__')[2]
-            colname2 = c['name'].split('__')[3]
-            schema['schema'][colname1 + ' - ' + colname2] = []
+        if c['is_new']:
+            schema['schema'][c['custom_name']] = []
             for field in c['fields']:
-                schema['schema'][colname1 + ' - ' + colname2].append(field['output_field'])
+                schema['schema'][c['custom_name']].append(field['output_field'])
                 schema['segments'].append(field['output_field'])
                 schema['cant_cols'] += 1
+
+
+    return schema
+
+def _transform_final_schema(old_format_schema):
+    schema = {'cant_cols': 0, 'schema': [], 'segments': []}
+    for c in old_format_schema:
+        new_s = {}
+        schema['schema'].append(new_s)
+        col_name = c['custom_name'] or c['name']
+        new_s[col_name] = []
+        for field in c['fields']:
+            new_s[c['custom_name']].append(field['output_field'])
+            schema['segments'].append(field['output_field'])
+            schema['cant_cols'] += 1
+
+
     return schema
 
 
@@ -140,6 +161,11 @@ def comparisondata(request, project_id):
         ret_data.append(new_d)
 
     return JsonResponse(ret_data, safe=False)
+
+def fuseddata(request, project_id):
+    dal = dal_mongo.DALMongo(project_id)
+    data = dal.get_fused_data()
+    return JsonResponse(data, safe=False)
 
 
 def matchesresult(request, project_id):

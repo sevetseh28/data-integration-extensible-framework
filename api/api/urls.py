@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^preview-data/(?P<step>[\w-]+)/(?P<project_id>\d+)?', views.previewdata),
     url(r'^segmented-schema/(?P<project_id>\d+)?', views.segmentedschema),
     url(r'^global-schema/(?P<project_id>\d+)?', views.globalschema),
+    url(r'^final-schema/(?P<project_id>\d+)?', views.finalschema),
     url(r'^comparison-data/(?P<project_id>\d+)?', views.comparisondata),
     url(r'^matches-result/(?P<project_id>\d+)?', views.matchesresult),
+    url(r'^fused-data/(?P<project_id>\d+)?', views.fuseddata),
 ]

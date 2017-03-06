@@ -214,6 +214,35 @@ class DALMongo:
                 break
         return ret_info
 
+    def get_fused_data(self):
+        """
+        Returns compared data along with the similarity vector (in JSON format)
+        :return:
+        """
+        c = self.get_mongoclient()
+        cursor = self.get_all('DataFusionStep', '')
+        array_global_schema = self.get_global_schema()
+        ret_info = []
+        i = 0
+        for rec in cursor:
+            new_order = []
+            for col in array_global_schema:
+                for idx, reccol in enumerate(rec['columns']):
+                    if col['name'] == reccol['name']:
+                        new_order.append(reccol)
+                        rec['columns'].pop(idx)
+                        break
+
+            rec['columns'] = new_order
+
+            new_r = { 'vals' : []}
+            for col in rec['columns']:
+                for field in col['fields']:
+                    new_r['vals'].append(field['value'])
+            ret_info.append(new_r)
+
+        return ret_info
+
     def get_schema(self, source_number):  # , current_step):
         """
         Retorna el esquema original de una fuente
