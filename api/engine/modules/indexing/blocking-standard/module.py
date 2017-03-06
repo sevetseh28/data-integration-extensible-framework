@@ -26,7 +26,7 @@ class BlockingStandard(IndexingModule):
     def __init__(self, records, **kwargs):
         super(BlockingStandard, self).__init__(**kwargs)
         self.records = records
-        self.keys = [{"key": unidecode(k["key"]["key"]), "encoding": k["encoding"]} for k in self.config["keys"]]
+        self.keys = [{"key": unidecode(k["1_key"]["key"]), "encoding": k["encoding"]} for k in self.config["keys"]]
 
         # encodings attribute will mantain all selected encoding modules
         self.encodings = {}
@@ -83,7 +83,7 @@ class BlockingStandard(IndexingModule):
         rowmodel = {
             'type': 'row',
             'cols': {
-                'key':
+                '1_key':
                     {
                         'type': 'dropdown',
                         'label': 'Select a column',

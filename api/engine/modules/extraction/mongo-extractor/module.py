@@ -22,9 +22,9 @@ class MongodbExtractor(ExtractionModule):
     def __init__(self, **kwargs):
         super(MongodbExtractor, self).__init__(**kwargs)
         self.pretty_name = 'MongodbExtractor'
-        self.host = self.config["host"]
-        self.port = int(self.config["port"])
-        self.db = self.config["db"]
+        self.host = self.config["1_host"]
+        self.port = int(self.config["2_port"])
+        self.db = self.config["3_db"]
         self.collection = self.config["collection"]
 
     @staticmethod
@@ -82,15 +82,15 @@ class MongodbExtractor(ExtractionModule):
     @staticmethod
     def config_json(**kwargs):
         return {
-            'host': {
+            '1_host': {
                 'label': 'Host',
                 'type': 'text'
             },
-            'port': {
+            '2_port': {
                 'label': 'Port',
                 'type': 'text'
             },
-            'db': {
+            '3_db': {
                 'label': 'Database',
                 'type': 'text'
             },

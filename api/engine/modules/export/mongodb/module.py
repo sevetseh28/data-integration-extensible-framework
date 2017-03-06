@@ -21,12 +21,12 @@ class MongoDBExport(ExportModule):
         super(MongoDBExport, self).__init__(**kwargs)
         self.matches = matches
         self.non_matches = non_matches
-        self.only_matches = self.config['only_matches']['checked'] if "only_matches" in self.config and \
-                                                                      self.config["only_matches"] else False
-        self.host = self.config["host"] if "host" in self.config and self.config["host"] else 'localhost'
-        self.port = self.config["port"] if "port" in self.config and self.config["port"] else 27017
-        self.db = self.config["db"] if "db" in self.config and self.config["db"] else 'output'
-        self.collection = self.config["collection"] if "collection" in self.config and self.config["collection"] else 'results'
+        self.only_matches = self.config['5_only_matches']['checked'] if "5_only_matches" in self.config and \
+                                                                      self.config["5_only_matches"] else False
+        self.host = self.config["1_host"] if "1_host" in self.config and self.config["1_host"] else 'localhost'
+        self.port = self.config["2_port"] if "2_port" in self.config and self.config["2_port"] else 27017
+        self.db = self.config["3_db"] if "3_db" in self.config and self.config["3_db"] else 'output'
+        self.collection = self.config["4_collection"] if "4_collection" in self.config and self.config["4_collection"] else 'results'
 
 
     @staticmethod
@@ -52,23 +52,23 @@ class MongoDBExport(ExportModule):
     @staticmethod
     def config_json(**kwargs):
         return {
-            'host': {
+            '1_host': {
                 'label': 'Host (default: localhost)',
                 'type': 'text'
             },
-            'port': {
+            '2_port': {
                 'label': 'Port (default: 27017)',
                 'type': 'text'
             },
-            'db': {
+            '3_db': {
                 'label': 'Database (default: output)',
                 'type': 'text'
             },
-            'collection': {
+            '4_collection': {
                 'label': 'Collection (default: results)',
                 'type': 'text'
             },
-            'only_matches': {
+            '5_only_matches': {
                 'label': 'Export only matches',
                 'type': 'toggleswitch',
                 "color": 'blue',

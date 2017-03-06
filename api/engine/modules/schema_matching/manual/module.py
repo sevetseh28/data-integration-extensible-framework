@@ -116,10 +116,12 @@ class ManualSchemaMatching(SchemaMatchingModule):
             'type': 'row',
             'cols': {
                 'source1': {
+                    'label': 'Select source 1 columns',
                     'type': 'multipleselect',
                     'options': cols1
                 },
                 'source2': {
+                    'label': 'Select source 2 columns',
                     'type': 'multipleselect',
                     'options': cols2
                 },

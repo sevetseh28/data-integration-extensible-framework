@@ -20,9 +20,9 @@ class CSVExport(ExportModule):
         self.only_matches = self.config['only_matches']['checked'] if "only_matches" in self.config and \
                                                                       self.config["only_matches"] else False
         self.schema = schema
-        self.name = self.config["name"] if "name" in self.config and self.config["name"] else 'csv.csv'
-        self.delimiter = self.config['delimiter'].__str__()[0] if 'delimiter' in self.config and self.config[
-            'delimiter'] else ','
+        self.name = self.config["1_name"] if "1_name" in self.config and self.config["1_name"] else 'csv.csv'
+        self.delimiter = self.config["2_delimiter"].__str__()[0] if "2_delimiter" in self.config and self.config[
+            "2_delimiter"] else ','
 
     @staticmethod
     def pretty_name():
@@ -56,11 +56,11 @@ class CSVExport(ExportModule):
     @staticmethod
     def config_json(**kwargs):
         return {
-            'name': {
+            '1_name': {
                 'label': 'Name of file',
                 'type': 'text'
             },
-            'delimiter': {
+            '2_delimiter': {
                 'label': 'Delimiter (default: ",")',
                 'type': 'text'
             },

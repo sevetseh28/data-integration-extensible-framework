@@ -75,7 +75,7 @@ class RuleBasedClassification(ClassificationModule):
             rules_evaluation = False
 
         for rule in self.rules:
-            col_or_outf_to_compare = rule['output-field-column']['val']
+            col_or_outf_to_compare = rule['1_output-field-column']['val']
             idx_col_or_outf_to_compare = cols_order[col_or_outf_to_compare]  # index of the simil vector to compare
             logical_op = rule['logical-op']['val']
 
@@ -147,7 +147,7 @@ class RuleBasedClassification(ClassificationModule):
         rowmodel = {
             'type': 'row',
             'cols': {
-                'output-field-column': {
+                '1_output-field-column': {
                     'label': 'Column/Output Field',
                     'type': 'dropdown',
                     'selectedoption': {},
