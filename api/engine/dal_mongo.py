@@ -214,7 +214,7 @@ class DALMongo:
                 break
         return ret_info
 
-    def get_fused_data(self):
+    def get_fused_preview(self):
         """
         Returns compared data along with the similarity vector (in JSON format)
         :return:
@@ -225,21 +225,22 @@ class DALMongo:
         ret_info = []
         i = 0
         for rec in cursor:
-            new_order = []
+            r = {}
+
             for col in array_global_schema:
-                for idx, reccol in enumerate(rec['columns']):
-                    if col['name'] == reccol['name']:
-                        new_order.append(reccol)
-                        rec['columns'].pop(idx)
-                        break
+                for c in rec['columns']:
+                    if col['name'] == c['name']:
+                        if col['is_new']:
+                            r[col['custom_name']] = {}
 
-            rec['columns'] = new_order
+                            for field in col['fields']:
+                                for f in c['fields']:
+                                    if field['output_field'] == f['output_field']:
+                                        r[col['custom_name']][f['output_field']] = f['value']
+                        else:
+                            r[col['name']] = c['fields'][0]['value']
 
-            new_r = { 'vals' : []}
-            for col in rec['columns']:
-                for field in col['fields']:
-                    new_r['vals'].append(field['value'])
-            ret_info.append(new_r)
+            ret_info.append(r)
 
         return ret_info
 
@@ -386,4 +387,13 @@ class DALMongo:
     def drop_database(self):
         c = self.get_mongoclient()
         c.drop_database(self.db_name)
+        c.close()
+
+    def drop_segmentation(self):
+        c = self.get_mongoclient()
+        db = c[self.db_name]
+        db['SegmentationStep_source1_records'].drop()
+        db['SegmentationStep_source1_schema'].drop()
+        db['SegmentationStep_source2_records'].drop()
+        db['SegmentationStep_source2_schema'].drop()
         c.close()

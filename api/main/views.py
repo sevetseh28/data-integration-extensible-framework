@@ -164,7 +164,7 @@ def comparisondata(request, project_id):
 
 def fuseddata(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
-    data = dal.get_fused_data()
+    data = dal.get_fused_preview()
     return JsonResponse(data, safe=False)
 
 

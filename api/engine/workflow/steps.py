@@ -346,6 +346,7 @@ class SchemaMatchingStep(Step):
         """
         dal = DALMongo(self.project_id)
         if self.segmentation_skipped:
+            dal.drop_segmentation()
             prevstep = "StandardisationAndTaggingStep"
         else:
             prevstep = "SegmentationStep"
