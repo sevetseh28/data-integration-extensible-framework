@@ -10,7 +10,9 @@
 
 <div class="card" style="overflow-y:scroll; max-height:250px;">
     <div class="card-header">
-        <h2>Fused data</h2>
+        <h2>Fused data
+            <small></small>
+        </h2>
     </div>
 
     <div class="card-body">
@@ -21,18 +23,18 @@
                     <th ng-repeat="col in export.previewdata[0].columns">{{ col.custom_name || col.name }}</th>
                 </tr>
                 </thead>
-                <!-- <tbody>
+                <tbody>
                 <tr ng-repeat="row in export.previewdata">
-                    <td ng-repeat="s in export.previewdata">
-                        <span ng-repeat="token in row[s] track by $index" ng-class="token.tags.length > 0 ? 'colorstan' + ($index % 3) : ''">
+                    <td ng-repeat="col in row.columns">
+                        <span ng-repeat="token in col.fields track by $index" ng-class="token.output_field ? 'colorstan' + ($index % 3) : ''">
                             <span>{{ token.value }}
-                            <sup ng-repeat="tag in token.tags">
-                                {{ tag }}
+                            <sup>
+                                {{ token.output_field }}
                             </sup></span>
                         </span>
                     </td>
                 </tr>
-                </tbody>-->
+                </tbody>
             </table>
         </div>
     </div>
