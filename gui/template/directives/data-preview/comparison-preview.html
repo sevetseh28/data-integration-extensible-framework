@@ -9,9 +9,9 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th colspan="{{ segments.length }}"
-                        ng-repeat="(matchedcols, segments) in classification.previewdataschema.schema">
-                        {{ matchedcols }}
+                    <th colspan="{{ col.fields.length }}"
+                        ng-repeat="col in classification.previewdataschema.schema">
+                        {{ col.name }}
                     </th>
                 </tr>
                 <tr>
