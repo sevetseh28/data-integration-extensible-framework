@@ -1,0 +1,39 @@
+<style>
+    .colorstan0 {
+        color: green;
+    }
+
+    .colorstan1 {
+        color: #f10c0d;
+    }
+</style>
+
+<div class="card" style="overflow-y:scroll; max-height:250px;">
+    <div class="card-header">
+        <h2>Fused data</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-vmiddle">
+                <thead>
+                <tr>
+                    <th ng-repeat="col in export.previewdata[0].columns">{{ col.custom_name || col.name }}</th>
+                </tr>
+                </thead>
+                <!-- <tbody>
+                <tr ng-repeat="row in export.previewdata">
+                    <td ng-repeat="s in export.previewdata">
+                        <span ng-repeat="token in row[s] track by $index" ng-class="token.tags.length > 0 ? 'colorstan' + ($index % 3) : ''">
+                            <span>{{ token.value }}
+                            <sup ng-repeat="tag in token.tags">
+                                {{ tag }}
+                            </sup></span>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>-->
+            </table>
+        </div>
+    </div>
+</div>

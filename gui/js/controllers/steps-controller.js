@@ -252,6 +252,10 @@ materialAdmin
                     $scope[step]['modules'] = data.data;
                 });
 
+                APIService.getFusedData($stateParams.id).then(function (response) {
+                    $scope[step]['previewdata'] = response.data
+                });
+
             }
         };
 

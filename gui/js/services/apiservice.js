@@ -133,6 +133,11 @@ angular.module('materialAdmin')
             return get(path);
         }
 
+        function getFusedData(project_id) {
+            var path = 'fused-data/'+project_id;
+            return get(path);
+        }
+
         return {
             getColumnsSources: getColumnsSources,
             getSegmentedSchema: getSegmentedSchema,
@@ -152,6 +157,7 @@ angular.module('materialAdmin')
             previewData: previewData,
             getGlobalSchema: getGlobalSchema,
             getComparisonInfo: getComparisonInfo,
-            getClassificationInfo: getClassificationInfo
+            getClassificationInfo: getClassificationInfo,
+            getFusedData: getFusedData
         }
     });

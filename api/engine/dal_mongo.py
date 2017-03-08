@@ -225,22 +225,24 @@ class DALMongo:
         ret_info = []
         i = 0
         for rec in cursor:
-            r = {}
+            # r = {}
+            #
+            # for col in array_global_schema:
+            #     for c in rec['columns']:
+            #         if col['name'] == c['name']:
+            #             if col['is_new']:
+            #                 r[col['custom_name']] = {}
+            #
+            #                 for field in col['fields']:
+            #                     for f in c['fields']:
+            #                         if field['output_field'] == f['output_field']:
+            #                             r[col['custom_name']][f['output_field']] = f['value']
+            #             else:
+            #                 r[col['name']] = ''
+            #                 for f in c['fields']:
+            #                     r[col['name']] += f['value']
 
-            for col in array_global_schema:
-                for c in rec['columns']:
-                    if col['name'] == c['name']:
-                        if col['is_new']:
-                            r[col['custom_name']] = {}
-
-                            for field in col['fields']:
-                                for f in c['fields']:
-                                    if field['output_field'] == f['output_field']:
-                                        r[col['custom_name']][f['output_field']] = f['value']
-                        else:
-                            r[col['name']] = c['fields'][0]['value']
-
-            ret_info.append(r)
+            ret_info.append(rec)
 
         return ret_info
 
