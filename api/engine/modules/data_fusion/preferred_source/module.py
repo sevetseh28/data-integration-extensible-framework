@@ -42,7 +42,7 @@ class PreferredSource(Module):
             r3.add_columns(r2_remaining_cols)
 
             # se agregan las columnas matcheadas de acuerdo al criterio
-            preferred_record = r1 if self.preferred_source == 1 else r2
+            preferred_record = r1 if self.preferred_source == '1' else r2
             for col in preferred_record.get_new_cols():
                 r3.add_column(col)
 
