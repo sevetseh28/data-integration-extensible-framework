@@ -214,6 +214,26 @@ class DALMongo:
                 break
         return ret_info
 
+    def get_total_comparisons_made(self):
+        c = self.get_mongoclient()
+        cursor = self.get_all('ClassificationStep', '')
+        return cursor.count()
+
+    def get_potential_matches_count(self):
+        c = self.get_mongoclient()
+        cursor = self.get_all('ClassificationStep', filters={'match_type': 2})
+        return cursor.count()
+
+    def get_non_matches_count(self):
+        c = self.get_mongoclient()
+        cursor = self.get_all('ClassificationStep', filters={'match_type': 0})
+        return cursor.count()
+
+    def get_matches_count(self):
+        c = self.get_mongoclient()
+        cursor = self.get_all('ClassificationStep', filters={'match_type': 1})
+        return cursor.count()
+
     def get_fused_preview(self):
         """
         Returns compared data along with the similarity vector (in JSON format)

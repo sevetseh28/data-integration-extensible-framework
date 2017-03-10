@@ -176,13 +176,28 @@ def matchesresult(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
     data = dal.get_matches_info()
     schema = _transform_global_schema(dal.get_global_schema())
-    new_data = []
+    matches = []
+    non_matches = []
+    potential_matches = []
     for d in data:
         new_d = {'match_type': d['match_type'],
                  'record1': d['record1'],
                  'record2': d['record2']}
-        new_data.append(new_d)
-    return JsonResponse(new_data, safe=False)
+        if d['match_type'] == 0:
+            non_matches.append(new_d)
+        elif d['match_type'] == 1:
+            matches.append(new_d)
+        elif d['match_type'] == 2:
+            potential_matches.append(new_d)
+
+    response = {
+        'results': matches + potential_matches + non_matches,
+        'total_data': dal.get_total_comparisons_made(),
+        'total_matches': dal.get_matches_count(),
+        'total_potential_matches': dal.get_potential_matches_count(),
+        'total_non_matches': dal.get_non_matches_count()
+    }
+    return JsonResponse(response, safe=False)
 
 
 def _transform_format_record(old_format_record):
