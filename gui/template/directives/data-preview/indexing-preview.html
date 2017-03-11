@@ -19,7 +19,7 @@
 
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered">
+            <table class="table table-striped">
                 <thead>
                 <tr >
                     <th>Key (group)</th>
@@ -31,15 +31,15 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="idxgroup in comparison.idxinfo.results track by $index" >
-                    <th>
+                    <td>
                         {{ idxgroup.key }}
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         {{ idxgroup.count_s1 }}
-                    </th>
-                    <th>
+                    </td>
+                    <td>
                         {{ idxgroup.count_s2 }}
-                    </th>
+                    </td>
                 </tr>
                 </tbody>
             </table>
