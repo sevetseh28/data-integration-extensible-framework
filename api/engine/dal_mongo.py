@@ -337,14 +337,56 @@ class DALMongo:
 
         return cols
 
-    # def get_schema_matching(self):
-    #     """
-    #     Retorna el esquema matching
-    #     """
-    #     schema = self.get_all("SchemaMatchingStep", "")
-    #     json = [match for match in schema]
-    #
-    #     return SchemaMatch.from_json(json)
+    def get_limited_indexing_keys(self, limit):
+        c = self.get_mongoclient()
+        col = c[self.db_name]["IndexingStep"]
+
+        # Se obtienen las keys de los grupos
+        keys = []
+        for k in col.aggregate([{"$group": {
+            "_id": "$key",
+            "count_s1": {"$sum": {
+                "$cond": {"if": {"$eq": ["$source", 1]}, "then": 1, "else": 0}
+            }},
+            "count_s2": {"$sum": {
+                "$cond": {"if": {"$eq": ["$source", 2]}, "then": 1, "else": 0}
+            }}
+        }}]):
+            keys.append({'key': k['_id'], 'count_s1': k['count_s1'], 'count_s2': k['count_s2']})
+            if len(keys) == limit:
+                break
+        return keys
+
+    def get_count_indexing_groups(self):
+        c = self.get_mongoclient()
+        col = c[self.db_name]["IndexingStep"]
+
+        # Se obtienen las keys de los grupos
+        cursor = col.aggregate([{"$group": {
+            "_id": "$key"
+        }}])
+        return len(list(cursor))
+
+    def get_number_of_comparisons_to_do(self):
+        c = self.get_mongoclient()
+        col = c[self.db_name]["IndexingStep"]
+
+        # Se obtienen las keys de los grupos
+        result = col.aggregate([{"$group": {
+            "_id": "$key",
+            "count_s1": {"$sum": {
+                "$cond": {"if": {"$eq": ["$source", 1]}, "then": 1, "else": 0}
+            }},
+            "count_s2": {"$sum": {
+                "$cond": {"if": {"$eq": ["$source", 2]}, "then": 1, "else": 0}
+            }}}},
+            {"$group": {"_id": "$_id",
+                        "comparisons": {"$sum": {"$multiply": ["$count_s1", "$count_s2"]}}
+                        }},
+            {"$group": {"_id": "all",
+                        "total_comparisons": {"$sum": "$comparisons"}
+                        }}])
+        return result.next()['total_comparisons']
 
     def get_all(self, step, suffix="", with_id=False, filters=None):
         """

@@ -196,6 +196,12 @@ materialAdmin
                             $scope[step]['outputFields'][i]['selectedModule'] = {};
                         }
                     });
+
+                    APIService.getIndexingInfo($stateParams.id).then(function (response) {
+                        $scope[step]['idxinfo'] = response.data;
+                    });
+
+
                 });
 
                 APIService.getComparisonInfo($stateParams.id).then(function (response) {

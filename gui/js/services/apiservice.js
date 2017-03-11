@@ -97,6 +97,11 @@ angular.module('materialAdmin')
             return get(path);
         }
 
+        function getIndexingInfo(idProject) {
+            var path = 'indexing-data/' + idProject;
+            return get(path);
+        }
+
         function getClassificationInfo(idProject) {
             var path = 'matches-result/' + idProject;
             return get(path);
@@ -157,6 +162,7 @@ angular.module('materialAdmin')
             previewData: previewData,
             getGlobalSchema: getGlobalSchema,
             getComparisonInfo: getComparisonInfo,
+            getIndexingInfo: getIndexingInfo,
             getClassificationInfo: getClassificationInfo,
             getFusedData: getFusedData
         }

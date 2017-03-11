@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Indexing results
+
+        <small>Total number of groups: <b>
+            {{ comparison.idxinfo.cant_idx_groups }}
+        </b></small>
+
+        <small>Total number of comparisons to do: <b>
+            {{ comparison.idxinfo.cant_comparisons }}
+        </b>
+          (reduced from {{ comparison.idxinfo.cant_comparisons_full_index }} possible comparisons
+            - <span style="color: green;">{{ 100 - comparison.idxinfo.cant_comparisons / comparison.idxinfo.cant_comparisons_full_index * 100 }}% reduction</span>)
+        </small>
+
+
+        </h2>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr >
+                    <th>Key (group)</th>
+                    <th># of source 1 records</th>
+                    <th># of source 2 records</th>
+                </tr>
+
+
+                </thead>
+                <tbody>
+                <tr ng-repeat="idxgroup in comparison.idxinfo.results track by $index" >
+                    <th>
+                        {{ idxgroup.key }}
+                    </th>
+                    <th>
+                        {{ idxgroup.count_s1 }}
+                    </th>
+                    <th>
+                        {{ idxgroup.count_s2 }}
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

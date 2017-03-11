@@ -272,6 +272,14 @@ def output_fields(request, project_id):
 
     return JsonResponse(ret, safe=False)
 
+def indexingdata(request, project_id):
+    project = Project.objects.get(id=project_id)
+    dal = dal_mongo.DALMongo(project_id)
+    return JsonResponse({'results': dal.get_limited_indexing_keys(25),
+                         'cant_idx_groups': dal.get_count_indexing_groups(),
+                         'cant_comparisons': dal.get_number_of_comparisons_to_do(),
+                         'cant_comparisons_full_index': dal.get_extracted_data_count(1) * dal.get_extracted_data_count(2)},
+                        safe=False)
 
 def run(request):
     """
@@ -325,3 +333,5 @@ def run(request):
         return JsonResponse({'status': 'ok'})
     else:
         return JsonResponse({'status': 'ok', 'downloadfile': {'name': downloadfile[0], 'filename': downloadfile[1]}})
+
+
