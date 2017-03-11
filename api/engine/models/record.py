@@ -69,8 +69,8 @@ class Record:
         result = ""
         col = self.columns[col]
         for f in col.fields:
-            result += str(f.value)
-        return result
+            result += str(f.value) + " "
+        return result[:-1] # el [:-1] elimina el ultimo espacio
 
     def get_sourcex_cols(self, source_number):
         return [c for c in self.columns.values() if c.name.startswith("s{}".format(source_number))]
