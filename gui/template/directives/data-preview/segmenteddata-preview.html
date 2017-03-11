@@ -12,10 +12,10 @@
     }
 
 </style>
-<div class="card"  ng-repeat="source in ['source1', 'source2']">
+<div class="card"  ng-repeat="source in ['source1', 'source2'] track by $index">
     <div class="card-header">
         <h2>Segmented data
-            <small>{{ source }}</small>
+            <small>Source {{ $index + 1 }}</small>
         </h2>
     </div>
 
@@ -30,7 +30,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="row in schemamatching.previewdata[source]">
+                <tr ng-repeat="row in schemamatching.previewdata[source]['results']">
                     <td ng-repeat="s in schemamatching.previewdataschema[source]">
                         <span ng-repeat="token in row[s.colname] track by $index"
                               ng-class="((token.output_field == null) && !(segmentationskipped))?

@@ -198,7 +198,7 @@ materialAdmin
                     });
                 });
 
-                APIService.getComparisonInfo($stateParams.id, 'SegmentationStep').then(function (response) {
+                APIService.getComparisonInfo($stateParams.id).then(function (response) {
                     $scope[step]['previewdata'] = {
                         'source1': response.data.source1,
                         'source2': response.data.source2

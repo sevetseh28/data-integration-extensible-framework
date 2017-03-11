@@ -146,8 +146,8 @@ def previewdata(request, project_id, step):
         new_previewdata2.append(new_row)
 
     return JsonResponse({
-        'source1': new_previewdata1,
-        'source2': new_previewdata2
+        'source1': {'results': new_previewdata1, 'total_count': dal.get_extracted_data_count(1)},
+        'source2': {'results': new_previewdata2, 'total_count': dal.get_extracted_data_count(2)}
     }, safe=False)
 
 
@@ -164,7 +164,8 @@ def comparisondata(request, project_id):
             new_d['comparisons']['record2'].append(c[1])
         ret_data.append(new_d)
 
-    return JsonResponse(ret_data, safe=False)
+    response = {'results': ret_data, 'total_comparisons_made': dal.get_total_comparisons_made()}
+    return JsonResponse(response, safe=False)
 
 def fuseddata(request, project_id):
     dal = dal_mongo.DALMongo(project_id)

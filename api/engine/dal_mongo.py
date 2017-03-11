@@ -216,7 +216,7 @@ class DALMongo:
 
     def get_total_comparisons_made(self):
         c = self.get_mongoclient()
-        cursor = self.get_all('ClassificationStep', '')
+        cursor = self.get_all('ComparisonStep', '')
         return cursor.count()
 
     def get_potential_matches_count(self):
@@ -232,6 +232,11 @@ class DALMongo:
     def get_matches_count(self):
         c = self.get_mongoclient()
         cursor = self.get_all('ClassificationStep', filters={'match_type': 1})
+        return cursor.count()
+
+    def get_extracted_data_count(self, source_number):
+        c = self.get_mongoclient()
+        cursor = self.get_all('ExtractionStep_source{}_records'.format(source_number))
         return cursor.count()
 
     def get_fused_preview(self):

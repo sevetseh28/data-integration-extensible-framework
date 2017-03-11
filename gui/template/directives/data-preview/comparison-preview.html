@@ -1,7 +1,10 @@
 <div class="card">
     <div class="card-header">
         <h2>Comparison results
-        </h2>
+
+        <small style="color: grey;">Total comparisons made: <b>
+            {{ classification.comparisoninfo.total_comparisons_made }}
+        </b></small></h2>
     </div>
 
     <div class="card-body" style="overflow-y:scroll; max-height:500px;">
@@ -21,7 +24,7 @@
                 </tr>
 
                 </thead>
-                <tbody ng-repeat="comparison in classification.comparisoninfo">
+                <tbody ng-repeat="comparison in classification.comparisoninfo.results">
                     <tr>
                     <td ng-repeat="val in comparison.comparisons.record1 track by $index">
                         {{ val }}

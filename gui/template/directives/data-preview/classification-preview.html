@@ -1,15 +1,16 @@
 <div class="card">
     <div class="card-header">
-        <h2>Classification results</h2>
-        <h6 style="color: green;">Total matches: <b>
+        <h2>Classification results
+        <small style="color: green;">Total matches: <b>
             {{ datafusion.classificationinfo.total_matches }}
-        </b> ({{ (datafusion.classificationinfo.total_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</h6>
-        <h6 style="color: orange;">Total potential matches: <b>
+        </b> ({{ (datafusion.classificationinfo.total_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</small>
+        <small style="color: orange;">Total potential matches: <b>
             {{ datafusion.classificationinfo.total_potential_matches }}
-        </b> ({{ (datafusion.classificationinfo.total_potential_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</h6>
-        <h6 style="color: red;">Total non-matches: <b>
+        </b> ({{ (datafusion.classificationinfo.total_potential_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</small>
+        <small style="color: red;">Total non-matches: <b>
             {{ datafusion.classificationinfo.total_non_matches }}
-        </b> ({{ (datafusion.classificationinfo.total_non_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</h6>
+        </b> ({{ (datafusion.classificationinfo.total_non_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</small>
+            </h2>
     </div>
 
     <div class="card-body" style="overflow-y:scroll; max-height:500px;">

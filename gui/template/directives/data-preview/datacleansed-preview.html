@@ -1,7 +1,7 @@
-<div class="card"  ng-repeat="source in ['source1', 'source2']">
+<div class="card"  ng-repeat="source in ['source1', 'source2'] track by $index">
     <div class="card-header">
         <h2>Cleansed data
-            <small>{{ source }}</small>
+            <small>Source {{ $index + 1 }}</small>
         </h2>
     </div>
 
@@ -14,7 +14,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="row in standardisationtagging.previewdata[source]">
+                <tr ng-repeat="row in standardisationtagging.previewdata[source]['results']">
                     <td ng-repeat="s in standardisationtagging.previewdataschema[source]">
                         {{ row[s][0].value }}
                     </td>
