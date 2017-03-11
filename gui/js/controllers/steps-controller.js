@@ -214,9 +214,14 @@ materialAdmin
 
             } else if (step == 'indexing') {
                 $scope[step].selectedModule = {};
-                APIService.getModules($stateParams.id, step).then(function (data) {
-                    $scope[step]['modules'] = data.data;
+                APIService.getModules($stateParams.id, step).then(function (response) {
+                    $scope[step]['modules'] = response.data;
                 });
+
+                APIService.getGlobalSchema($stateParams.id).then(function (response) {
+                    $scope[step]['previewdataschema'] = response.data
+                });
+
             } else if (step == 'classification') {
                 $scope[step].selectedModule = {};
                 APIService.getModules($stateParams.id, step).then(function (data) {

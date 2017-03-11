@@ -1,0 +1,27 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Schema result (matched columns)</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr >
+                    <th colspan="{{ col.fields.length }}" style="background-color: #ffed8f"
+                        ng-repeat="col in indexing.previewdataschema.schema">
+                        {{ col.name }}
+                    </th>
+                </tr>
+                <tr >
+                    <th ng-repeat="seg in indexing.previewdataschema.segments track by $index"
+                    style="background-color: #fffcbe">
+                        {{ seg }}
+                    </th>
+                </tr>
+
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
