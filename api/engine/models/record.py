@@ -56,9 +56,9 @@ class Record:
         col = self.columns[col]
         for f in col.fields:
             if f.output_field == out_field:
-                result += str(f.value)
+                result += str(f.value) + " "
 
-        return result
+        return result[:-1]
 
     def get_field_col(self, col):
         """
