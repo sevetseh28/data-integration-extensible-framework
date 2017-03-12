@@ -40,4 +40,5 @@ urlpatterns = [
     url(r'^comparison-data/(?P<project_id>\d+)?', views.comparisondata),
     url(r'^matches-result/(?P<project_id>\d+)?', views.matchesresult),
     url(r'^fused-data/(?P<project_id>\d+)?', views.fuseddata),
+    url(r'^get-script/(?P<project_id>\d+)?',views.get_script)
 ]

@@ -21,7 +21,12 @@ class StepConfigSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     steps = StepConfigSerializer(many=True, read_only=True)
+    script = serializers.SerializerMethodField('has_script')
+
+    def has_script(self,proj):
+        return proj.steps.filter(step="ExportStep").count() > 0
+
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'current_step', 'steps')
+        fields = ('id', 'name', 'current_step', 'steps', 'script')

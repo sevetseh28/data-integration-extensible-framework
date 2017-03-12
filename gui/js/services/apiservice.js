@@ -132,6 +132,10 @@ angular.module('materialAdmin')
             path = baseUrl+"download-file/"+filename+"/"+name+"/";
             window.open(path, '_blank', '');
         }
+        function getScriptProject(projectid){
+            path = baseUrl+"get-script/"+projectid+"/";
+            window.open(path, '_blank', '');
+        }
 
         function previewData(project_id, step) {
             var path = 'preview-data/' + step + '/'+project_id;
@@ -158,6 +162,7 @@ angular.module('materialAdmin')
 
             //Download file
             downloadFile: downloadFile,
+            getScriptProject: getScriptProject,
 
             previewData: previewData,
             getGlobalSchema: getGlobalSchema,

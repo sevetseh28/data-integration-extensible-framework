@@ -25,6 +25,7 @@ class StepConfig(models.Model):
     project = models.ForeignKey(Project, related_name='steps')
     step = models.CharField(max_length=30, choices=STEPS)
     config = JSONField(True)
+    script_data = JSONField(True)
 
     def __str__(self):
         return self.project.__str__() + '.' + self.step

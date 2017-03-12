@@ -293,7 +293,6 @@ def run(request):
         project_id = params['project_id']
         step = params['step']
         config = params['config'] if 'config' in params else {}
-        step_state = params['step_state'] if 'step_state' in params else {}
         project = Project.objects.get(id=project_id)
         # Se chequea si se skipea el paso de Segmentation
         downloadfile = False
@@ -317,10 +316,12 @@ def run(request):
         # se guarda el estado del proyecto
         project.current_step = step
         project.save()
-
-        saved_step, created = StepConfig.objects.get_or_create(project_id=project_id, step=step)
-        saved_step.config = step_state
-        saved_step.save()
+        if 'step_state' in params:
+            step_state = params['step_state']
+            saved_step, created = StepConfig.objects.get_or_create(project_id=project_id, step=step)
+            saved_step.config = step_state
+            saved_step.script_data = config
+            saved_step.save()
     except Exception as e:
         # DEBUG PURPOSES
         print(traceback.format_exc())
@@ -334,4 +335,38 @@ def run(request):
     else:
         return JsonResponse({'status': 'ok', 'downloadfile': {'name': downloadfile[0], 'filename': downloadfile[1]}})
 
+def get_script(request,project_id):
+    if StepConfig.objects.filter(project_id = project_id, step="ExportStep").count() > 0:
+        list_steps = ["Extraction Step", "Data Cleansing Step",
+                      "Standardisation And Tagging Step", "Segmentation Step", "Schema Matching Step",
+                      "Indexing Step", "Comparison Step","Classification Step","Data Fusion Step", "Export Step"]
+        httphost = request.META["HTTP_HOST"]
+        response = HttpResponse(content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename="script.py"'
+        script = ""
+        script += 'import urllib2\nimport json\nhost = "%s"\nproject_id = %s\n' %(httphost,project_id)
+        for stepname in list_steps:
+            try:
+                step = StepConfig.objects.get(project_id= project_id,step=stepname.replace(" ",""))
+                script += 'print "Executing %s..."\n' % stepname
+                script += "config = json.loads(r'''"
+                script += json.dumps(step.script_data)
+                script += "''')"
+                script += "\n"
+                script += 'data = {"project_id": project_id,"step": "%s", "config": config }\n' % stepname.replace(" ","")
+                script += 'req = urllib2.Request("http://%s/run/" % host)\nreq.add_header("Content-Type", "application/json")\nresponse = urllib2.urlopen(req, json.dumps(data))\n'
+                if stepname != "Export Step":
+                    script += "print response.read()\n"
+                else:
+                    script += 'stringjson = response.read()\ndictjson = json.loads(stringjson)\n' \
+                              'if "downloadfile" in dictjson:\n\tname = dictjson["downloadfile"]["name"]\n\t' \
+                              'filename = dictjson["downloadfile"]["filename"]\n\tprint "Download file in http://%s/download-file/%s/%s" % (host,filename, name)\n' \
+                              'else:\n\tprint stringjson\n'
+                script +="\n"
+            except Exception as e:
+                response.write("Error in %s configuration" %stepname)
+                return response
+
+        response.write(script)
+        return response
 

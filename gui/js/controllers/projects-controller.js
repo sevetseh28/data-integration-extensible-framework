@@ -20,6 +20,9 @@ materialAdmin
                 $scope.reloadProjects()
             })
         };
+        $scope.getScriptProject = function (idProject) {
+            APIService.getScriptProject(idProject);
+        };
 
         $scope.createProject = function () {
             APIService.createProject($scope.newProject).then(function () {
