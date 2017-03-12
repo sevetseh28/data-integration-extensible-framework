@@ -412,7 +412,6 @@ materialAdmin
                             $scope.loadStep($scope.steps[$scope.currentStep]);
 
                         }
-                        console.log(data);
 
                         $scope.tabs[$scope.currentStep]['active'] = true;
                     }else{
