@@ -35,7 +35,7 @@
             </div>
         </div>
     </div>
-    <div class="row" ng-repeat="(k, c) in outputField.selectedModule['config']">
+    <div class="row" ng-repeat="(k, c) in outputField.selectedModule['config'] track by outputField.selectedModule.id">
         <div class="col-sm-12">
             <div>
                 <dynamic-input return-value='c.returnValue'
