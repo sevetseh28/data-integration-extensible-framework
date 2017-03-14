@@ -30,6 +30,7 @@ class NamesParsing(SegmentationModule):
         # 0 nothing found
         # 1 found first name
         # 2 found second name
+        # 3 found surname
 
         for idx, field in enumerate(column.fields):
             # it is safe to assume that at this point each field has zero or more tags assigned
@@ -41,7 +42,10 @@ class NamesParsing(SegmentationModule):
                     field.output_field = global_output_fields.SECOND_NAME
                     state = 2
             elif global_tags.SN['id'] in field.tags:
+                if state == 3:
+                    continue
                 field.output_field = global_output_fields.SURNAME
+                state = 3
 
             column.fields[idx] = field
 
