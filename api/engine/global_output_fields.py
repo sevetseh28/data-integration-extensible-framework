@@ -8,6 +8,8 @@ fields though.
 """
 TITLE = "Title"
 GIVEN_NAME = "Given-name"
+FIRST_NAME = "First-name"
+SECOND_NAME = "Second-name"
 NICK_NAME = "Nick-name"
 SURNAME = "Surname"
 BUILDING_NAME = "Building name"

@@ -167,6 +167,7 @@ class DataCleansingStep(Step):
             for col, datacleansing_modules in self.config["source{}".format(source_number)].items():
                 for datacleansing_module in datacleansing_modules:
                     module = self._load_module(datacleansing_module)
+                    #TODO the module should be given only the field value (string) and not the column
                     record.columns[col] = module.run(record.columns[col])
 
             # Remove extra columns

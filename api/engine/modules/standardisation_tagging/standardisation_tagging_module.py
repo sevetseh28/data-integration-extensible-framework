@@ -12,4 +12,9 @@ class StandardisationTaggingModule(Module):
 
     @abc.abstractmethod
     def run(self, column):
+        """
+
+        :param column:
+        :return: a Column object
+        """
         raise NotImplementedError

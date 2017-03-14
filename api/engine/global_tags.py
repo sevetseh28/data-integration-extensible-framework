@@ -82,6 +82,12 @@ SN = {
     'component': 'Name'
 }
 
+GN = {
+    'id': 'GN',
+    'description': 'Given name',
+    'component': 'Name'
+}
+
 GF = {
     'id': 'GF',
     'description': 'Female given name',
@@ -90,8 +96,8 @@ GF = {
 
 
 GM = {
-    'id': 'GF',
-    'description': 'Female male name',
+    'id': 'GM',
+    'description': 'Male given name',
     'component': 'Name'
 }
 

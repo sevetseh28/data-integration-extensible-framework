@@ -35,10 +35,7 @@
                         <span ng-repeat="token in row[s.colname] track by $index"
                               ng-class="((token.output_field == null) && !(segmentationskipped))?
                               'striked' : 'colorseg' + ($index % 2)">
-                            <span>{{ token.value }}
-                            <sup ng-if="token.output_field != null">
-                                {{ token.output_field }}
-                            </sup></span>
+                            <span>{{ token.value }}<sup ng-if="token.output_field != null">{{ token.output_field }}</sup> </span>
                         </span>
                     </td>
                 </tr>

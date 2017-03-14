@@ -299,7 +299,7 @@ class DALMongo:
         db = mongoclient[self.db_name]
         segschema = self.get_all("SegmentationStep", "source{}_schema".format(source_number))
 
-        return [Column.from_json(c) for c in segschema][:5]
+        return [Column.from_json(c) for c in segschema]
 
     def get_output_fields_matched_cols(self):
         """
