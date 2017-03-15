@@ -1,6 +1,8 @@
 import abc
 from copy import deepcopy
 
+from django.utils.datastructures import OrderedSet
+
 from engine.models.record import *
 from engine.modules.module import Module
 from engine.utils.dynamic_loading import load_module
@@ -34,14 +36,14 @@ class SchemaMatchingModule(Module):
 
             # TODO this is done assumming that the format is '__new__cols1-...-__cols2-...'
             # example: column_name = __new__name-surname__nombreyapellido
-            matched_columns_s1 = column.name.split('__')[2].split('-') # ['name', 'surname']
+            matched_columns_s1 = column.name.split('__')[2].split('-')  # ['name', 'surname']
             matched_columns_s2 = column.name.split('__')[3].split('-')  # ['nombreyapellido']
 
             ofs1 = []
             ofs1_type = {}
             for col1 in matched_columns_s1:
                 docs = coll1.find({
-                    'fields': {'$ne' : []},
+                    'fields': {'$ne': []},
                     'name': col1
                 })
                 for d in docs:
@@ -55,7 +57,7 @@ class SchemaMatchingModule(Module):
             ofs2_type = {}
             for col2 in matched_columns_s2:
                 docs = coll2.find({
-                    'fields': {'$ne' : []},
+                    'fields': {'$ne': []},
                     'name': col2
                 })
                 for d in docs:
@@ -65,14 +67,14 @@ class SchemaMatchingModule(Module):
                             ofs2.append(f)
                             ofs2_type[f] = field['type']
 
-
-            union_output_fields = list(set().union(ofs1, ofs2))
+            union_output_fields = list(OrderedSet(ofs1 + ofs2))
             union_output_fields_type = ofs1_type.copy()
             union_output_fields_type.update(ofs2_type)
 
             for of in union_output_fields:
-                new_of = Field(tags=[], output_field=of, value="n/A", tipe=EnumType(union_output_fields_type[of])) # type of s1 and s2
-                                                                                                        # should be the same
+                new_of = Field(tags=[], output_field=of, value="n/A",
+                               tipe=EnumType(union_output_fields_type[of]))  # type of s1 and s2
+                # should be the same
                 column.fields.append(new_of)
 
         self.schema.append(deepcopy(column))
