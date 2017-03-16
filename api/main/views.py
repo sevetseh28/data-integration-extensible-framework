@@ -293,6 +293,7 @@ def run(request):
         project_id = params['project_id']
         step = params['step']
         config = params['config'] if 'config' in params else {}
+        step_state = params['step_state'] if 'step_state' in params else {}
         project = Project.objects.get(id=project_id)
         # Se chequea si se skipea el paso de Segmentation
         downloadfile = False
@@ -316,12 +317,10 @@ def run(request):
         # se guarda el estado del proyecto
         project.current_step = step
         project.save()
-        if 'step_state' in params:
-            step_state = params['step_state']
-            saved_step, created = StepConfig.objects.get_or_create(project_id=project_id, step=step)
-            saved_step.config = step_state
-            saved_step.script_data = config
-            saved_step.save()
+        saved_step, created = StepConfig.objects.get_or_create(project_id=project_id, step=step)
+        saved_step.config = step_state
+        saved_step.script_data = config
+        saved_step.save()
     except Exception as e:
         # DEBUG PURPOSES
         print(traceback.format_exc())
@@ -337,6 +336,7 @@ def run(request):
 
 def get_script(request,project_id):
     if StepConfig.objects.filter(project_id = project_id, step="ExportStep").count() > 0:
+        project_name = Project.objects.get(id = project_id).name
         list_steps = ["Extraction Step", "Data Cleansing Step",
                       "Standardisation And Tagging Step", "Segmentation Step", "Schema Matching Step",
                       "Indexing Step", "Comparison Step","Classification Step","Data Fusion Step", "Export Step"]
@@ -344,7 +344,12 @@ def get_script(request,project_id):
         response = HttpResponse(content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename="script.py"'
         script = ""
-        script += 'import urllib2\nimport json\nhost = "%s"\nproject_id = %s\n' %(httphost,project_id)
+        script += 'import sys\nimport urllib2\nimport json\nhost = "%s"\nname ="Script of %s"\n' %(httphost, project_name)
+        script +='list_name = sys.argv[1:]\nif len(list_name)>= 1:\n\tname = list_name[0]\nprint "Creating project %s" %name\n' \
+                 'data = {"name": name, "stepconfig_set":[]}\nreq = urllib2.Request("http://%s/projects/" % host)\n' \
+                 'req.add_header("Content-Type", "application/json")\nresponse = urllib2.urlopen(req, json.dumps(data))\n' \
+                 'stringjson = response.read()\ndictjson = json.loads(stringjson)\nif "id" in dictjson:\n\t' \
+                 'project_id = dictjson["id"]\n\tprint "Project created"\nelse:\n\tprint "Failed"\n\tsys.exit()\n\n'
         for stepname in list_steps:
             try:
                 step = StepConfig.objects.get(project_id= project_id,step=stepname.replace(" ",""))
