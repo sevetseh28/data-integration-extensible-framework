@@ -13,12 +13,17 @@ angular.module("materialAdmin")
                     selected_module: {
                         name: '',
                         config: {}
-                    }
+                    },
+                    only_matches: false
                 };
 
                 $scope.$watch('export.selectedModule', function(){
                     $scope.export.returnValue.selected_module.name = $scope.export.selectedModule.id;
                 }, true);
+
+                $scope.export.toggle = function() {
+                     $scope.export.returnValue.only_matches = !($scope.export.returnValue.only_matches);
+                };
             }
         }
     });

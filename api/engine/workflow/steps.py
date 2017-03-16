@@ -598,13 +598,15 @@ class ExportStep(Step):
         "selected_module": {
             "name":"[un_nombre]",
             "config":{[config]}
-        }
+        },
+        "only_matches": <boolean>
     }
     """
 
-    def __init__(self, **kwargs):
-        super(ExportStep, self).__init__(**kwargs)
+    def __init__(self, config, **kwargs):
+        super(ExportStep, self).__init__(config=config, **kwargs)
         self.modules_directory = "export"
+        self.only_matches = config['only_matches']
 
     @staticmethod
     def pretty_name():
@@ -614,10 +616,13 @@ class ExportStep(Step):
         # Se obtienen los resultados del data fusion
         dal = DALMongo(self.project_id)
 
-        matches = dal.get_fused_records()
-        non_matches = dal.get_non_matches()
+        records = dal.get_fused_records()
+
+        if not self.only_matches:
+            records += dal.get_non_matches()
+
         schema = dal.get_global_schema()
 
-        return self._load_module(matches=matches, non_matches=non_matches, schema=schema).run()
+        return self._load_module(records=records, schema=schema).run()
 
 

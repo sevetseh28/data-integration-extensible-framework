@@ -13,10 +13,9 @@ class CSVExport(ExportModule):
     }
     """
 
-    def __init__(self, matches, non_matches, schema, **kwargs):
+    def __init__(self, records, schema, **kwargs):
         super(CSVExport,self).__init__(**kwargs)
-        self.matches = matches
-        self.non_matches = non_matches
+        self.records = records
         self.only_matches = self.config['only_matches']['checked'] if "only_matches" in self.config and \
                                                                       self.config["only_matches"] else False
         self.schema = schema
@@ -29,11 +28,6 @@ class CSVExport(ExportModule):
         return "CSV"
 
     def run(self):
-        self.records = self.matches
-
-        if not self.only_matches:
-            self.records += self.non_matches
-
         filename = uuid.uuid4()
 
         with open('files-to-download/{}.csv'.format(filename),'wb') as csvfile:
@@ -63,13 +57,7 @@ class CSVExport(ExportModule):
             '2_delimiter': {
                 'label': 'Delimiter (default: ",")',
                 'type': 'text'
-            },
-            'only_matches': {
-                'label': 'Export only matches',
-                'type': 'toggleswitch',
-                "color": 'blue',
-                'checked': False
-            },
+            }
         }
 
 

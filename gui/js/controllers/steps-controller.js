@@ -520,8 +520,10 @@ materialAdmin
         ];
 
         function disableFollowingSteps() {
-            for (var i = $scope.currentStep + 1; i < $scope.tabs.length; i++)
+            for (var i = $scope.currentStep + 1; i < $scope.tabs.length; i++) {
                 $scope.tabs[i].disabled = true;
+                $scope.tabs[i].reload_required = false;
+            }
         }
 
         function setCurrentStep() {
