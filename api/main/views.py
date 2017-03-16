@@ -18,6 +18,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all().order_by('name')
     serializer_class = ProjectSerializer
 
+    def destroy(self, request, *args, **kwargs):
+        dal = dal_mongo.DALMongo(kwargs['pk'])
+        dal.drop_database()
+        return super(ProjectViewSet,self).destroy(request,*args,**kwargs)
+
+
 
 class StepConfigViewSet(viewsets.ModelViewSet):
     """
