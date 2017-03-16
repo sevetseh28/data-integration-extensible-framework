@@ -28,13 +28,6 @@ class BlockingStandard(IndexingModule):
         self.records = records
         self.keys = [{"key": unidecode(k["1_key"]["key"]), "encoding": k["encoding"]} for k in self.config["keys"]]
 
-        # encodings attribute will mantain all selected encoding modules
-        self.encodings = {}
-        for ke in self.config["keys"]:
-            if ke["encoding"]["name"] not in self.encodings:
-                self.encodings[ke["encoding"]["name"]] = load_module("encoding", ke['encoding']['name'],
-                                                             config=ke['encoding'])
-
     @staticmethod
     def pretty_name():
         return "Blocking Standard"
@@ -58,7 +51,8 @@ class BlockingStandard(IndexingModule):
     def _concat_cols(self, record):
         concat = ""
         for ke in self.keys:
-            concat += self.encodings[ke["encoding"]["name"]].run(str(record.columns[ke["key"]].concat_fields()))
+            module = load_module("encoding", ke['encoding']['name'], config=ke['encoding'])
+            concat += module.run(str(record.columns[ke["key"]].concat_fields()))
         return concat
 
     @staticmethod

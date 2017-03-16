@@ -6,8 +6,8 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-6" ng-repeat="source in sources">
-        <div ng-repeat="o in standardisationtagging.moduleSelections[source] track by $index">
+    <div class="col-sm-6" ng-repeat="source in sources" ng-init="standardisationtagging.debug={}">
+        <div ng-repeat="o in standardisationtagging.moduleSelections[source] track by $index" ng-init="standardisationtagging.debug[source]=standardisationtagging.moduleSelections[source].length">
             <div class="row">
                 <div class="col-sm-4">
                     <p class="c-black f-500 m-b-20">Column</p>
