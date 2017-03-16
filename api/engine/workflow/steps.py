@@ -475,7 +475,7 @@ class ComparisonStep(Step):
             for r1 in group.records1:
                 for r2 in group.records2:
                     # Initialize similarity vector
-                    sv = SimilarityVector(r1._id, r2._id)
+                    sv = SimilarityVector(r1._id, r2._id, group=group.key)
                     for col in matched_cols: # could be r2.matched_cols() as well (they return the same)
                         if not self.segmentation_skipped:
                             for out_field, comparison_module in self.config.items():

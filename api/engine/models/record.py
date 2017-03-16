@@ -244,10 +244,11 @@ class IndexingGroup:
 
 
 class SimilarityVector:
-    def __init__(self, r1_id, r2_id, vector=None):
+    def __init__(self, r1_id, r2_id, vector=None, group=None):
         if vector is None:
             vector = []
 
+        self.group = group
         self.comparisons = []
         self.record1 = r1_id
         self.record2 = r2_id
@@ -259,7 +260,7 @@ class SimilarityVector:
 
     @staticmethod
     def from_json(json):
-        return SimilarityVector(json['record1'], json['record2'], json['vector'])
+        return SimilarityVector(json['record1'], json['record2'], json['vector'], json['group'])
 
 
 class MatchResultType(Enum):

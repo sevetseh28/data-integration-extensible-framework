@@ -198,21 +198,59 @@ class DALMongo:
 
         return groups
 
-    def get_comparison_info(self):
+    @property
+    def get_comparison_info(self, max_cant=20):
         """
         Returns compared data along with the similarity vector (in JSON format)
         :return:
         """
-        c = self.get_mongoclient()
-        cursor = self.get_all('ComparisonStep', '')
-        ret_info = []
-        i = 0
-        for rec in cursor:
-            ret_info.append({'vector': rec['vector'], 'comparisons': rec['comparisons']})
-            i += 1
-            if i == 5:
-                break
-        return ret_info
+        n = max_cant
+        # se agrupan las comparaciones por clave
+        pipeline = [
+            {'$sort': {'group': 1}},
+            {
+                '$group': {
+                    '_id': '$group',
+                    'comparisons': {'$push': '$$ROOT'},
+                }
+            }
+        ]
+        groups = self._get_aggregated('ComparisonStep', pipeline)
+
+        groups = [g for g in groups]
+
+        # se calcula el maximo de registros por grupo en base al n
+        max_recs_per_group = n / len(groups) if len(groups) < n else 1
+
+        # se carga el maximo de comparaciones por grupo agrupados por clave
+        comparisons = {}
+        for g in groups:
+            for i in range(min(len(g['comparisons']), max_recs_per_group)):
+                if g['_id'] not in comparisons:
+                    comparisons[g['_id']] = []
+
+                comparisons[g['_id']].append(g['comparisons'].pop())
+
+        # el resultado anterior es agrupado por clave, aqui se aplana poniendo todos los registros juntos
+        flattened = [item for k, sublist in comparisons.items() for item in sublist]
+
+        # si todavia faltan registros, se completa con cualquiera de los restantes
+        if len(flattened) < n:
+            comps_left = n-len(flattened)
+
+            for g in groups:
+                for i in range(len(g['comparisons'])):
+                    comparisons[g['_id']].append(g['comparisons'].pop())
+
+                    #se lleva la cuenta de cuantos faltan para parar
+                    comps_left -= 1
+                    if comps_left == 0:
+                        break
+                if comps_left == 0:
+                    break
+
+        # se devuelve el array aplanado
+        return [item for k, sublist in comparisons.items() for item in sublist]
 
     def get_total_comparisons_made(self):
         c = self.get_mongoclient()
