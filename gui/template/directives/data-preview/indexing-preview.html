@@ -10,7 +10,7 @@
             {{ comparison.idxinfo.cant_comparisons }}
         </b>
           (reduced from {{ comparison.idxinfo.cant_comparisons_full_index }} possible comparisons
-            - <span style="color: green;">{{ 100 - comparison.idxinfo.cant_comparisons / comparison.idxinfo.cant_comparisons_full_index * 100 }}% reduction</span>)
+            - <span style="color: green;">{{ 100 - comparison.idxinfo.cant_comparisons / comparison.idxinfo.cant_comparisons_full_index * 100 | number : 2}}% reduction</span>)
         </small>
 
 

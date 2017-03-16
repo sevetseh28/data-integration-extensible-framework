@@ -3,13 +3,13 @@
         <h2>Classification results
         <small style="color: green;">Total matches: <b>
             {{ datafusion.classificationinfo.total_matches }}
-        </b> ({{ (datafusion.classificationinfo.total_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</small>
+        </b> ({{ (datafusion.classificationinfo.total_matches) / (datafusion.classificationinfo.total_data) * 100 | number : 2}}%)</small>
         <small style="color: orange;">Total potential matches: <b>
             {{ datafusion.classificationinfo.total_potential_matches }}
-        </b> ({{ (datafusion.classificationinfo.total_potential_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</small>
+        </b> ({{ (datafusion.classificationinfo.total_potential_matches) / (datafusion.classificationinfo.total_data) * 100 | number : 2}}%)</small>
         <small style="color: red;">Total non-matches: <b>
             {{ datafusion.classificationinfo.total_non_matches }}
-        </b> ({{ (datafusion.classificationinfo.total_non_matches) / (datafusion.classificationinfo.total_data) * 100 }}%)</small>
+        </b> ({{ (datafusion.classificationinfo.total_non_matches) / (datafusion.classificationinfo.total_data) * 100 | number : 2}}%)</small>
             </h2>
     </div>
 
