@@ -198,7 +198,6 @@ class DALMongo:
 
         return groups
 
-    @property
     def get_comparison_info(self, max_cant=20):
         """
         Returns compared data along with the similarity vector (in JSON format)
