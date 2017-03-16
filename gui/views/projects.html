@@ -19,13 +19,13 @@
                                         class="text-uppercase">{{ project.name }} <!--<span
                                 class="badge date-project-tag-next"> - </span>--></h2></a>
                                 <ul class="actions">
-                                    <li ng-if="project.script" tooltip-popup-delay="500" tooltip-append-to-body="true" tooltip="Get configuration script"
+                                    <li style="cursor: pointer" ng-if="project.script" tooltip-popup-delay="500" tooltip-append-to-body="true" tooltip="Get configuration script"
                                         tooltip-placement="top">
                                         <a data-ng-click="getScriptProject(project.id)">
                                             <i class="zmdi zmdi-language-python"></i>
                                         </a>
                                     </li>
-                                    <li tooltip-popup-delay="500" tooltip-append-to-body="true" tooltip="Remove project"
+                                    <li style="cursor: pointer" tooltip-popup-delay="500" tooltip-append-to-body="true" tooltip="Remove project"
                                         tooltip-placement="top">
                                         <a data-ng-click="deleteProject(project.id)">
                                             <i class="zmdi zmdi-delete"></i>
