@@ -73,10 +73,10 @@ class ManualSchemaMatching(SchemaMatchingModule):
                                    self.project_id)
         return self.schema, self.records1, self.records2
 
-    @staticmethod
-    def _standardise_schema(records, schematches, source_number, other_schema):
+    def _standardise_schema(self, records, schematches, source_number, other_schema):
         # Estas son las columnas del otro esquema. Quedaran vacias en los registros de este esquema
         extra_cols = [col.name for col in other_schema.values()]
+
         other_source_number = 1 if source_number == 2 else 2
 
         # Se sacan de las extra cols, las columnas que estan matcheadas, para que no queden duplicadas
@@ -96,12 +96,15 @@ class ManualSchemaMatching(SchemaMatchingModule):
             for match in schematches.schema_matches:
                 r.remove_cols(match["source{}".format(source_number)])
 
-            # Se pone prefijo a las columnas propias de este esquema para identificarlas
-            r.prefix_cols("s{}".format(source_number))
+            if self.remaining_columns:
+                # Se pone prefijo a las columnas propias de este esquema para identificarlas
+                r.prefix_cols("s{}".format(source_number))
 
-            # Se añaden las columnas del otro esquema
-            for col in extra_cols:
-                r.add_column(Column(col))
+                # Se añaden las columnas del otro esquema
+                for col in extra_cols:
+                    r.add_column(Column(col))
+            else:
+                r.remove_nonmatched_cols()
 
         return records
 

@@ -31,6 +31,11 @@ class Record:
                 col.name = new_name
                 self.columns[new_name] = col
 
+    def remove_nonmatched_cols(self):
+        for col in self.columns.values():
+            if not col.name.startswith("__new__"):
+                self.columns.pop(col.name)
+
     def add_columns(self, cols, prefix=''):
         for col in cols:
             self.add_column(col, prefix)
