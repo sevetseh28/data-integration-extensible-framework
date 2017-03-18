@@ -282,13 +282,12 @@ class MatchResultType(Enum):
 
 
 class MatchResult:
-    def __init__(self, r1_id, r2_id, likelihood=None, match_type=MatchResultType.no_match, id=None):
+    def __init__(self, r1_id, r2_id, match_type=MatchResultType.no_match, id=None):
         self.record1 = r1_id
         self.record2 = r2_id
 
         self.match_type = match_type
 
-        self.likelihood = likelihood
         self._id = id
 
     def to_json(self):
@@ -302,7 +301,7 @@ class MatchResult:
 
     @staticmethod
     def from_json(json):
-        return MatchResult(json['record1'], json['record2'], json["likelihood"],
+        return MatchResult(json['record1'], json['record2'],
                            MatchResultType.from_json(json['match_type']), id=json['_id'])
 
 

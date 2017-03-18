@@ -105,7 +105,7 @@ class RuleBasedClassification(ClassificationModule):
 
         match_type = MatchResultType.match if rules_evaluation else MatchResultType.no_match
 
-        return MatchResult(simil.record1, simil.record2, None, match_type)
+        return MatchResult(simil.record1, simil.record2, match_type)
 
     @staticmethod
     def _vector_average(vector):

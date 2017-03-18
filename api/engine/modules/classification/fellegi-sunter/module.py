@@ -51,7 +51,7 @@ class FellegiSunterClassification(ClassificationModule):
         elif similarity < self.lower_bound:
             match_type = MatchResultType.no_match
 
-        return MatchResult(simil.record1, simil.record2, similarity, match_type)
+        return MatchResult(simil.record1, simil.record2, match_type)
 
     @staticmethod
     def config_json(**kwargs):
