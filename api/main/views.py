@@ -21,8 +21,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         dal = dal_mongo.DALMongo(kwargs['pk'])
         dal.drop_database()
-        return super(ProjectViewSet,self).destroy(request,*args,**kwargs)
-
+        return super(ProjectViewSet, self).destroy(request, *args, **kwargs)
 
 
 class StepConfigViewSet(viewsets.ModelViewSet):
@@ -83,7 +82,9 @@ def globalschema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
     # project = Project.objects.get(id=project_id)
     schema = _transform_global_schema(dal.get_global_schema())
+    schema['segments'].sort()
     return JsonResponse(schema, safe=False)
+
 
 def finalschema(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
@@ -109,6 +110,7 @@ def _transform_global_schema(old_format_schema):
 
     return schema
 
+
 def _transform_final_schema(old_format_schema):
     schema = {'cant_cols': 0, 'schema': [], 'segments': []}
     for c in old_format_schema:
@@ -120,7 +122,6 @@ def _transform_final_schema(old_format_schema):
             new_s[c['custom_name']].append(field['output_field'])
             schema['segments'].append(field['output_field'])
             schema['cant_cols'] += 1
-
 
     return schema
 
@@ -163,15 +164,21 @@ def comparisondata(request, project_id):
     ret_data = []
     for d in data:
         new_d = {}
-        new_d['vector'] = d['vector']
+        for i in range(len(d['comparisons'])):
+            d['comparisons'][i]['vector_value'] = d['vector'][i]
+
         new_d['comparisons'] = {'record1': [], 'record2': []}
+        if 'output_field' in d['comparisons'][0]:
+            d['comparisons'].sort(key=lambda c: c['output_field'])
         for c in d['comparisons']:
-            new_d['comparisons']['record1'].append(c[0])
-            new_d['comparisons']['record2'].append(c[1])
+            new_d['comparisons']['record1'].append(c['values'][0])
+            new_d['comparisons']['record2'].append(c['values'][1])
+        new_d['vector'] = [c['vector_value'] for c in d['comparisons']]
         ret_data.append(new_d)
 
     response = {'results': ret_data, 'total_comparisons_made': dal.get_total_comparisons_made()}
     return JsonResponse(response, safe=False)
+
 
 def fuseddata(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
@@ -182,14 +189,20 @@ def fuseddata(request, project_id):
 def matchesresult(request, project_id):
     dal = dal_mongo.DALMongo(project_id)
     data = dal.get_matches_info()
-    schema = _transform_global_schema(dal.get_global_schema())
     matches = []
     non_matches = []
     potential_matches = []
     for d in data:
+        if 'output_field' in d['record1'][0]:
+            r1 = [o['value'] for o in sorted(d['record1'], key=lambda o: o['output_field'])]
+            r2 = [o['value'] for o in sorted(d['record2'], key=lambda o: o['output_field'])]
+        else:
+            r1 = [o['value'] for o in d['record1']]
+            r2 = [o['value'] for o in d['record2']]
+
         new_d = {'match_type': d['match_type'],
-                 'record1': d['record1'],
-                 'record2': d['record2']}
+                 'record1': r1,
+                 'record2': r2}
         if d['match_type'] == 0:
             non_matches.append(new_d)
         elif d['match_type'] == 1:
@@ -216,7 +229,6 @@ def _transform_format_record(old_format_record):
                 pass
             new_format_rec[_get_colname_pretty(unsorted_col)].append(field['value'])
 
-
     # new_format_rec = []
     # for unsorted_col in old_format_record:
     #     for field in unsorted_col['fields']:
@@ -227,6 +239,7 @@ def _transform_format_record(old_format_record):
             new_format_rec_ordered.append(val)
     return new_format_rec_ordered
 
+
 def _get_colname_pretty(c):
     try:
         colname1 = c['name'].split('__')[2]
@@ -234,6 +247,7 @@ def _get_colname_pretty(c):
     except:
         pass
     return colname1 + ' - ' + colname2
+
 
 def upload(request):
     filename = uuid.uuid4()
@@ -278,14 +292,17 @@ def output_fields(request, project_id):
 
     return JsonResponse(ret, safe=False)
 
+
 def indexingdata(request, project_id):
     project = Project.objects.get(id=project_id)
     dal = dal_mongo.DALMongo(project_id)
     return JsonResponse({'results': dal.get_limited_indexing_keys(25),
                          'cant_idx_groups': dal.get_count_indexing_groups(),
                          'cant_comparisons': dal.get_number_of_comparisons_to_do(),
-                         'cant_comparisons_full_index': dal.get_extracted_data_count(1) * dal.get_extracted_data_count(2)},
+                         'cant_comparisons_full_index': dal.get_extracted_data_count(1) * dal.get_extracted_data_count(
+                             2)},
                         safe=False)
+
 
 def run(request):
     """
@@ -340,31 +357,34 @@ def run(request):
     else:
         return JsonResponse({'status': 'ok', 'downloadfile': {'name': downloadfile[0], 'filename': downloadfile[1]}})
 
-def get_script(request,project_id):
-    if StepConfig.objects.filter(project_id = project_id, step="ExportStep").count() > 0:
-        project_name = Project.objects.get(id = project_id).name
+
+def get_script(request, project_id):
+    if StepConfig.objects.filter(project_id=project_id, step="ExportStep").count() > 0:
+        project_name = Project.objects.get(id=project_id).name
         list_steps = ["Extraction Step", "Data Cleansing Step",
                       "Standardisation And Tagging Step", "Segmentation Step", "Schema Matching Step",
-                      "Indexing Step", "Comparison Step","Classification Step","Data Fusion Step", "Export Step"]
+                      "Indexing Step", "Comparison Step", "Classification Step", "Data Fusion Step", "Export Step"]
         httphost = request.META["HTTP_HOST"]
         response = HttpResponse(content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename="script.py"'
         script = ""
-        script += 'import sys\nimport urllib2\nimport json\nhost = "%s"\nname ="Script of %s"\n' %(httphost, project_name)
-        script +='list_name = sys.argv[1:]\nif len(list_name)>= 1:\n\tname = list_name[0]\nprint "Creating project %s" %name\n' \
-                 'data = {"name": name, "stepconfig_set":[]}\nreq = urllib2.Request("http://%s/projects/" % host)\n' \
-                 'req.add_header("Content-Type", "application/json")\nresponse = urllib2.urlopen(req, json.dumps(data))\n' \
-                 'stringjson = response.read()\ndictjson = json.loads(stringjson)\nif "id" in dictjson:\n\t' \
-                 'project_id = dictjson["id"]\n\tprint "Project created"\nelse:\n\tprint "Failed"\n\tsys.exit()\n\n'
+        script += 'import sys\nimport urllib2\nimport json\nhost = "%s"\nname ="Script of %s"\n' % (
+        httphost, project_name)
+        script += 'list_name = sys.argv[1:]\nif len(list_name)>= 1:\n\tname = list_name[0]\nprint "Creating project %s" %name\n' \
+                  'data = {"name": name, "stepconfig_set":[]}\nreq = urllib2.Request("http://%s/projects/" % host)\n' \
+                  'req.add_header("Content-Type", "application/json")\nresponse = urllib2.urlopen(req, json.dumps(data))\n' \
+                  'stringjson = response.read()\ndictjson = json.loads(stringjson)\nif "id" in dictjson:\n\t' \
+                  'project_id = dictjson["id"]\n\tprint "Project created"\nelse:\n\tprint "Failed"\n\tsys.exit()\n\n'
         for stepname in list_steps:
             try:
-                step = StepConfig.objects.get(project_id= project_id,step=stepname.replace(" ",""))
+                step = StepConfig.objects.get(project_id=project_id, step=stepname.replace(" ", ""))
                 script += 'print "Executing %s..."\n' % stepname
                 script += "config = json.loads(r'''"
                 script += json.dumps(step.script_data)
                 script += "''')"
                 script += "\n"
-                script += 'data = {"project_id": project_id,"step": "%s", "config": config }\n' % stepname.replace(" ","")
+                script += 'data = {"project_id": project_id,"step": "%s", "config": config }\n' % stepname.replace(" ",
+                                                                                                                   "")
                 script += 'req = urllib2.Request("http://%s/run/" % host)\nreq.add_header("Content-Type", "application/json")\nresponse = urllib2.urlopen(req, json.dumps(data))\n'
                 if stepname != "Export Step":
                     script += "print response.read()\n"
@@ -373,11 +393,10 @@ def get_script(request,project_id):
                               'if "downloadfile" in dictjson:\n\tname = dictjson["downloadfile"]["name"]\n\t' \
                               'filename = dictjson["downloadfile"]["filename"]\n\tprint "Download file in http://%s/download-file/%s/%s" % (host,filename, name)\n' \
                               'else:\n\tprint stringjson\n'
-                script +="\n"
+                script += "\n"
             except Exception as e:
-                response.write("Error in %s configuration" %stepname)
+                response.write("Error in %s configuration" % stepname)
                 return response
 
         response.write(script)
         return response
-

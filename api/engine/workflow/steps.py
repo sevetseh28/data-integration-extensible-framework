@@ -38,7 +38,7 @@ class Step(object):
         """
         logging.info("Starting step " + self.class_name)
 
-        ret =self.run_implementation()
+        ret = self.run_implementation()
 
         # se guardan los resultados
         dal = DALMongo(self.project_id)
@@ -167,24 +167,24 @@ class DataCleansingStep(Step):
             for col, datacleansing_modules in self.config["source{}".format(source_number)].items():
                 for datacleansing_module in datacleansing_modules:
                     module = self._load_module(datacleansing_module)
-                    #TODO the module should be given only the field value (string) and not the column
+                    # TODO the module should be given only the field value (string) and not the column
                     record.columns[col] = module.run(record.columns[col])
 
-            # Remove extra columns
-            # for extra_col in extra_cols:
-            #     record.columns.pop(extra_col)
+                    # Remove extra columns
+                    # for extra_col in extra_cols:
+                    #     record.columns.pop(extra_col)
 
         self._append_result_collection(records, "source{}_records".format(source_number))
 
-        #new_schema = [Column(c_name) for c_name in used_cols]
-        #self._append_result_collection(new_schema, 'source{}_new_schema'.format(source_number))
-
+        # new_schema = [Column(c_name) for c_name in used_cols]
+        # self._append_result_collection(new_schema, 'source{}_new_schema'.format(source_number))
 
     def _load_module(self, datacleansing):
         step = self.modules_directory
         module = datacleansing['name']
         config = datacleansing['config']
         return dynamic_loading.load_module(step, module, config=config)
+
 
 class StandardisationAndTaggingStep(Step):
     """
@@ -264,7 +264,6 @@ class SegmentationStep(Step):
     }
     """
 
-
     def __init__(self, **kwargs):
         super(SegmentationStep, self).__init__(**kwargs)
         self.modules_directory = "segmentation"
@@ -301,7 +300,7 @@ class SegmentationStep(Step):
                     new_col_fields = new_cols[col_name].fields
                     # If a new output field was found in this column then add it to the new schema
                     if field_obj.output_field is not None and \
-                        field_obj.output_field not in [field.output_field for field in new_col_fields]:
+                                    field_obj.output_field not in [field.output_field for field in new_col_fields]:
                         # TODO tags could be appended as well but for now we leave it empty
                         new_of = Field(value="n/A", tipe=field_obj.tipe, output_field=field_obj.output_field,
                                        tags=[])
@@ -320,6 +319,7 @@ class SegmentationStep(Step):
         module = segmentation_module['name']
         config = segmentation_module['config']
         return dynamic_loading.load_module(step, module, config=config)
+
 
 class SchemaMatchingStep(Step):
     """
@@ -476,15 +476,15 @@ class ComparisonStep(Step):
                 for r2 in group.records2:
                     # Initialize similarity vector
                     sv = SimilarityVector(r1._id, r2._id, group=group.key)
-                    for col in matched_cols: # could be r2.matched_cols() as well (they return the same)
+                    for col in matched_cols:  # could be r2.matched_cols() as well (they return the same)
                         if not self.segmentation_skipped:
                             for out_field, comparison_module in self.config.items():
                                 # Check that the output field exists in the column, otherwise it wont create an entrance
                                 # in the similarity vector
-                                if out_field in [f['output_field'] for f  in output_fields_schema[col]]:
+                                if out_field in [f['output_field'] for f in output_fields_schema[col]]:
                                     # Se obienen los valores a comparar y se comparan
-                                    out_field_value1 = r1.get_output_field_col(out_field,col)
-                                    out_field_value2 = r2.get_output_field_col(out_field,col)
+                                    out_field_value1 = r1.get_output_field_col(out_field, col)
+                                    out_field_value2 = r2.get_output_field_col(out_field, col)
 
                                     module = self._load_module(comparison_module)
 
@@ -494,7 +494,11 @@ class ComparisonStep(Step):
                                     sim_value = module.run(out_field_value1, out_field_value2)
                                     sim_value_weighted = sim_value * weight / max_weight
                                     sv.vector.append(sim_value_weighted)
-                                    sv.comparisons.append([out_field_value1, out_field_value2])
+                                    # sv.comparisons.append([out_field_value1, out_field_value2])
+                                    sv.comparisons.append({
+                                        'values': [out_field_value1, out_field_value2],
+                                        'output_field': out_field
+                                    })
                         else:
                             comparison_module = self.config[col]
 
@@ -510,7 +514,9 @@ class ComparisonStep(Step):
                             sim_value = module.run(column_value_s1, column_value_s2)
                             sim_value_weighted = sim_value * weight / max_weight
                             sv.vector.append(sim_value_weighted)
-                            sv.comparisons.append([column_value_s1, column_value_s2])
+                            sv.comparisons.append({
+                                        'values': [column_value_s1, column_value_s2]
+                                    })
                     simils.append(sv)
 
         self._append_result_collection(simils)
@@ -624,5 +630,3 @@ class ExportStep(Step):
         schema = dal.get_global_schema()
 
         return self._load_module(records=records, schema=schema).run()
-
-

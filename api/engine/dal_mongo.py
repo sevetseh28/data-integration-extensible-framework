@@ -138,7 +138,10 @@ class DALMongo:
         rec = c[self.db_name]['ComparisonStep'].find({'$or': [{'record1': id}, {'record2': id}]})[0]
         new_rec = []
         for c in rec['comparisons']:
-            new_rec.append(c[source_num - 1])
+            if 'output_field' in c:
+                new_rec.append({'output_field':c['output_field'], 'value':c['values'][source_num - 1]})
+            else:
+                new_rec.append({'value': c['values'][source_num - 1]})
         return new_rec
 
     def get_non_matches(self):
@@ -225,10 +228,15 @@ class DALMongo:
         comparisons = {}
         for g in groups:
             for i in range(min(len(g['comparisons']), max_recs_per_group)):
+
                 if g['_id'] not in comparisons:
                     comparisons[g['_id']] = []
 
-                comparisons[g['_id']].append(g['comparisons'].pop())
+                comparison = g['comparisons'].pop()
+
+                if not (all(c['values'][0]=='' for c in comparison['comparisons'])
+                       or all(c['values'][1]=='' for c in comparison['comparisons'])):
+                    comparisons[g['_id']].append(comparison)
 
         # el resultado anterior es agrupado por clave, aqui se aplana poniendo todos los registros juntos
         flattened = [item for k, sublist in comparisons.items() for item in sublist]
@@ -286,7 +294,7 @@ class DALMongo:
         array_global_schema = self.get_global_schema()
         ret_info = []
         i = 0
-        for rec in cursor:
+        for rec in cursor[:20]:
             # r = {}
             #
             # for col in array_global_schema:
