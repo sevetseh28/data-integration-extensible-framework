@@ -88,7 +88,7 @@ class MongodbExtractor(ExtractionModule):
             },
             '2_port': {
                 'label': 'Port',
-                'type': 'text'
+                'type': 'number'
             },
             '3_db': {
                 'label': 'Database',
