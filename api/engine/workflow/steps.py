@@ -301,7 +301,7 @@ class SegmentationStep(Step):
                     new_col_fields = new_cols[col_name].fields
                     # If a new output field was found in this column then add it to the new schema
                     if field_obj.output_field is not None and \
-                                    field_obj.output_field not in [field.output_field for field in new_col_fields]:
+                            field_obj.output_field not in [field.output_field for field in new_col_fields]:
                         # TODO tags could be appended as well but for now we leave it empty
                         new_of = Field(value="n/A", tipe=field_obj.tipe, output_field=field_obj.output_field,
                                        tags=[])
@@ -390,7 +390,7 @@ class IndexingStep(Step):
 
         result_groups = []
 
-        for k, group1 in groups1.items():
+        for k, group1 in list(groups1.items()):
             groups1.pop(k)
             group2 = groups2.pop(k, None)
 
@@ -516,8 +516,8 @@ class ComparisonStep(Step):
                             sim_value_weighted = sim_value * weight / max_weight
                             sv.vector.append(sim_value_weighted)
                             sv.comparisons.append({
-                                        'values': [column_value_s1, column_value_s2]
-                                    })
+                                'values': [column_value_s1, column_value_s2]
+                            })
                     simils.append(sv)
 
         self._append_result_collection(simils)

@@ -47,7 +47,7 @@ class AddressesTokenization(StandardisationTaggingModule):
                                          output_field=None)
             fields.append(address_number_field)
 
-        if len(fields) == 0: # if an empty string was found in the column return the same column
+        if len(fields) == 0:  # if an empty string was found in the column return the same column
             return column
         else:
             # Create the return column object

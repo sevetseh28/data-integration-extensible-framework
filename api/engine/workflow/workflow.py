@@ -1,5 +1,5 @@
 from engine.utils import dynamic_loading
-from steps import *
+from engine.workflow.steps import ExtractionStep
 
 FIRST_STEP = ExtractionStep
 

@@ -224,7 +224,7 @@ class DALMongo:
         # se carga el maximo de comparaciones por grupo agrupados por clave
         comparisons = {}
         for g in groups:
-            for i in range(min(len(g['comparisons']), max_recs_per_group)):
+            for i in range(min(len(g['comparisons']), int(max_recs_per_group))):
 
                 if g['_id'] not in comparisons:
                     comparisons[g['_id']] = []

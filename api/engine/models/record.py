@@ -29,7 +29,7 @@ class Record:
                 self.columns[new_name] = col
 
     def remove_nonmatched_cols(self):
-        for col in self.columns.values():
+        for col in list(self.columns.values()):
             if not col.name.startswith("__new__"):
                 self.columns.pop(col.name)
 
@@ -39,7 +39,7 @@ class Record:
 
     def remove_cols(self, cols):
         remove_cols = [c.name for c in cols]
-        for col in self.columns.keys():
+        for col in list(self.columns.keys()):
             if col in remove_cols:
                 self.columns.pop(col)
 

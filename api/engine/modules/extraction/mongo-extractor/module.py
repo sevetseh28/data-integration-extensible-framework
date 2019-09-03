@@ -70,8 +70,10 @@ class MongodbExtractor(ExtractionModule):
         for key, value in document.items():  # documentos embebidos
             key = unidecode(key)
             # Solo se aceptan claves de los siguientes tipos
-            if isinstance(value,int) or isinstance(value,long) or isinstance(value, float) or type(
-                    value).__name__ == 'Int64' or isinstance(value, str) or isinstance(value, unicode) or isinstance(value, bool) or isinstance(value, datetime) or type(value) is type(None):
+            if isinstance(value, int) or isinstance(value, float) or type(
+                    value).__name__ == 'Int64' or isinstance(value, str) or isinstance(value, bool) or isinstance(value,
+                                                                                                                  datetime) or type(
+                value) is type(None):
                 column = Column(concat + key)
                 self.add_to_schema(column)
             elif type(value) is dict:
@@ -98,20 +100,19 @@ class MongodbExtractor(ExtractionModule):
                 'label': 'Collection',
                 'type': 'text'
             },
-                }
+        }
 
 
 # Se traduce el valor de mongo al formato interno de acuerdo al tipo
 def get_field_from_mongo(value):
-    if isinstance(value,str):
+    if isinstance(value, str):
         return Field(value, EnumType.string)
-    elif isinstance(value,unicode):
-        return Field(unidecode(value), EnumType.string)
-    elif isinstance(value, int) or isinstance(value,long) or isinstance(value,float) or type(value).__name__ == 'Int64':
+    elif isinstance(value, int) or isinstance(value, float) or type(
+            value).__name__ == 'Int64':
         return Field(value, EnumType.number)
-    elif isinstance(value,bool):
+    elif isinstance(value, bool):
         return Field(value, EnumType.boolean)
-    elif isinstance(value,datetime):
+    elif isinstance(value, datetime):
         return Field(value, EnumType.date)
     elif type(value) is type(None):
         return Field(value, EnumType.null)

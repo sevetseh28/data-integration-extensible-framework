@@ -10,8 +10,10 @@ from rest_framework import viewsets
 from engine import dal_mongo
 from engine.utils.dynamic_loading import list_modules
 from engine.workflow.workflow import Workflow
-from serializers import *
+from main.models import Project
+from main.serializers import *
 import engine.dal_mongo
+
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -234,7 +236,7 @@ def _transform_format_record(old_format_record):
     #     for field in unsorted_col['fields']:
     #         new_format_rec.append(field['value'])
     new_format_rec_ordered = []
-    for colname, vals in new_format_rec.iteritems():
+    for colname, vals in new_format_rec.items():
         for val in vals:
             new_format_rec_ordered.append(val)
     return new_format_rec_ordered
@@ -350,7 +352,7 @@ def run(request):
         # return JsonResponse({'status': 'error', 'details': traceback.format_exc()}, status=500)
 
         # TODO Should be in the final version instead
-        return JsonResponse({'status': 'error', 'details': e.message}, status=500)
+        return JsonResponse({'status': 'error', 'details': e}, status=500)
 
     if not downloadfile:
         return JsonResponse({'status': 'ok'})

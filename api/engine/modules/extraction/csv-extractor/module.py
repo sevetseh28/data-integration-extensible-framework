@@ -29,7 +29,7 @@ class CsvExtractor(ExtractionModule):
 
     def run(self):
 
-        with open(self.pathcsv) as csvfile:
+        with open(self.pathcsv, encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile, delimiter=self.delimiter, skipinitialspace=True, quoting=csv.QUOTE_MINIMAL)
             for fieldname in reader.fieldnames:
                 self.add_to_schema(Column(fieldname))
@@ -37,7 +37,7 @@ class CsvExtractor(ExtractionModule):
                 self.records.append(Record())
                 for key, value in row.items():
                     column = Column(key)
-                    column.fields.append(get_field_from_csv(_clean(value)))
+                    column.fields.append(get_field_from_csv(value))
                     self.records[i].columns[column.name] = column
         return self.schema, self.records
 
