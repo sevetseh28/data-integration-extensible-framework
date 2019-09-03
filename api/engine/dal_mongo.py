@@ -1,15 +1,12 @@
 # coding=utf-8
-from json import dumps
 
 from pymongo import MongoClient
-from django.conf import settings
 
 from api.settings import DATABASES
 from engine.models.record import *
 
 COL_STEP_PREFIXES = {
     "extraction": "ExtractionStep",
-
 }
 
 
@@ -139,7 +136,7 @@ class DALMongo:
         new_rec = []
         for c in rec['comparisons']:
             if 'output_field' in c:
-                new_rec.append({'output_field':c['output_field'], 'value':c['values'][source_num - 1]})
+                new_rec.append({'output_field': c['output_field'], 'value': c['values'][source_num - 1]})
             else:
                 new_rec.append({'value': c['values'][source_num - 1]})
         return new_rec
@@ -234,8 +231,8 @@ class DALMongo:
 
                 comparison = g['comparisons'].pop()
 
-                if not (all(c['values'][0]=='' for c in comparison['comparisons'])
-                       or all(c['values'][1]=='' for c in comparison['comparisons'])):
+                if not (all(c['values'][0] == '' for c in comparison['comparisons'])
+                        or all(c['values'][1] == '' for c in comparison['comparisons'])):
                     comparisons[g['_id']].append(comparison)
 
         # el resultado anterior es agrupado por clave, aqui se aplana poniendo todos los registros juntos
@@ -243,13 +240,13 @@ class DALMongo:
 
         # si todavia faltan registros, se completa con cualquiera de los restantes
         if len(flattened) < n:
-            comps_left = n-len(flattened)
+            comps_left = n - len(flattened)
 
             for g in groups:
                 for i in range(len(g['comparisons'])):
                     comparisons[g['_id']].append(g['comparisons'].pop())
 
-                    #se lleva la cuenta de cuantos faltan para parar
+                    # se lleva la cuenta de cuantos faltan para parar
                     comps_left -= 1
                     if comps_left == 0:
                         break

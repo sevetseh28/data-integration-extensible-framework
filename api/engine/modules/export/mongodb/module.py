@@ -1,9 +1,6 @@
 from pymongo import MongoClient
 
 from engine.modules.export.export_module import ExportModule
-from engine.modules.indexing.indexing_module import IndexingModule
-from engine.modules.module import Module
-from engine.utils import dynamic_loading
 
 
 class MongoDBExport(ExportModule):
@@ -17,16 +14,16 @@ class MongoDBExport(ExportModule):
     }
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, records, **kwargs):
         super(MongoDBExport, self).__init__(**kwargs)
         self.records = records
         self.only_matches = self.config['5_only_matches']['checked'] if "5_only_matches" in self.config and \
-                                                                      self.config["5_only_matches"] else False
+                                                                        self.config["5_only_matches"] else False
         self.host = self.config["1_host"] if "1_host" in self.config and self.config["1_host"] else 'localhost'
         self.port = self.config["2_port"] if "2_port" in self.config and self.config["2_port"] else 27017
         self.db = self.config["3_db"] if "3_db" in self.config and self.config["3_db"] else 'output'
-        self.collection = self.config["4_collection"] if "4_collection" in self.config and self.config["4_collection"] else 'results'
-
+        self.collection = self.config["4_collection"] if "4_collection" in self.config and self.config[
+            "4_collection"] else 'results'
 
     @staticmethod
     def pretty_name():
@@ -62,9 +59,4 @@ class MongoDBExport(ExportModule):
                 'label': 'Collection (default: results)',
                 'type': 'text'
             }
-
-            # 'clear_collection': {
-            #     'label': 'Clear collection before savinb',
-            #     'type': 'checkbox'
-            # },
         }

@@ -1,10 +1,11 @@
 # coding=utf-8
 from __future__ import print_function
+
 import logging
 from abc import abstractmethod
 
 from engine.dal_mongo import DALMongo
-from engine.models.record import IndexingGroup, SimilarityVector, Column, Field
+from engine.models.record import IndexingGroup, SimilarityVector, Field
 from engine.utils import dynamic_loading
 
 

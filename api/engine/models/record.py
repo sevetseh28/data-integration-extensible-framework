@@ -1,6 +1,3 @@
-import collections
-from json import JSONEncoder
-
 from enum import Enum
 
 
@@ -75,7 +72,7 @@ class Record:
         col = self.columns[col]
         for f in col.fields:
             result += str(f.value) + " "
-        return result[:-1] # el [:-1] elimina el ultimo espacio
+        return result[:-1]  # el [:-1] elimina el ultimo espacio
 
     def get_sourcex_cols(self, source_number):
         return [c for c in self.columns.values() if c.name.startswith("s{}".format(source_number))]
@@ -175,16 +172,6 @@ class Field:
         return Field(json["value"], EnumType.from_json(json["type"]), json["tags"], json["output_field"])
 
 
-# class MatchedCols:
-#     """
-#     This class represents objects containing information about matched columns and
-#     are used to store the new schema
-#     {
-#
-#     }
-#     """
-#
-
 class SchemaMatch:
     """
     Representa la coleccion de columnas matcheadas.
@@ -218,11 +205,11 @@ class SchemaMatch:
 
     def to_json(self):
         return [{
-                    "col_name": match["col_name"],
-                    "custom_name": match["custom_name"],
-                    "source1": [c.to_json(with_fields=False) for c in match['source1']],
-                    "source2": [c.to_json(with_fields=False) for c in match['source2']]
-                } for match in self.schema_matches]
+            "col_name": match["col_name"],
+            "custom_name": match["custom_name"],
+            "source1": [c.to_json(with_fields=False) for c in match['source1']],
+            "source2": [c.to_json(with_fields=False) for c in match['source2']]
+        } for match in self.schema_matches]
 
     @staticmethod
     def from_json(json):

@@ -94,7 +94,6 @@ GF = {
     'component': 'Name'
 }
 
-
 GM = {
     'id': 'GM',
     'description': 'Male given name',

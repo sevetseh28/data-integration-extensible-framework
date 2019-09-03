@@ -1,19 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
+import csv
+
 from engine.models.record import *
 from engine.modules.extraction.extraction_module import ExtractionModule
-from engine.modules.module import Module
-import csv
-import unicodedata
 
-def _clean(data):
-    if not isinstance(data, unicode):
-        data = unicode(data, 'iso-8859-1')
-    return unicodedata.normalize('NFKD', data).encode('ascii', 'ignore')
 
 class CsvExtractor(ExtractionModule):
-
     """
         Formato config:
         {
@@ -26,7 +20,8 @@ class CsvExtractor(ExtractionModule):
         super(CsvExtractor, self).__init__(**kwargs)
         self.pretty_name = 'CsvExtractor'
         self.pathcsv = self.config['pathcsv']
-        self.delimiter = self.config['delimiter'].__str__()[0] if 'delimiter' in self.config and self.config['delimiter'] else ','
+        self.delimiter = self.config['delimiter'].__str__()[0] if 'delimiter' in self.config and self.config[
+            'delimiter'] else ','
 
     @staticmethod
     def pretty_name():
@@ -38,9 +33,9 @@ class CsvExtractor(ExtractionModule):
             reader = csv.DictReader(csvfile, delimiter=self.delimiter, skipinitialspace=True, quoting=csv.QUOTE_MINIMAL)
             for fieldname in reader.fieldnames:
                 self.add_to_schema(Column(fieldname))
-            for i,row in enumerate(reader):
+            for i, row in enumerate(reader):
                 self.records.append(Record())
-                for key,value in row.items():
+                for key, value in row.items():
                     column = Column(key)
                     column.fields.append(get_field_from_csv(_clean(value)))
                     self.records[i].columns[column.name] = column
@@ -60,20 +55,18 @@ class CsvExtractor(ExtractionModule):
         }
 
 
-
-
-
-def ignore_exception(IgnoreException=Exception,DefaultVal=None):
+def ignore_exception(IgnoreException=Exception, DefaultVal=None):
     def dec(function):
         def _dec(*args, **kwargs):
             try:
                 return function(*args, **kwargs)
             except IgnoreException:
                 return DefaultVal
+
         return _dec
+
     return dec
 
 
 def get_field_from_csv(value):
-        return Field(value, EnumType.string)
-
+    return Field(value, EnumType.string)
